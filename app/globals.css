@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #f5f5f5 !important; /* make arrows white */
+  background: rgba(255, 255, 255, 0.08); /* subtle translucent background */
+  border-radius: 50%;
+  padding: 10px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 16px !important; /* make arrow icons smaller */
+  font-weight: bold;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.swiper-button-disabled {
+  opacity: 0.3 !important;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+@keyframes ticker-reverse {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-ticker {
+  animation: ticker 60s linear infinite;
+}
+
+
+/* Swiper Pagination - Accessible Touch Targets */
+.swiper-pagination-bullet {
+  width: 12px !important;
+  height: 12px !important;
+  margin: 0 8px !important;
+  opacity: 0.5;
+  background: white;
+  position: relative;
+}
+
+.swiper-pagination-bullet::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  bottom: -10px;
+  left: -10px;
+  right: -10px;
+}
+
+.swiper-pagination-bullet-active {
+  opacity: 1;
+  background: #CC2224 !important;
+}
