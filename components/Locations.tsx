@@ -50,7 +50,7 @@ export default function Locations() {
               >
                 <div className="relative aspect-[3/4] bg-black">
                   <LazyVideo
-                    src="/awfis-video.mp4"
+                    src="/Awfis-video.mp4"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
                 </div>
@@ -108,7 +108,7 @@ export default function Locations() {
               >
                 <div className="relative aspect-[3/4] bg-black">
                   <LazyVideo
-                    src="/lodhi-video.mp4"
+                    src="/Lodhi-video.mp4"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
                 </div>

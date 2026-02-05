@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "latest",
+    "@sentry/nextjs": "^10.38.0",
     "lucide-react": "latest",
     "motion": "latest",
     "next": "latest",
