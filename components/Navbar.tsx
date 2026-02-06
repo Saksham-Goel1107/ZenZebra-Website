@@ -45,7 +45,14 @@ function Navbar() {
               transition={{ duration: 1.05, ease: "easeOut" }}
             >
               <Link href={"/"} aria-label="ZenZebra Home">
-                <Image src="/logo.png" width={175} height={175} alt="ZenZebra Logo" />
+                <Image
+                  src="https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/6985926d0013323cc0ca/view?project=698585dc0014c943f45e&mode=admin"
+                  width={175}
+                  height={175}
+                  alt="ZenZebra Logo"
+                  priority
+                  style={{ width: "auto", height: "auto" }}
+                />
               </Link>
             </m.div>
           </div>

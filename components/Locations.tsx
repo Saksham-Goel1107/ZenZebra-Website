@@ -50,7 +50,7 @@ export default function Locations() {
               >
                 <div className="relative aspect-[3/4] bg-black">
                   <LazyVideo
-                    src="/Awfis-video.mp4"
+                    src="https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/69858ed90020b5b5266f/view?project=698585dc0014c943f45e&mode=admin"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
                 </div>
@@ -79,7 +79,7 @@ export default function Locations() {
               >
                 <div className="relative aspect-[3/4] bg-black">
                   <LazyVideo
-                    src="/sw-video.mp4"
+                    src="https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698593b4000346adc43d/view?project=698585dc0014c943f45e&mode=admin"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
                 </div>
@@ -108,7 +108,7 @@ export default function Locations() {
               >
                 <div className="relative aspect-[3/4] bg-black">
                   <LazyVideo
-                    src="/Lodhi-video.mp4"
+                    src="https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/69859035002d1561907e/view?project=698585dc0014c943f45e&mode=admin"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
                 </div>
@@ -136,7 +136,7 @@ export default function Locations() {
                 className="rounded-xl bg-white text-[#353535] shadow-xl overflow-hidden"
               >
                 <div className="relative aspect-[3/4] bg-black">
-                  <Image src={'/soon.jpg'} alt="coming soon" width={600} height={800} className="w-full h-full object-cover" />
+                  <Image src={'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698593a40025156f230b/view?project=698585dc0014c943f45e&mode=admin'} alt="coming soon" width={600} height={800} className="w-full h-full object-cover" />
                 </div>
                 <div className="p-5">
                   <div className="flex items-center gap-2 text-[#CC2224] font-semibold text-sm">

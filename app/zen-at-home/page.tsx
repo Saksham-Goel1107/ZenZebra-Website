@@ -1,4 +1,4 @@
-import ZenAtHome from "@/components/zenAtHome"
+import ZenAtHome from "@/components/zenAtHome";
 
 export const metadata = {
   title: "Zen at Home | Coming Soon | ZenZebra",
@@ -17,19 +17,21 @@ export const metadata = {
       "Your favorite lifestyle picks, now where you live. ZenZebra is redefining the home experience — convenience, assurance, and value delivered.",
     url: "https://zenzebra.in/zen-at-home",
     siteName: "ZenZebra",
-    images: [{ url: "/logo-2.png", width: 1200, height: 630, alt: "ZenZebra Zen at Home" }],
+    images: [
+      {
+        url: "https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698592c00021ba481e19/view?project=698585dc0014c943f45e&mode=admin",
+        width: 1200,
+        height: 630,
+        alt: "ZenZebra Zen at Home",
+      },
+    ],
     locale: "en_IN",
     type: "website",
   },
   metadataBase: new URL("https://zenzebra.in"),
   themeColor: "#CC2224",
-}
+};
 
 export default function ZenAtHomeComingSoon() {
-  return (
-    <ZenAtHome/>
-  )
+  return <ZenAtHome />;
 }
-
-
-

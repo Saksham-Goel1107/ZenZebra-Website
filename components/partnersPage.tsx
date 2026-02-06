@@ -36,12 +36,14 @@ export function Hero() {
           viewport={{ once: true }}
           className="mt-8 flex items-center gap-3"
         >
-          <Link
-            href="/contact"
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSfyFOB1d7hBoF-um8epwCM6TR3tcB6diGmdffn3WNok4pMxZw/viewform?usp=publish-editor"
             className="rounded-full bg-[#CC2224] px-6 py-3 text-sm font-semibold hover:bg-[#b31d1f] transition"
           >
             Partner With Us
-          </Link>
+          </a>
         </motion.div>
       </div>
     </section>
@@ -246,7 +248,7 @@ export function FinalCTA() {
           viewport={{ once: true }}
           className="text-3xl sm:text-5xl font-extrabold tracking-tight"
         >
-          Let’s Build <span className="text-[#CC2224]">BreakSpots</span> Together
+          Let&apos;s Build <span className="text-[#CC2224]">BreakSpots</span> Together
         </motion.h3>
         <p className="mt-3 max-w-2xl mx-auto text-white/75">
           Add emotional value, drive engagement, and make your space unforgettable.  
@@ -254,12 +256,14 @@ export function FinalCTA() {
         </p>
 
         <div className="mt-8">
-          <Link
-            href="/contact"
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSfyFOB1d7hBoF-um8epwCM6TR3tcB6diGmdffn3WNok4pMxZw/viewform?usp=publish-editor"
             className="rounded-full bg-[#CC2224] px-6 py-3 text-sm font-semibold hover:bg-[#b31d1f] transition"
           >
             Become a Space Partner
-          </Link>
+          </a>
         </div>
       </div>
     </section>

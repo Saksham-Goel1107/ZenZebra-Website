@@ -17,7 +17,7 @@ export const metadata = {
       "Explore ZenZebra catalogues for Smartworks, Ambience Mall, and DLF Spa. Experience convenience, assurance, and value through curated lifestyle offerings.",
     url: "https://zenzebra.in/catalogue",
     siteName: "ZenZebra",
-    images: [{ url: "/logo-2.png", width: 1200, height: 630, alt: "ZenZebra Catalogue" }],
+    images: [{ url: "/logo-3.png", width: 1200, height: 630, alt: "ZenZebra Catalogue" }],
     locale: "en_IN",
     type: "website",
   },

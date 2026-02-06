@@ -1,4 +1,4 @@
-import ContactPage from "@/components/contact"
+import ContactPage from "@/components/contact";
 
 export const metadata = {
   title: "Contact | ZenZebra",
@@ -17,17 +17,21 @@ export const metadata = {
       "Reach out to ZenZebra - convenience, assurance, and value-driven experiences. Connect with our team for brand or partnership opportunities.",
     url: "https://zenzebra.in/contact",
     siteName: "ZenZebra",
-    images: [{ url: "/logo-2.png", width: 1200, height: 630, alt: "ZenZebra Contact" }],
+    images: [
+      {
+        url: "https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698592c00021ba481e19/view?project=698585dc0014c943f45e&mode=admin",
+        width: 1200,
+        height: 630,
+        alt: "ZenZebra Contact",
+      },
+    ],
     locale: "en_IN",
     type: "website",
   },
   metadataBase: new URL("https://zenzebra.in"),
   themeColor: "#CC2224",
-}
-
+};
 
 export default function Contact() {
-  return (
-    <ContactPage/>
-  )
+  return <ContactPage />;
 }

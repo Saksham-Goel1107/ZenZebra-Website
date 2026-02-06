@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 type ImgItem = { src: string; alt: string };
 type Props = {
@@ -14,10 +15,11 @@ export default function TickerItem({ images, to }: Props) {
     <div className="relative overflow-hidden">
       <div className="flex w-fit">
         {/* Track A */}
-        <div
-          className={`flex items-center mt-10 flex-shrink-0 bg-white will-change-transform ${
-            isReverse ? "animate-ticker-reverse" : "animate-ticker"
-          }`}
+        <motion.div
+          initial={{ x: isReverse ? "-100%" : "0%" }}
+          animate={{ x: isReverse ? "0%" : "-100%" }}
+          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          className="flex items-center mt-10 flex-shrink-0 bg-white"
         >
           {images.map((item, i) => (
             <Image
@@ -30,13 +32,14 @@ export default function TickerItem({ images, to }: Props) {
               loading="lazy"
             />
           ))}
-        </div>
+        </motion.div>
 
         {/* Track B (duplicate for seamless loop) */}
-        <div
-          className={`flex items-center mt-10 flex-shrink-0 bg-white will-change-transform ${
-            isReverse ? "animate-ticker-reverse" : "animate-ticker"
-          }`}
+        <motion.div
+          initial={{ x: isReverse ? "-100%" : "0%" }}
+          animate={{ x: isReverse ? "0%" : "-100%" }}
+          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          className="flex items-center mt-10 flex-shrink-0 bg-white"
           aria-hidden="true"
         >
           {images.map((item, i) => (
@@ -50,7 +53,7 @@ export default function TickerItem({ images, to }: Props) {
               loading="lazy"
             />
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

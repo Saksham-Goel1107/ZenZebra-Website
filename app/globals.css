@@ -60,6 +60,9 @@
   animation: ticker 60s linear infinite;
 }
 
+.animate-ticker-reverse {
+  animation: ticker-reverse 60s linear infinite;
+}
 
 /* Swiper Pagination - Accessible Touch Targets */
 .swiper-pagination-bullet {
@@ -82,5 +85,5 @@
 
 .swiper-pagination-bullet-active {
   opacity: 1;
-  background: #CC2224 !important;
+  background: #cc2224 !important;
 }

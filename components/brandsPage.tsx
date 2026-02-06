@@ -41,12 +41,14 @@ export function Hero() {
           viewport={{ once: true }}
           className="mt-8 flex items-center gap-3"
         >
-          <Link
-            href="/contact"
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSf6IqDJ3WhYjUc-805XiHlsZ_D4lomL9_qCPKl7EIHlfDubBA/viewform"
             className="rounded-full bg-[#CC2224] px-6 py-3 text-sm font-semibold hover:bg-[#b31d1f] transition"
           >
             Become a Brand Partner
-          </Link>
+          </a>
         </m.div>
       </div>
     </section>
@@ -251,12 +253,14 @@ export function FinalCTA() {
         </p>
 
         <div className="mt-8">
-          <Link
-            href="/contact"
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSf6IqDJ3WhYjUc-805XiHlsZ_D4lomL9_qCPKl7EIHlfDubBA/viewform"
             className="rounded-full bg-[#CC2224] px-6 py-3 text-sm font-semibold hover:bg-[#b31d1f] transition"
           >
             Apply to Partner
-          </Link>
+          </a>
         </div>
       </div>
     </section>

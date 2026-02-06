@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
-import { motion } from 'framer-motion'
-import Image from 'next/image'
-import Link from 'next/link'
+import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
 
-export default function ZenAtHome(){
-  return(
+export default function ZenAtHome() {
+  return (
     <main className="relative min-h-[100svh] bg-black text-white overflow-hidden">
       {/* Background glows */}
       <div className="pointer-events-none absolute -top-32 -left-24 h-[40rem] w-[40rem] rounded-full bg-[#CC2224]/20 blur-3xl" />
@@ -17,12 +17,19 @@ export default function ZenAtHome(){
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
           className="mx-auto w-full max-w-3xl rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl p-8 sm:p-12 text-center shadow-[0_10px_40px_rgba(0,0,0,0.35)]"
         >
           {/* Logo */}
           <div className="mb-6 flex justify-center items-center ">
-            <Image alt="zenzebra logo" src={'/logo-2.png'} width={175} height={175}></Image>
+            <Image
+              alt="zenzebra logo"
+              src={
+                "https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698592c00021ba481e19/view?project=698585dc0014c943f45e&mode=admin"
+              }
+              width={175}
+              height={175}
+            ></Image>
           </div>
 
           {/* Heading */}
@@ -42,9 +49,9 @@ export default function ZenAtHome(){
             transition={{ delay: 0.2, duration: 0.5 }}
             className="mt-4 text-white/75 text-lg leading-relaxed"
           >
-            Your favorite lifestyle picks, now where you live.  
-            Experience the future of convenience, assurance, and value - 
-            brought home by <span className="text-white font-semibold">ZenZebra</span>.
+            Your favorite lifestyle picks, now where you live. Experience the
+            future of convenience, assurance, and value - brought home by{" "}
+            <span className="text-white font-semibold">ZenZebra</span>.
           </motion.p>
 
           {/* Back to Home */}
@@ -73,4 +80,5 @@ export default function ZenAtHome(){
         </motion.div>
       </section>
     </main>
-)}
+  );
+}

@@ -1,6 +1,6 @@
 import {
   Hero,
-   WhatYouGet,
+  WhatYouGet,
   WhyJoin,
   Network,
   BrandsCarousel,
@@ -29,7 +29,7 @@ export const metadata = {
     siteName: "ZenZebra",
     images: [
       {
-        url: "/logo-2.png",
+        url: "https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698592c00021ba481e19/view?project=698585dc0014c943f45e&mode=admin",
         width: 1200,
         height: 630,
         alt: "ZenZebra Brands Page",
@@ -49,11 +49,13 @@ export default function BrandsPage() {
   return (
     <main className="bg-black text-white relative">
       <Image
-        src={"/blob-1.jpg"}
+        src={
+          "/https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/69858f000011da237d9a/view?project=698585dc0014c943f45e&mode=admin.jpg"
+        }
         alt="blob image"
         width={1920}
         height={1080}
-        className='sm:block absolute top-0 left-0 w-full h-full object-cover opacity-60 pointer-events-none select-none'
+        className="sm:block absolute top-0 left-0 w-full h-full object-cover opacity-60 pointer-events-none select-none"
       />
       <div className="relative z-10">
         <Hero />
