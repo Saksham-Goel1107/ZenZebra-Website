@@ -1,10 +1,11 @@
-import { MetadataRoute } from 'next'
+import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'ZenZebra - Lifestyle Integration',
     short_name: 'ZenZebra',
-    description: 'Curated lifestyle, seamlessly integrated into your daily life. Try it. Own it. On the go.',
+    description:
+      'Curated lifestyle, seamlessly integrated into your daily life. Try it. Own it. On the go.',
     start_url: '/',
     display: 'standalone',
     background_color: '#000000',
@@ -31,5 +32,5 @@ export default function manifest(): MetadataRoute.Manifest {
         type: 'image/png',
       },
     ],
-  }
+  };
 }

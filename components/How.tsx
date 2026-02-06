@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { motion } from 'framer-motion'
-import { Search, FlaskConical, ShoppingBag } from 'lucide-react'
+import { motion } from 'framer-motion';
+import { Search, FlaskConical, ShoppingBag } from 'lucide-react';
 
 export default function How() {
   return (
@@ -16,7 +16,8 @@ export default function How() {
             viewport={{ once: true }}
             className="text-3xl sm:text-4xl font-extrabold leading-tight"
           >
-            Discovery <br/><span className="text-black">To</span> Destination
+            Discovery <br />
+            <span className="text-black">To</span> Destination
           </motion.h2>
 
           <motion.p
@@ -26,7 +27,8 @@ export default function How() {
             viewport={{ once: true }}
             className="mt-4 text-white/90 max-w-prose"
           >
-            From discovery to decision - in spaces you already are.<br/>
+            From discovery to decision - in spaces you already are.
+            <br />
             No pressure. No guesswork.
           </motion.p>
         </div>
@@ -104,5 +106,5 @@ export default function How() {
         </div>
       </div>
     </section>
-  )
+  );
 }

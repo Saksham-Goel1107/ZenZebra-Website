@@ -1,62 +1,58 @@
-import { Montserrat } from "next/font/google";
-import type { Metadata } from "next";
-import "./globals.css";
-import Navbar from "../components/Navbar";
-import Footer from "@/components/Footer";
+import { Montserrat } from 'next/font/google';
+import type { Metadata } from 'next';
+import './globals.css';
+import Navbar from '../components/Navbar';
+import Footer from '@/components/Footer';
 
 const montserrat = Montserrat({
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700'],
 });
 
 export const metadata = {
-  title: "ZenZebra - Curated Lifestyle Where You Already Are",
+  title: 'ZenZebra - Curated Lifestyle Where You Already Are',
   description:
-    "ZenZebra brings curated lifestyle products directly into your daily spaces - offices, gyms, cafés, and malls. Try first, own after. No pressure, no guesswork, just better living by design.",
+    'ZenZebra brings curated lifestyle products directly into your daily spaces - offices, gyms, cafés, and malls. Try first, own after. No pressure, no guesswork, just better living by design.',
   keywords: [
-    "ZenZebra",
-    "lifestyle brand",
-    "lifestyle integrated brand",
-    "try before you buy",
-    "curated experiences",
-    "consumer convenience",
-    "brand sampling",
-    "modern retail India",
+    'ZenZebra',
+    'lifestyle brand',
+    'lifestyle integrated brand',
+    'try before you buy',
+    'curated experiences',
+    'consumer convenience',
+    'brand sampling',
+    'modern retail India',
   ],
-  authors: [{ name: "ZenZebra Team" }],
+  authors: [{ name: 'ZenZebra Team' }],
   openGraph: {
-    title: "ZenZebra - Curated Lifestyle Where You Already Are",
+    title: 'ZenZebra - Curated Lifestyle Where You Already Are',
     description:
-      "World’s first lifestyle-integrated brand. Discover, try, and buy premium products right where you live, work, and relax.",
-    url: "https://zenzebra.in",
-    siteName: "ZenZebra",
+      'World’s first lifestyle-integrated brand. Discover, try, and buy premium products right where you live, work, and relax.',
+    url: 'https://zenzebra.in',
+    siteName: 'ZenZebra',
     images: [
       {
-        url: "https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/6985926d0013323cc0ca/view?project=698585dc0014c943f45e&mode=admin",
+        url: 'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/6985926d0013323cc0ca/view?project=698585dc0014c943f45e&mode=admin',
         width: 1200,
         height: 630,
-        alt: "ZenZebra Lifestyle Experience",
+        alt: 'ZenZebra Lifestyle Experience',
       },
     ],
-    locale: "en_IN",
-    type: "website",
+    locale: 'en_IN',
+    type: 'website',
   },
-  metadataBase: new URL("https://zenzebra.in"),
+  metadataBase: new URL('https://zenzebra.in'),
 };
 
 export const viewport = {
-  themeColor: "#CC2224",
+  themeColor: '#CC2224',
 };
 
-import { Providers } from "@/components/Providers";
-import Script from "next/script";
+import { Providers } from '@/components/Providers';
+import Script from 'next/script';
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={`${montserrat.className} bg-black`}>
@@ -66,10 +62,7 @@ export default function RootLayout({
           <Footer />
         </Providers>
         {/* Google tag (gtag.js) */}
-        <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-GM4Q02DG8S"
-        />
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-GM4Q02DG8S" />
         {/* Schema.org markup for Google+ */}
         <Script id="schema-org" type="application/ld+json">
           {`

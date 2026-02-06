@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import { motion } from 'framer-motion'
+import { motion } from 'framer-motion';
 
 export default function OurPromise() {
   return (
@@ -47,9 +47,9 @@ export default function OurPromise() {
         {/* Three bullets */}
         <ul className="mt-10 grid gap-4 sm:grid-cols-3">
           {[
-            "Something you didn’t know you wanted.",
-            "Something that feels uniquely yours.",
-            "Something you’ll want to share.",
+            'Something you didn’t know you wanted.',
+            'Something that feels uniquely yours.',
+            'Something you’ll want to share.',
           ].map((item, i) => (
             <motion.li
               key={i}
@@ -67,5 +67,5 @@ export default function OurPromise() {
         </ul>
       </div>
     </section>
-  )
+  );
 }

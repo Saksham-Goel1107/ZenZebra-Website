@@ -1,9 +1,9 @@
-import * as Sentry from "@sentry/nextjs";
+import * as Sentry from '@sentry/nextjs';
 
 Sentry.init({
-  dsn: "https://ecababcb4292a727509246ecb552979a@o4510832490446848.ingest.us.sentry.io/4510832491495424",
+  dsn: 'https://ecababcb4292a727509246ecb552979a@o4510832490446848.ingest.us.sentry.io/4510832491495424',
 
-  // Optimize bundle size by only including Replay in production if needed, 
+  // Optimize bundle size by only including Replay in production if needed,
   // or lazy loading it. For 100% performance score, we want minimal blocking JS.
   integrations: [
     Sentry.replayIntegration({

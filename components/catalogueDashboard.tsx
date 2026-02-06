@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { ref, onValue, push, set, update, remove } from "firebase/database";
-import { getDownloadURL, ref as sRef, uploadBytes } from "firebase/storage";
-import { signOut } from "firebase/auth";
-import { db, storage, auth } from "@/firebase";
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { ref, onValue, push, set, update, remove } from 'firebase/database';
+import { getDownloadURL, ref as sRef, uploadBytes } from 'firebase/storage';
+import { signOut } from 'firebase/auth';
+import { db, storage, auth } from '@/firebase';
 
 type Row = {
   id: string;
@@ -18,16 +18,16 @@ type Row = {
 function slugify(s: string) {
   return s
     .toLowerCase()
-    .replace(/[^\w]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+    .replace(/[^\w]+/g, '-')
+    .replace(/(^-|-$)/g, '');
 }
 
 export default function CatalogueDashboard() {
   const router = useRouter();
 
   const [rows, setRows] = useState<Row[]>([]);
-  const [label, setLabel] = useState("");
-  const [url, setUrl] = useState("");
+  const [label, setLabel] = useState('');
+  const [url, setUrl] = useState('');
   const [active, setActive] = useState(true);
   const [file, setFile] = useState<File | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -37,17 +37,17 @@ export default function CatalogueDashboard() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    console.log("currentUser UID (mount):", auth.currentUser?.uid || null);
+    console.log('currentUser UID (mount):', auth.currentUser?.uid || null);
   }, []);
 
   useEffect(() => {
-    const r = ref(db, "catalog/locations");
+    const r = ref(db, 'catalog/locations');
     const off = onValue(r, (snap) => {
       const v = snap.val() || {};
       const list: Row[] = Object.entries(v).map(([id, o]: any) => ({
         id,
-        label: o.label ?? "",
-        url: o.url ?? "",
+        label: o.label ?? '',
+        url: o.url ?? '',
         active: !!o.active,
         updatedAt: o.updatedAt ?? 0,
       }));
@@ -58,26 +58,24 @@ export default function CatalogueDashboard() {
   }, []);
 
   const resetForm = () => {
-    setLabel("");
-    setUrl("");
+    setLabel('');
+    setUrl('');
     setActive(true);
     setFile(null);
     setEditingId(null);
     // NEW: clear the file input's displayed filename
-    if (fileInputRef.current) fileInputRef.current.value = "";
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const uploadPdfIfAny = async (locLabel: string): Promise<string> => {
     if (!file) return url.trim();
 
-    const isPdfByType = (file.type || "").toLowerCase().includes("pdf");
+    const isPdfByType = (file.type || '').toLowerCase().includes('pdf');
     const isPdfByName = /\.pdf$/i.test(file.name);
-    if (!isPdfByType && !isPdfByName)
-      throw new Error("Please upload a PDF file (.pdf).");
-    if (file.size > 20 * 1024 * 1024)
-      throw new Error("PDF must be 20 MB or smaller.");
+    if (!isPdfByType && !isPdfByName) throw new Error('Please upload a PDF file (.pdf).');
+    if (file.size > 20 * 1024 * 1024) throw new Error('PDF must be 20 MB or smaller.');
 
-    console.log("UID before upload:", auth.currentUser?.uid || null, {
+    console.log('UID before upload:', auth.currentUser?.uid || null, {
       name: file.name,
       type: file.type,
       size: file.size,
@@ -86,9 +84,7 @@ export default function CatalogueDashboard() {
     const key = `${Date.now()}-${slugify(locLabel)}`;
     const path = `catalog/${key}.pdf`;
     const contentType =
-      file.type && file.type !== "application/octet-stream"
-        ? file.type
-        : "application/pdf";
+      file.type && file.type !== 'application/octet-stream' ? file.type : 'application/pdf';
 
     const sr = sRef(storage, path);
     await uploadBytes(sr, file, { contentType });
@@ -97,11 +93,11 @@ export default function CatalogueDashboard() {
   };
 
   const handleSave = async () => {
-    if (!label.trim()) return alert("Please enter location label.");
+    if (!label.trim()) return alert('Please enter location label.');
     setBusy(true);
     try {
       const finalUrl = await uploadPdfIfAny(label);
-      if (!finalUrl) return alert("Provide a URL or upload a PDF.");
+      if (!finalUrl) return alert('Provide a URL or upload a PDF.');
 
       if (editingId) {
         await update(ref(db, `catalog/locations/${editingId}`), {
@@ -111,7 +107,7 @@ export default function CatalogueDashboard() {
           updatedAt: Date.now(),
         });
       } else {
-        const r = push(ref(db, "catalog/locations"));
+        const r = push(ref(db, 'catalog/locations'));
         await set(r, {
           label: label.trim(),
           url: finalUrl,
@@ -122,7 +118,7 @@ export default function CatalogueDashboard() {
       resetForm();
     } catch (e: any) {
       console.error(e);
-      alert(e?.message || "Failed to save");
+      alert(e?.message || 'Failed to save');
     } finally {
       setBusy(false);
     }
@@ -134,8 +130,8 @@ export default function CatalogueDashboard() {
     setUrl(row.url);
     setActive(row.active);
     setFile(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (fileInputRef.current) fileInputRef.current.value = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (row: Row) => {
@@ -146,13 +142,10 @@ export default function CatalogueDashboard() {
 
   const logout = async () => {
     await signOut(auth);
-    router.replace("/admin-login");
+    router.replace('/admin-login');
   };
 
-  const canSave = useMemo(
-    () => !!label.trim() && (!!url.trim() || !!file),
-    [label, url, file]
-  );
+  const canSave = useMemo(() => !!label.trim() && (!!url.trim() || !!file), [label, url, file]);
 
   return (
     <section className="min-h-screen bg-[#0A0A0A] text-white px-6 py-10">
@@ -169,7 +162,7 @@ export default function CatalogueDashboard() {
 
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-xl">
           <h2 className="text-xl font-semibold mb-4">
-            {editingId ? "Edit Location" : "Add New Location"}
+            {editingId ? 'Edit Location' : 'Add New Location'}
           </h2>
 
           <div className="grid sm:grid-cols-2 gap-4">
@@ -184,9 +177,7 @@ export default function CatalogueDashboard() {
             </label>
 
             <label className="flex flex-col gap-2">
-              <span className="text-sm text-white/70">
-                PDF URL (optional if you upload)
-              </span>
+              <span className="text-sm text-white/70">PDF URL (optional if you upload)</span>
               <input
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
@@ -196,9 +187,7 @@ export default function CatalogueDashboard() {
             </label>
 
             <label className="flex flex-col gap-2">
-              <span className="text-sm text-white/70">
-                Upload PDF (optional)
-              </span>
+              <span className="text-sm text-white/70">Upload PDF (optional)</span>
               <input
                 ref={fileInputRef} // <-- attach ref
                 type="file"
@@ -224,13 +213,7 @@ export default function CatalogueDashboard() {
               onClick={handleSave}
               className="px-5 py-2 rounded-lg bg-[#CC2224] disabled:bg-[#CC2224]/40"
             >
-              {editingId
-                ? busy
-                  ? "Saving…"
-                  : "Update"
-                : busy
-                ? "Saving…"
-                : "Add"}
+              {editingId ? (busy ? 'Saving…' : 'Update') : busy ? 'Saving…' : 'Add'}
             </button>
             {editingId && (
               <button
@@ -259,17 +242,13 @@ export default function CatalogueDashboard() {
                 <tr key={r.id} className="border-t border-white/10">
                   <td className="px-4 py-3">{r.label}</td>
                   <td className="px-4 py-3 max-w-[320px] truncate">
-                    <a
-                      href={r.url}
-                      target="_blank"
-                      className="text-[#CC2224] underline"
-                    >
+                    <a href={r.url} target="_blank" className="text-[#CC2224] underline">
                       {r.url}
                     </a>
                   </td>
-                  <td className="px-4 py-3">{r.active ? "Yes" : "No"}</td>
+                  <td className="px-4 py-3">{r.active ? 'Yes' : 'No'}</td>
                   <td className="px-4 py-3">
-                    {r.updatedAt ? new Date(r.updatedAt).toLocaleString() : "—"}
+                    {r.updatedAt ? new Date(r.updatedAt).toLocaleString() : '—'}
                   </td>
                   <td className="px-4 py-3 flex gap-2">
                     <button
@@ -289,10 +268,7 @@ export default function CatalogueDashboard() {
               ))}
               {rows.length === 0 && (
                 <tr>
-                  <td
-                    colSpan={5}
-                    className="px-4 py-6 text-center text-white/60"
-                  >
+                  <td colSpan={5} className="px-4 py-6 text-center text-white/60">
                     No locations yet.
                   </td>
                 </tr>

@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { motion } from 'framer-motion'
-import Link from 'next/link'
+import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 /* -------------------- Hero -------------------- */
 export function Hero() {
@@ -47,7 +47,7 @@ export function Hero() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }
 
 /* -------------------- Value Proposition -------------------- */
@@ -65,7 +65,7 @@ export function ValueSection() {
       title: 'Revenue & Retention',
       text: 'Add experiential retail without operational load. We handle curation, logistics, and branding.',
     },
-  ]
+  ];
 
   return (
     <section className="py-20 px-6">
@@ -99,7 +99,7 @@ export function ValueSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 /* -------------------- Experience Section -------------------- */
@@ -117,7 +117,7 @@ export function ExperienceSection() {
       step: '3. Belonging - The Shared Find',
       desc: 'Each interaction sparks conversation - the kind of marketing no ad can buy.',
     },
-  ]
+  ];
 
   return (
     <section className="relative overflow-hidden py-20 px-6">
@@ -153,7 +153,7 @@ export function ExperienceSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 /* -------------------- Numbers -------------------- */
@@ -163,7 +163,7 @@ export function Numbers() {
     { num: '250+', label: 'Brands Integrated' },
     { num: '10K+', label: 'Daily Footfall' },
     { num: '∞', label: 'Connections Sparked' },
-  ]
+  ];
 
   return (
     <section className="py-20 px-6 border-t border-white/10">
@@ -182,7 +182,7 @@ export function Numbers() {
         ))}
       </div>
     </section>
-  )
+  );
 }
 
 /* -------------------- Collaboration Models -------------------- */
@@ -200,7 +200,7 @@ export function CollabModel() {
       title: 'Brand x Space Collabs',
       text: 'We match your vibe with trending brands for co-branded discovery moments.',
     },
-  ]
+  ];
   return (
     <section className="py-20 px-6">
       <div className="mx-auto max-w-6xl">
@@ -233,7 +233,7 @@ export function CollabModel() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 /* -------------------- Final CTA -------------------- */
@@ -251,8 +251,8 @@ export function FinalCTA() {
           Let&apos;s Build <span className="text-[#CC2224]">BreakSpots</span> Together
         </motion.h3>
         <p className="mt-3 max-w-2xl mx-auto text-white/75">
-          Add emotional value, drive engagement, and make your space unforgettable.  
-          Partner with ZenZebra to turn everyday movement into memorable moments.
+          Add emotional value, drive engagement, and make your space unforgettable. Partner with
+          ZenZebra to turn everyday movement into memorable moments.
         </p>
 
         <div className="mt-8">
@@ -267,5 +267,5 @@ export function FinalCTA() {
         </div>
       </div>
     </section>
-  )
+  );
 }

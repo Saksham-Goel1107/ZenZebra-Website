@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { m } from "framer-motion";
-import Link from "next/link";
-import { Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
-import Image from "next/image";
+import { m } from 'framer-motion';
+import Link from 'next/link';
+import { Instagram, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -14,24 +14,24 @@ export default function Footer() {
         <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
           viewport={{ once: true }}
         >
           <Link href="/">
             <Image
               alt="ZenZebra Logo"
               src={
-                "https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698592c00021ba481e19/view?project=698585dc0014c943f45e&mode=admin"
+                'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698592c00021ba481e19/view?project=698585dc0014c943f45e&mode=admin'
               }
               height={175}
               width={175}
               sizes="(max-width: 768px) 150px, 175px"
-              style={{ width: "auto", height: "auto" }}
+              style={{ width: 'auto', height: 'auto' }}
             />
           </Link>
           <p className="mt-3 text-white/70 text-sm leading-relaxed">
-            A lifestyle store for finer things in life - right where you are.
-            Try it first, own it after.
+            A lifestyle store for finer things in life - right where you are. Try it first, own it
+            after.
           </p>
         </m.div>
 
@@ -39,7 +39,7 @@ export default function Footer() {
         <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+          transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
           viewport={{ once: true }}
         >
           <h3 className="text-lg font-semibold text-[#CC2224] mb-3">Explore</h3>
@@ -64,30 +64,20 @@ export default function Footer() {
         <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+          transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
           viewport={{ once: true }}
         >
-          <h3 className="text-lg font-semibold text-[#CC2224] mb-3">
-            Get in touch
-          </h3>
+          <h3 className="text-lg font-semibold text-[#CC2224] mb-3">Get in touch</h3>
           <div className="space-y-2 text-sm text-white/80">
             <div className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-[#CC2224]" />
               <span>
-                {" "}
-                <a
-                  href="mailto:tanmay@zenzebra.in"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                {' '}
+                <a href="mailto:tanmay@zenzebra.in" target="_blank" rel="noopener noreferrer">
                   tanmay@zenzebra.in
-                </a>{" "}
-                |{" "}
-                <a
-                  href="mailto:gurpreet@zenzebra.in"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                </a>{' '}
+                |{' '}
+                <a href="mailto:gurpreet@zenzebra.in" target="_blank" rel="noopener noreferrer">
                   gurpreet@zenzebra.in
                 </a>
               </span>
@@ -95,20 +85,12 @@ export default function Footer() {
             <div className="flex items-center gap-2">
               <Phone className="h-4 w-4 text-[#CC2224]" />
               <span>
-                {" "}
-                <a
-                  href="tel:+919910605187"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                {' '}
+                <a href="tel:+919910605187" target="_blank" rel="noopener noreferrer">
                   +91 9910605187
-                </a>{" "}
-                |{" "}
-                <a
-                  href="tel:+919958680856"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                </a>{' '}
+                |{' '}
+                <a href="tel:+919958680856" target="_blank" rel="noopener noreferrer">
                   +91 9958680856
                 </a>
               </span>

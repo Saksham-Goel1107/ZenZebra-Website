@@ -1,44 +1,42 @@
-'use client'
-import { useCallback, useRef } from "react";
-import { useCanvas } from "./useCanvas";
+'use client';
+import { useCallback, useRef } from 'react';
+import { useCanvas } from './useCanvas';
 
 class Particle {
+  x: number;
+  y: number;
+  velocity: { x: number; y: number };
+  radius: number;
+  color: string;
 
-    x: number;
-    y: number;
-    velocity: {x:number, y:number};
-    radius: number;
-    color: string
+  constructor(ctx: CanvasRenderingContext2D) {
+    this.x = Math.random() * ctx.canvas.width;
+    this.y = Math.random() * ctx.canvas.height;
+    this.velocity = {
+      x: (Math.random() - 0.5) * 2,
+      y: (Math.random() - 0.5) * 2,
+    };
+    this.radius = Math.random() * 3 + 1.5;
+    this.color = `rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, 
+        0.9)`; // 'a' refers to alpha which represents the opacity of color
+  }
 
-    constructor(ctx:CanvasRenderingContext2D){
-        this.x = Math.random() * ctx.canvas.width;
-        this.y = Math.random() * ctx.canvas.height;
-        this.velocity = {
-            x: (Math.random() - 0.5) * 2,
-            y: (Math.random() - 0.5) * 2,
-        }
-        this.radius = Math.random() * 3 + 1.5;
-        this.color = `rgba(${Math.random()*100 + 155}, ${Math.random()*100 + 155}, ${Math.random()*100 + 155}, 
-        0.9)`  // 'a' refers to alpha which represents the opacity of color
-    }
+  //to update positions
+  update(ctx: CanvasRenderingContext2D) {
+    this.x += this.velocity.x;
+    this.y += this.velocity.y;
 
-    //to update positions
-    update(ctx:CanvasRenderingContext2D){
-        this.x += this.velocity.x;
-        this.y += this.velocity.y;
+    if (this.x < 0 || this.x > ctx.canvas.width) this.velocity.x *= -1;
+    if (this.y < 0 || this.y > ctx.canvas.height) this.velocity.y *= -1;
+  }
 
-        if(this.x<0 || this.x>ctx.canvas.width) this.velocity.x *= -1;
-        if(this.y<0 || this.y>ctx.canvas.height) this.velocity.y *= -1;
-
-    }
-
-    //to draw new particles
-    draw(ctx:CanvasRenderingContext2D){
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
-        ctx.fillStyle = this.color;
-        ctx.fill();
-    }
+  //to draw new particles
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+  }
 }
 
 //to render a new particle to canvas
@@ -49,8 +47,8 @@ export function ParticleCanvas() {
   const draw = useCallback((ctx: CanvasRenderingContext2D) => {
     // Initialize particles - reduced count for performance
     if (particles.current.length === 0) {
-      // Use fewer particles on mobile/smaller screens if possible, 
-      // but hard to detect here without resize listener. 
+      // Use fewer particles on mobile/smaller screens if possible,
+      // but hard to detect here without resize listener.
       // Safe default: 35 instead of 50
       particles.current = Array.from({ length: 35 }, () => new Particle(ctx));
     }
@@ -62,10 +60,10 @@ export function ParticleCanvas() {
     // Update and draw particles
     const width = ctx.canvas.width;
     const height = ctx.canvas.height;
-    
-    particles.current.forEach(particle => {
+
+    particles.current.forEach((particle) => {
       // Pass dimensions explicitly to avoid property access overhead
-      particle.update(ctx); 
+      particle.update(ctx);
       particle.draw(ctx);
     });
 

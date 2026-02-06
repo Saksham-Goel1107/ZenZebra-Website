@@ -1,0 +1,3 @@
+node scripts/validate-branch-name.js
+pnpm lint-staged
+pnpm run typecheck

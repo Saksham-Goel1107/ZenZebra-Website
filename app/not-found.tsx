@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import Image from "next/image";
-import { motion } from "framer-motion";
+import Link from 'next/link';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 export default function NotFound() {
   return (
@@ -50,8 +50,7 @@ export default function NotFound() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-white/60 text-lg mb-10"
         >
-          The page you're looking for seems to have wandered off.{" "}
-          <br className="hidden md:block" />
+          The page you're looking for seems to have wandered off. <br className="hidden md:block" />
           Let's get you back to where better living happens.
         </motion.p>
 

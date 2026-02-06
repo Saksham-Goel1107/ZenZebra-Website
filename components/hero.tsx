@@ -1,8 +1,8 @@
-"use client";
-import { ParticleCanvas } from "@/hooks/particle";
-import { m, useScroll, useTransform } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
+'use client';
+import { ParticleCanvas } from '@/hooks/particle';
+import { m, useScroll, useTransform } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
 
 function Hero() {
   const { scrollY } = useScroll();
@@ -16,7 +16,7 @@ function Hero() {
           <m.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
+            transition={{ duration: 1, ease: 'easeOut' }}
             className="relative group lg:w-1/2"
           >
             <m.h1
@@ -48,14 +48,14 @@ function Hero() {
               Try it. Own it. On the go
             </m.p>
 
-            <Link href={"/catalogue"}>
+            <Link href={'/catalogue'}>
               <m.button
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
                 whileHover={{
                   scale: 1.05,
-                  transition: { duration: 0.2, ease: "easeOut" },
+                  transition: { duration: 0.2, ease: 'easeOut' },
                 }}
                 className="relative overflow-hidden px-8 py-4 rounded-full border
                       border-white/30 hover:border-white/50 transition-all cursor-pointer group"
@@ -77,7 +77,7 @@ function Hero() {
           <m.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+            transition={{ duration: 1, delay: 0.5, ease: 'easeOut' }}
             className="lg:w-1/2 relative"
             style={{ y }}
           >
@@ -88,7 +88,7 @@ function Hero() {
                 transition={{
                   duration: 6,
                   repeat: Infinity,
-                  ease: "easeInOut",
+                  ease: 'easeInOut',
                 }}
                 className="relative w-full aspect-auto
                                 rounded-3xl overflow-hidden

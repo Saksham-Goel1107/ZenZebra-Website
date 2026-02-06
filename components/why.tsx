@@ -1,25 +1,24 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
 
 const items = [
   {
-    k: "01",
-    title: "Convenience",
-    line: "Right where you are. No detours.",
+    k: '01',
+    title: 'Convenience',
+    line: 'Right where you are. No detours.',
   },
   {
-    k: "02",
-    title: "Assurance",
-    line: "Try first. Own later. No regrets",
+    k: '02',
+    title: 'Assurance',
+    line: 'Try first. Own later. No regrets',
   },
   {
-    k: "03",
-    title: "Value",
-    line: "Lux experience. Honest prices.",
+    k: '03',
+    title: 'Value',
+    line: 'Lux experience. Honest prices.',
   },
 ];
-
 
 export default function Why() {
   return (
@@ -47,17 +46,7 @@ export default function Why() {
   );
 }
 
-function Stripe({
-  k,
-  title,
-  line,
-  idx,
-}: {
-  k: string;
-  title: string;
-  line: string;
-  idx: number;
-}) {
+function Stripe({ k, title, line, idx }: { k: string; title: string; line: string; idx: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 14 }}
@@ -75,9 +64,7 @@ function Stripe({
         {/* left: key + title */}
         <div className="flex items-baseline gap-4">
           <span className="text-xs tracking-widest text-white/40">{k}</span>
-          <h3 className="text-2xl sm:text-3xl font-semibold text-white">
-            {title}
-          </h3>
+          <h3 className="text-2xl sm:text-3xl font-semibold text-white">{title}</h3>
         </div>
 
         {/* connector (visible only on desktop/tablet) */}
@@ -85,9 +72,7 @@ function Stripe({
           {/* red line */}
           <span className="h-[2px] w-full bg-[#CC2224] rounded-full" />
           {/* arrow head */}
-          <span
-            className="absolute right-0 w-3 h-3 border-t-2 border-r-2 border-[#CC2224] rotate-45 translate-x-[4px]"
-          />
+          <span className="absolute right-0 w-3 h-3 border-t-2 border-r-2 border-[#CC2224] rotate-45 translate-x-[4px]" />
         </div>
 
         {/* right: one-line value */}

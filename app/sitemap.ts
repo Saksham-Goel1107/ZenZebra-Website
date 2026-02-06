@@ -1,8 +1,8 @@
-import { MetadataRoute } from 'next'
+import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://zenzebra.in'
-  
+  const baseUrl = 'https://zenzebra.in';
+
   return [
     {
       url: baseUrl,
@@ -40,5 +40,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.7,
     },
-  ]
+  ];
 }

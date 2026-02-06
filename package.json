@@ -2,11 +2,25 @@
   "name": "zenzebra-site",
   "version": "1.0.0",
   "private": true,
+  "author": "Saksham-Goel1107",
+  "packageManager": "pnpm@10.28.2",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "**/*.{json,md}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@heroicons/react": "latest",
@@ -25,9 +39,12 @@
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "eslint": "latest",
+    "eslint": "8.57.0",
     "eslint-config-next": "latest",
     "framer-motion": "latest",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.8.1",
     "tailwindcss": "latest",
     "typescript": "latest"
   }

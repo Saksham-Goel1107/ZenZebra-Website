@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { m } from "framer-motion";
-import Link from "next/link";
-import dynamic from "next/dynamic";
+import { m } from 'framer-motion';
+import Link from 'next/link';
+import dynamic from 'next/dynamic';
 
-const Ticker = dynamic(() => import("@/components/Ticker"));
+const Ticker = dynamic(() => import('@/components/Ticker'));
 
 /* -------------------- Hero -------------------- */
 export function Hero() {
@@ -19,8 +19,7 @@ export function Hero() {
           viewport={{ once: true }}
           className="text-4xl sm:text-6xl font-extrabold tracking-tight"
         >
-          Where Good Taste Gets{" "}
-          <span className="text-[#CC2224]">Discovered</span> - Offline
+          Where Good Taste Gets <span className="text-[#CC2224]">Discovered</span> - Offline
         </m.h1>
         <m.p
           initial={{ opacity: 0 }}
@@ -29,9 +28,8 @@ export function Hero() {
           viewport={{ once: true }}
           className="mt-4 max-w-2xl text-white/75"
         >
-          ZenZebra turns your brand into a real-world moment of discovery -
-          inside coworking spaces, hotels, and cafés where people pause, touch,
-          and share.
+          ZenZebra turns your brand into a real-world moment of discovery - inside coworking spaces,
+          hotels, and cafés where people pause, touch, and share.
         </m.p>
 
         <m.div
@@ -59,16 +57,16 @@ export function Hero() {
 export function WhyJoin() {
   const items = [
     {
-      title: "Emotional Reach",
-      text: "Turn impulse into emotion. Be part of stories shared over breaks - not ads.",
+      title: 'Emotional Reach',
+      text: 'Turn impulse into emotion. Be part of stories shared over breaks - not ads.',
     },
     {
-      title: "Physical Discovery",
-      text: "Touch. Feel. Try. Be present in the real world, right where your audience is.",
+      title: 'Physical Discovery',
+      text: 'Touch. Feel. Try. Be present in the real world, right where your audience is.',
     },
     {
-      title: "Smart Curation",
-      text: "Every placement is intentional - matched to location, vibe, and audience.",
+      title: 'Smart Curation',
+      text: 'Every placement is intentional - matched to location, vibe, and audience.',
     },
   ];
 
@@ -81,8 +79,7 @@ export function WhyJoin() {
           viewport={{ once: true }}
           className="text-3xl sm:text-5xl font-extrabold tracking-tight"
         >
-          More Than Placement -{" "}
-          <span className="text-[#CC2224]">It’s Presence</span>
+          More Than Placement - <span className="text-[#CC2224]">It’s Presence</span>
         </m.h2>
         <p className="mt-3 text-white/70">
           Built for how modern consumers discover, feel, and share.
@@ -99,9 +96,7 @@ export function WhyJoin() {
               className="rounded-2xl bg-white/[0.04] backdrop-blur-xl ring-1 ring-white/10 p-6"
             >
               <h3 className="text-xl font-semibold">{it.title}</h3>
-              <p className="mt-3 text-sm text-white/70 leading-relaxed">
-                {it.text}
-              </p>
+              <p className="mt-3 text-sm text-white/70 leading-relaxed">{it.text}</p>
             </m.div>
           ))}
         </div>
@@ -113,10 +108,10 @@ export function WhyJoin() {
 /* -------------------- Network -------------------- */
 export function Network() {
   const tiles = [
-    { title: "Coworking", line: "Smartworks, WeWork & more" },
-    { title: "Hospitality", line: "Hotels, spas, resorts" },
-    { title: "Cafés & Lounges", line: "High-dwell social hubs" },
-    { title: "Universities", line: "Youthful, high-intent zones" },
+    { title: 'Coworking', line: 'Smartworks, WeWork & more' },
+    { title: 'Hospitality', line: 'Hotels, spas, resorts' },
+    { title: 'Cafés & Lounges', line: 'High-dwell social hubs' },
+    { title: 'Universities', line: 'Youthful, high-intent zones' },
   ];
   return (
     <section className="relative overflow-hidden py-20 px-6">
@@ -158,16 +153,16 @@ export function Network() {
 export function WhatYouGet() {
   const points = [
     {
-      title: "Real-world visibility",
-      text: "Show up where your audience works, unwinds, and shares - not just where they scroll.",
+      title: 'Real-world visibility',
+      text: 'Show up where your audience works, unwinds, and shares - not just where they scroll.',
     },
     {
-      title: "Placement that fits",
-      text: "Data-curated by space, vibe, and income profile. Your brand belongs where it performs.",
+      title: 'Placement that fits',
+      text: 'Data-curated by space, vibe, and income profile. Your brand belongs where it performs.',
     },
     {
-      title: "Measurable engagement",
-      text: "Trials, footfall, sentiment - beyond vanity metrics.",
+      title: 'Measurable engagement',
+      text: 'Trials, footfall, sentiment - beyond vanity metrics.',
     },
   ];
 
@@ -180,8 +175,7 @@ export function WhatYouGet() {
           viewport={{ once: true }}
           className="text-3xl sm:text-5xl font-extrabold tracking-tight"
         >
-          Designed for Brands{" "}
-          <span className="text-[#CC2224]">That Get It</span>
+          Designed for Brands <span className="text-[#CC2224]">That Get It</span>
         </m.h2>
 
         <div className="mt-10 space-y-4">
@@ -248,8 +242,8 @@ export function FinalCTA() {
           Join the <span className="text-[#CC2224]">Dazzle</span>
         </m.h3>
         <p className="mt-3 max-w-2xl text-white/75">
-          Bring your brand where people actually feel something. Let’s co-create
-          moments of discovery - together.
+          Bring your brand where people actually feel something. Let’s co-create moments of
+          discovery - together.
         </p>
 
         <div className="mt-8">

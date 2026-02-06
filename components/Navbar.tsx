@@ -1,20 +1,20 @@
-"use client";
-import { m } from "framer-motion";
-import MenuItem from "./MenuItem";
-import { useEffect, useState } from "react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/16/solid";
-import Link from "next/link";
-import Image from "next/image";
+'use client';
+import { m } from 'framer-motion';
+import MenuItem from './MenuItem';
+import { useEffect, useState } from 'react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/16/solid';
+import Link from 'next/link';
+import Image from 'next/image';
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
 
   const navItems = [
-    { label: "Home", href: "/" },
-    { label: "Brands", href: "/brands" },
-    { label: "Partners", href: "/partners" },
-    { label: "Zen at home", href: "/zen-at-home" },
-    { label: "Contact", href: "/contact" },
+    { label: 'Home', href: '/' },
+    { label: 'Brands', href: '/brands' },
+    { label: 'Partners', href: '/partners' },
+    { label: 'Zen at home', href: '/zen-at-home' },
+    { label: 'Contact', href: '/contact' },
   ];
 
   useEffect(() => {
@@ -25,33 +25,30 @@ function Navbar() {
       lastY = currentY;
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
     <m.nav
       initial={{ y: -100 }}
       animate={{ y: isHidden ? -80 : 0 }}
-      transition={{ duration: 0.4, ease: "easeInOut" }}
+      transition={{ duration: 0.4, ease: 'easeInOut' }}
       className="fixed w-full top-0 left-0 right-0 z-50 bg-[#1c1c1c]/60 backdrop-blur-3xl 
       transition-all duration-300 ease-out text-white/70 border-white/10"
     >
       <div className="max-w-full px-6 py-3 ">
         <div className="flex justify-between items-center">
           <div className="flex items-center md:gap-3">
-            <m.div
-              whileHover={{ scale: 1.1 }}
-              transition={{ duration: 1.05, ease: "easeOut" }}
-            >
-              <Link href={"/"} aria-label="ZenZebra Home">
+            <m.div whileHover={{ scale: 1.1 }} transition={{ duration: 1.05, ease: 'easeOut' }}>
+              <Link href={'/'} aria-label="ZenZebra Home">
                 <Image
                   src="https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/6985926d0013323cc0ca/view?project=698585dc0014c943f45e&mode=admin"
                   width={175}
                   height={175}
                   alt="ZenZebra Logo"
                   priority
-                  style={{ width: "auto", height: "auto" }}
+                  style={{ width: 'auto', height: 'auto' }}
                 />
               </Link>
             </m.div>
@@ -67,7 +64,7 @@ function Navbar() {
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className=" md:hidden bg-white/5 hover:bg-blue-100/10 p-2 rounded-lg transition-colors"
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isMenuOpen}
           >
             {isMenuOpen ? (

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
 type LazyVideoProps = React.VideoHTMLAttributes<HTMLVideoElement> & {
   src: string;
@@ -23,21 +23,20 @@ export default function LazyVideo({ src, className, ...props }: LazyVideoProps) 
           }
         });
       },
-      { rootMargin: "400px" } 
+      { rootMargin: '400px' },
     );
 
     const playObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            videoEl.play().catch(() => {
-            });
+            videoEl.play().catch(() => {});
           } else {
             videoEl.pause();
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     loadObserver.observe(videoEl);
@@ -52,12 +51,12 @@ export default function LazyVideo({ src, className, ...props }: LazyVideoProps) 
   return (
     <video
       ref={videoRef}
-      src={shouldLoad ? src : undefined} 
+      src={shouldLoad ? src : undefined}
       className={className}
       muted
       loop
       playsInline
-      preload={shouldLoad ? "auto" : "none"}
+      preload={shouldLoad ? 'auto' : 'none'}
       {...props}
     />
   );

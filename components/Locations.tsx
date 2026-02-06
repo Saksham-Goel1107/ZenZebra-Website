@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, A11y } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import { m } from "framer-motion";
-import { MapPin } from "lucide-react";
-import Image from "next/image";
-import LazyVideo from "@/components/LazyVideo";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, A11y } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { m } from 'framer-motion';
+import { MapPin } from 'lucide-react';
+import Image from 'next/image';
+import LazyVideo from '@/components/LazyVideo';
 
 export default function Locations() {
   return (
@@ -18,7 +18,7 @@ export default function Locations() {
         <m.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
           viewport={{ once: true }}
           className="text-center text-4xl sm:text-5xl font-bold text-[#f5f5f5]"
         >
@@ -60,8 +60,7 @@ export default function Locations() {
                     <span>Awfis, Ambience Mall - Gurugram</span>
                   </div>
                   <p className="mt-2 text-sm text-[#353535]/70">
-                    Discover top brands and try them before you buy inside
-                    Ambience Mall.
+                    Discover top brands and try them before you buy inside Ambience Mall.
                   </p>
                 </div>
               </m.div>
@@ -89,8 +88,7 @@ export default function Locations() {
                     <span>Smartworks - Gurugram</span>
                   </div>
                   <p className="mt-2 text-sm text-[#353535]/70">
-                    Experience ZenZebra at the heart of Gurugram’s professional
-                    spaces.
+                    Experience ZenZebra at the heart of Gurugram’s professional spaces.
                   </p>
                 </div>
               </m.div>
@@ -118,8 +116,7 @@ export default function Locations() {
                     <span>The Lodhi - New Delhi</span>
                   </div>
                   <p className="mt-2 text-sm text-[#353535]/70">
-                    A luxurious experience meets better living - right where you
-                    unwind.
+                    A luxurious experience meets better living - right where you unwind.
                   </p>
                 </div>
               </m.div>
@@ -136,7 +133,15 @@ export default function Locations() {
                 className="rounded-xl bg-white text-[#353535] shadow-xl overflow-hidden"
               >
                 <div className="relative aspect-[3/4] bg-black">
-                  <Image src={'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698593a40025156f230b/view?project=698585dc0014c943f45e&mode=admin'} alt="coming soon" width={600} height={800} className="w-full h-full object-cover" />
+                  <Image
+                    src={
+                      'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698593a40025156f230b/view?project=698585dc0014c943f45e&mode=admin'
+                    }
+                    alt="coming soon"
+                    width={600}
+                    height={800}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="p-5">
                   <div className="flex items-center gap-2 text-[#CC2224] font-semibold text-sm">
@@ -144,13 +149,12 @@ export default function Locations() {
                     <span>More locations loading...</span>
                   </div>
                   <p className="mt-2 text-sm text-[#353535]/70">
-                    <br/>
-                    <br/>
+                    <br />
+                    <br />
                   </p>
                 </div>
               </m.div>
             </SwiperSlide>
-
           </Swiper>
         </div>
       </div>

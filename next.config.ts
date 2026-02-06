@@ -1,27 +1,27 @@
-import { withSentryConfig } from "@sentry/nextjs";
-import type { NextConfig } from "next";
+import { withSentryConfig } from '@sentry/nextjs';
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "fra.cloud.appwrite.io",
+        protocol: 'https',
+        hostname: 'fra.cloud.appwrite.io',
       },
     ],
   },
 };
 
 export default withSentryConfig(nextConfig, {
-  org: "zenzebra",
+  org: 'zenzebra',
 
-  project: "javascript-nextjs",
+  project: 'javascript-nextjs',
 
   silent: !process.env.CI,
 
   widenClientFileUpload: true,
 
-  tunnelRoute: "/monitoring",
+  tunnelRoute: '/monitoring',
 
   webpack: {
     automaticVercelMonitors: true,
@@ -29,5 +29,5 @@ export default withSentryConfig(nextConfig, {
     treeshake: {
       removeDebugLogging: true,
     },
-  }
+  },
 });

@@ -1,27 +1,21 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  ChevronDown,
-  ExternalLink,
-  MapPin,
-  FileText,
-  ArrowRight,
-} from "lucide-react";
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown, ExternalLink, MapPin, FileText, ArrowRight } from 'lucide-react';
 
 const LOCATIONS = [
   {
-    label: "Smartworks - Gurugram",
-    file: "https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/6985948c0032c75accac/view?project=698585dc0014c943f45e&mode=admin",
+    label: 'Smartworks - Gurugram',
+    file: 'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/6985948c0032c75accac/view?project=698585dc0014c943f45e&mode=admin',
   },
   {
-    label: "Awfis - Ambience Mall, Gurugram",
-    file: "https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698594700032770b178b/view?project=698585dc0014c943f45e&mode=admin",
+    label: 'Awfis - Ambience Mall, Gurugram',
+    file: 'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698594700032770b178b/view?project=698585dc0014c943f45e&mode=admin',
   },
   {
-    label: "The Lodhi - New Delhi",
-    file: "https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/69859478003d9e1fab8d/view?project=698585dc0014c943f45e&mode=admin",
+    label: 'The Lodhi - New Delhi',
+    file: 'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/69859478003d9e1fab8d/view?project=698585dc0014c943f45e&mode=admin',
   },
 ];
 
@@ -29,8 +23,7 @@ export default function CataloguePage() {
   const [selected, setSelected] = useState(LOCATIONS[0].file);
   const [isOpen, setIsOpen] = useState(false);
 
-  const currentLabel =
-    LOCATIONS.find((l) => l.file === selected)?.label || "Select Location";
+  const currentLabel = LOCATIONS.find((l) => l.file === selected)?.label || 'Select Location';
 
   return (
     <main className="min-h-screen bg-[#050505] text-white flex flex-col items-center px-6 py-24 relative overflow-hidden">
@@ -50,7 +43,7 @@ export default function CataloguePage() {
               Curated Collections
             </h2>
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white leading-tight">
-              Explore Our{" "}
+              Explore Our{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/60">
                 Catalogue
               </span>
@@ -63,8 +56,7 @@ export default function CataloguePage() {
             transition={{ delay: 0.1 }}
             className="text-white/60 text-lg md:text-xl leading-relaxed"
           >
-            Discover handpicked products and experiences tailored for your
-            specific workspace.
+            Discover handpicked products and experiences tailored for your specific workspace.
           </motion.p>
         </div>
 
@@ -86,23 +78,20 @@ export default function CataloguePage() {
                   <MapPin className="w-5 h-5" />
                 </div>
                 <span
-                  className={`block truncate text-base font-medium ${!selected ? "text-white/50" : "text-white"}`}
+                  className={`block truncate text-base font-medium ${!selected ? 'text-white/50' : 'text-white'}`}
                 >
                   {currentLabel}
                 </span>
               </div>
               <ChevronDown
-                className={`w-5 h-5 text-white/40 transition-transform duration-300 group-hover:text-white/70 ${isOpen ? "rotate-180" : ""}`}
+                className={`w-5 h-5 text-white/40 transition-transform duration-300 group-hover:text-white/70 ${isOpen ? 'rotate-180' : ''}`}
               />
             </button>
 
             <AnimatePresence>
               {isOpen && (
                 <>
-                  <div
-                    className="fixed inset-0 z-30"
-                    onClick={() => setIsOpen(false)}
-                  />
+                  <div className="fixed inset-0 z-30" onClick={() => setIsOpen(false)} />
                   <motion.div
                     initial={{ opacity: 0, y: 8, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -119,8 +108,8 @@ export default function CataloguePage() {
                         }}
                         className={`w-full flex items-center justify-between px-4 py-3 text-sm rounded-lg transition-all group ${
                           selected === loc.file
-                            ? "bg-white/10 text-white"
-                            : "text-white/60 hover:text-white hover:bg-white/5"
+                            ? 'bg-white/10 text-white'
+                            : 'text-white/60 hover:text-white hover:bg-white/5'
                         }`}
                       >
                         <span className="font-medium">{loc.label}</span>
@@ -140,7 +129,7 @@ export default function CataloguePage() {
 
           {/* Action Button */}
           <button
-            onClick={() => selected && window.open(selected, "_blank")}
+            onClick={() => selected && window.open(selected, '_blank')}
             disabled={!selected}
             className="w-full md:w-auto min-w-[200px] flex items-center justify-center gap-2.5 px-6 py-4 bg-[#CC2224] text-white font-medium rounded-xl hover:bg-[#b01c1e] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-[0_8px_20px_rgba(204,34,36,0.25)] hover:shadow-[0_12px_30px_rgba(204,34,36,0.4)]"
           >
@@ -181,12 +170,8 @@ export default function CataloguePage() {
                 </div>
               </div>
               <div className="text-center">
-                <h3 className="text-xl font-medium text-white/80">
-                  No Catalogue Selected
-                </h3>
-                <p className="mt-2 text-white/40">
-                  Please choose a location to view its catalogue
-                </p>
+                <h3 className="text-xl font-medium text-white/80">No Catalogue Selected</h3>
+                <p className="mt-2 text-white/40">Please choose a location to view its catalogue</p>
               </div>
             </div>
           )}
