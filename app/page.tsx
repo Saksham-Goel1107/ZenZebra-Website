@@ -7,6 +7,7 @@ import What from '@/components/what';
 import Why from '@/components/why';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import StoreAppleScroll from '@/components/StoreScrollAnimation.';
 const Ticker = dynamic(() => import('@/components/Ticker'));
 const Locations = dynamic(() => import('@/components/Locations'));
 
@@ -94,6 +95,7 @@ export default function Home() {
         />
       </div>
       <OurPromise />
+      <StoreAppleScroll />
     </main>
   );
 }

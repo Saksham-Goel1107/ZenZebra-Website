@@ -1,4 +1,15 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
 
 .swiper-button-next,
 .swiper-button-prev {
@@ -75,7 +86,7 @@
 }
 
 .swiper-pagination-bullet::after {
-  content: "";
+  content: '';
   position: absolute;
   top: -10px;
   bottom: -10px;
@@ -86,4 +97,36 @@
 .swiper-pagination-bullet-active {
   opacity: 1;
   background: #cc2224 !important;
+}
+
+/* test from here */
+.scroll-root {
+  height: 350vh;
+  background: #000;
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  perspective: 1600px;
+  transform-style: preserve-3d;
+}
+
+.hero {
+  width: min(80vw, 1100px);
+  transform-style: preserve-3d;
+}
+
+.hero img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
 }

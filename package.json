@@ -26,6 +26,7 @@
     "@heroicons/react": "latest",
     "@sentry/nextjs": "^10.38.0",
     "firebase": "^12.8.0",
+    "gsap": "^3.14.2",
     "lucide-react": "latest",
     "motion": "latest",
     "next": "latest",
@@ -45,6 +46,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
+    "require-in-the-middle": "^8.0.1",
     "tailwindcss": "latest",
     "typescript": "latest"
   }
