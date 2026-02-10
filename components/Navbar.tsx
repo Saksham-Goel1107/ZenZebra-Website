@@ -1,13 +1,18 @@
 'use client';
-import { m } from 'framer-motion';
-import MenuItem from './MenuItem';
-import { useEffect, useState } from 'react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/16/solid';
-import Link from 'next/link';
+import { m } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import MenuItem from './MenuItem';
+
 function Navbar() {
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
+
+  if (pathname?.startsWith('/admin-login')) return null;
 
   const navItems = [
     { label: 'Home', href: '/' },
@@ -34,7 +39,7 @@ function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: isHidden ? -80 : 0 }}
       transition={{ duration: 0.4, ease: 'easeInOut' }}
-      className="fixed w-full top-0 left-0 right-0 z-50 bg-[#1c1c1c]/60 backdrop-blur-3xl 
+      className="fixed w-full top-0 left-0 right-0 z-50 bg-[#1c1c1c]/60 backdrop-blur-3xl
       transition-all duration-300 ease-out text-white/70 border-white/10"
     >
       <div className="max-w-full px-6 py-3 ">

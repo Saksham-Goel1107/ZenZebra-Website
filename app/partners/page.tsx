@@ -47,7 +47,7 @@ export default function PartnersPage() {
     <main className="bg-black text-white relative">
       <Image
         src={
-          '/https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/69858f000011da237d9a/view?project=698585dc0014c943f45e&mode=admin.jpg'
+          'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/69858f000011da237d9a/view?project=698585dc0014c943f45e&mode=admin.jpg'
         }
         alt="blob image 1"
         width={1920}

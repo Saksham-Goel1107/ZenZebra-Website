@@ -1,15 +1,34 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { account } from '@/lib/appwrite';
-import { ArrowRight, Loader2, Lock, Mail, ShieldCheck } from 'lucide-react';
+import { OAuthProvider } from 'appwrite';
+import { ArrowLeft, ArrowRight, Eye, EyeOff, Loader2, Lock, Mail, ShieldCheck, Smartphone } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+
+const GoogleIcon = () => (
+    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M23.5201 12.2901C23.5201 11.4701 23.44 10.6801 23.2901 9.92006H11.9601V14.3901H18.4901C18.2301 15.9301 17.3701 17.2901 16.0501 18.2601L16.0203 18.397L19.8277 21.3653L20.0901 21.3901C22.4601 19.1901 23.8301 15.9601 23.5201 12.2901Z" fill="#4285F4" />
+        <path d="M11.96 24.0001C15.15 24.0001 17.89 22.9201 19.95 20.9701H19.9499L15.92 17.8201C14.82 18.5901 13.43 18.9902 11.96 18.9902C8.84 18.9902 6.13 16.9201 5.15001 14.1101L5.02324 14.1206L1.10702 17.167L1.06006 17.2901C3.12006 21.4101 7.33003 24.0001 11.96 24.0001Z" fill="#34A853" />
+        <path d="M5.15004 14.1101C4.63004 12.5601 4.63004 10.8901 5.15004 9.34005L5.14389 9.20625L1.20038 6.13013L1.11003 6.20005C-0.349969 9.09005 -0.349969 12.5001 1.11003 15.3901L5.15004 14.1101Z" fill="#FBBC05" />
+        <path d="M11.96 5.01004C13.62 4.97004 15.23 5.58004 16.48 6.75004L19.98 3.25004C17.78 1.17004 14.92 -0.0199589 11.96 0.000141094C7.33003 0.000141094 3.12006 2.59005 1.06006 6.71005L5.15001 9.90005C6.12001 7.08005 8.83003 5.01004 11.96 5.01004Z" fill="#EA4335" />
+    </svg>
+);
 
 export default function AdminLogin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    // MFA State
+    const [mfaRequired, setMfaRequired] = useState(false);
+    const [totpCode, setTotpCode] = useState('');
+    const [challengeId, setChallengeId] = useState('');
+
     const router = useRouter();
 
     const handleLogin = async (e: React.FormEvent) => {
@@ -19,12 +38,71 @@ export default function AdminLogin() {
 
         try {
             await account.createEmailPasswordSession(email, password);
+
+            // Success! But check if MFA is required for this session
+            const user = await account.get();
+            if (user.mfa) {
+                const challenge = await account.createMFAChallenge({ factor: 'totp' as any });
+                setChallengeId(challenge.$id);
+                setMfaRequired(true);
+                setLoading(false);
+                return;
+            }
+
             router.push('/admin-login/catalogue-dashboard');
         } catch (err: any) {
-            console.error(err);
+            console.log('Login error caught:', err);
+
+            // If error is "More factors are required", it means login was correct but we need MFA
+            if (err.message?.includes('factors') || err.type === 'user_more_factors_required') {
+                console.log('MFA is confirmed required (via Exception), creating challenge...');
+                try {
+                    const challenge = await account.createMFAChallenge({ factor: 'totp' as any });
+                    console.log('MFA Challenge created:', challenge);
+                    setChallengeId(challenge.$id);
+                    setMfaRequired(true);
+                    setLoading(false);
+                    return; // Stop here and show MFA UI
+                } catch (mfaErr: any) {
+                    console.error('Failed to create MFA challenge:', mfaErr);
+                    setError('Login succeeded but failed to start MFA: ' + mfaErr.message);
+                    setLoading(false);
+                    return;
+                }
+            }
+
             setError(err.message || 'Login failed. Please check your credentials.');
-        } finally {
             setLoading(false);
+        }
+    };
+
+    const handleMfaVerify = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+
+        try {
+            console.log('Verifying MFA challenge...', { challengeId, totpCode });
+            await account.updateMFAChallenge({ challengeId, otp: totpCode });
+            console.log('MFA verified, redirecting...');
+            router.push('/admin-login/catalogue-dashboard');
+        } catch (err: any) {
+            console.error('MFA verification error:', err);
+            setError(err.message || 'Invalid code. Please try again.');
+            setLoading(false);
+        }
+    };
+
+    const handleGoogleLogin = () => {
+        try {
+            account.createOAuth2Session(
+                OAuthProvider.Google,
+                `${window.location.origin}/admin-login/catalogue-dashboard`,
+                `${window.location.origin}/admin-login`
+            );
+        } catch (e: any) {
+            console.error(e);
+            setError('Failed to initialize Google Login');
         }
     };
 
@@ -43,59 +121,136 @@ export default function AdminLogin() {
                     <p className="text-white/40 mt-2 text-sm">Secure access for authorized personnel only</p>
                 </div>
 
-                <div className="bg-[#111] bg-opacity-80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+                <div className="bg-[#111] bg-opacity-80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+                    {/* Subtle Grid Pattern Overlay */}
+                    <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
+
                     {error && (
-                        <div className="mb-6 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
+                        <div className="mb-6 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center relative z-10 animate-in fade-in slide-in-from-top-2">
                             {error}
                         </div>
                     )}
 
-                    <form onSubmit={handleLogin} className="space-y-5">
-                        <div className="space-y-2">
-                            <label className="text-xs font-medium uppercase tracking-wider text-white/50 nl-1">Email Address</label>
-                            <div className="relative group">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 group-focus-within:text-[#CC2224] transition-colors" />
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full bg-black/40 border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-white placeholder:text-white/20 focus:outline-none focus:border-[#CC2224]/50 focus:ring-1 focus:ring-[#CC2224]/50 transition-all font-medium"
-                                    placeholder="admin@zenzebra.in"
+                    {mfaRequired ? (
+                        <form onSubmit={handleMfaVerify} className="space-y-6 relative z-10 animate-in fade-in slide-in-from-right-4">
+                            <div className="text-center space-y-2">
+                                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/5 mb-2">
+                                    <Smartphone className="w-6 h-6 text-white/80" />
+                                </div>
+                                <h3 className="text-lg font-semibold text-white">Two-Factor Authentication</h3>
+                                <p className="text-white/50 text-sm">
+                                    Enter the 6-digit code from your authenticator app to continue.
+                                </p>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Input
+                                    value={totpCode}
+                                    onChange={(e) => setTotpCode(e.target.value)}
+                                    className="w-full bg-black/40 border-white/10 text-white placeholder:text-white/20 text-center text-2xl tracking-[0.5em] font-mono h-14 focus-visible:ring-[#CC2224] focus-visible:border-[#CC2224]"
+                                    placeholder="000000"
+                                    maxLength={6}
+                                    autoFocus
+                                    inputMode="numeric"
                                     required
                                 />
                             </div>
-                        </div>
 
-                        <div className="space-y-2">
-                            <label className="text-xs font-medium uppercase tracking-wider text-white/50 nl-1">Password</label>
-                            <div className="relative group">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 group-focus-within:text-[#CC2224] transition-colors" />
-                                <input
-                                    type="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full bg-black/40 border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-white placeholder:text-white/20 focus:outline-none focus:border-[#CC2224]/50 focus:ring-1 focus:ring-[#CC2224]/50 transition-all font-medium"
-                                    placeholder="••••••••"
-                                    required
-                                />
+                            <Button
+                                type="submit"
+                                disabled={loading || totpCode.length !== 6}
+                                className="w-full py-6 bg-[#CC2224] hover:bg-[#b01c1e] text-white rounded-xl font-semibold transition-all"
+                            >
+                                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Verify & Login"}
+                            </Button>
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setMfaRequired(false);
+                                    setTotpCode('');
+                                    setError('');
+                                    // Optionally logout implicitly? No, just go back to login form.
+                                }}
+                                className="w-full text-xs text-white/30 hover:text-white transition-colors flex items-center justify-center gap-1"
+                            >
+                                <ArrowLeft className="w-3 h-3" /> Back to login
+                            </button>
+                        </form>
+                    ) : (
+                        <form onSubmit={handleLogin} className="space-y-5 relative z-10 animate-in fade-in slide-in-from-left-4">
+                            <div className="space-y-2">
+                                <label className="text-xs font-medium uppercase tracking-wider text-white/50 ml-1">Email Address</label>
+                                <div className="relative group">
+                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 group-focus-within:text-[#CC2224] transition-colors" />
+                                    <Input
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className="w-full bg-black/40 border border-white/10 rounded-xl py-6 pl-12 pr-4 text-white placeholder:text-white/20 focus-visible:ring-1 focus-visible:ring-[#CC2224]/50 focus-visible:border-[#CC2224]/50 transition-all font-medium"
+                                        placeholder="admin@zenzebra.in"
+                                        required
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full group relative flex items-center justify-center gap-2 py-4 px-4 bg-[#CC2224] hover:bg-[#b01c1e] text-white rounded-xl font-semibold transition-all shadow-[0_8px_20px_rgba(204,34,36,0.25)] hover:shadow-[0_12px_30px_rgba(204,34,36,0.4)] disabled:opacity-50 disabled:cursor-not-allowed mt-2"
-                        >
-                            {loading ? (
-                                <Loader2 className="w-5 h-5 animate-spin" />
-                            ) : (
-                                <>
-                                    <span>Sign in to Dashboard</span>
-                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                </>
-                            )}
-                        </button>
-                    </form>
+                            <div className="space-y-2">
+                                <label className="text-xs font-medium uppercase tracking-wider text-white/50 ml-1">Password</label>
+                                <div className="relative group">
+                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 group-focus-within:text-[#CC2224] transition-colors" />
+                                    <Input
+                                        type={showPassword ? 'text' : 'password'}
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        className="w-full bg-black/40 border border-white/10 rounded-xl py-6 pl-12 pr-12 text-white placeholder:text-white/20 focus-visible:ring-1 focus-visible:ring-[#CC2224]/50 focus-visible:border-[#CC2224]/50 transition-all font-medium"
+                                        placeholder="••••••••"
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-white/30 hover:text-white transition-colors"
+                                    >
+                                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <Button
+                                type="submit"
+                                disabled={loading}
+                                className="w-full group relative flex items-center justify-center gap-2 py-6 px-4 bg-[#CC2224] hover:bg-[#b01c1e] text-white rounded-xl font-semibold transition-all shadow-[0_8px_20px_rgba(204,34,36,0.25)] hover:shadow-[0_12px_30px_rgba(204,34,36,0.4)] disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                            >
+                                {loading ? (
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                ) : (
+                                    <>
+                                        <span>Sign in</span>
+                                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                    </>
+                                )}
+                            </Button>
+
+                            <div className="relative">
+                                <div className="absolute inset-0 flex items-center">
+                                    <div className="w-full border-t border-white/10"></div>
+                                </div>
+                                <div className="relative flex justify-center text-xs uppercase">
+                                    <span className="bg-[#111] px-2 text-white/40 tracking-wider">Or continue with</span>
+                                </div>
+                            </div>
+
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={handleGoogleLogin}
+                                className="w-full flex items-center justify-center gap-3 py-6 px-4 bg-white hover:bg-gray-100 text-black rounded-xl font-semibold transition-all shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:shadow-[0_6px_16px_rgba(255,255,255,0.1)]"
+                            >
+                                <GoogleIcon />
+                                <span>Sign in with Google</span>
+                            </Button>
+                        </form>
+                    )}
                 </div>
 
                 <p className="text-center text-xs text-white/20 mt-8">

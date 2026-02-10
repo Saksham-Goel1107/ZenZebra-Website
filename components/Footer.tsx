@@ -1,11 +1,17 @@
 'use client';
 
 import { m } from 'framer-motion';
-import Link from 'next/link';
 import { Instagram, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
+
+import { usePathname } from 'next/navigation';
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  if (pathname?.startsWith('/admin-login')) return null;
+
   return (
     <footer className="bg-black text-white py-16 px-6">
       <div className="border-t border-white/10 mt-12 pt-6 text-center text-xs text-white/60"></div>
