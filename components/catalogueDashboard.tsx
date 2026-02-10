@@ -14,13 +14,12 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { account, appwriteConfig, default as client, databases, storage } from '@/lib/appwrite';
-import { ID, Models, Query, RealtimeResponseEvent } from 'appwrite';
+import { appwriteConfig, default as client, databases, storage } from '@/lib/appwrite';
+import { ID, Query, RealtimeResponseEvent } from 'appwrite';
 import { CheckCircle2, Edit2, FileUp, Loader2, Trash2, XCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from "sonner";
-import { AdminProfile } from './AdminProfile';
 
 type Row = {
   id: string;
@@ -35,9 +34,7 @@ export default function CatalogueDashboard() {
   const router = useRouter();
 
   const [rows, setRows] = useState<Row[]>([]);
-  const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
   const [label, setLabel] = useState('');
-  // URL is now purely derived from upload, or existing if editing
   const [url, setUrl] = useState('');
   const [active, setActive] = useState(true);
 
@@ -48,8 +45,6 @@ export default function CatalogueDashboard() {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const formRef = useRef<HTMLDivElement | null>(null);
-
-
 
   const fetchLocations = async () => {
     try {
@@ -73,17 +68,6 @@ export default function CatalogueDashboard() {
   };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const u = await account.get();
-        setUser(u);
-        setUser(u);
-      } catch (error) {
-        console.error('Failed to fetch user:', error);
-      }
-    };
-
-    fetchUser();
     fetchLocations();
     // Realtime subscription
     const unsubscribe = client.subscribe(
@@ -108,14 +92,12 @@ export default function CatalogueDashboard() {
     setFile(null);
     setEditingId(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
-    // Scroll to top of form gently
     if (formRef.current) {
       formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
   const uploadPdfIfAny = async (): Promise<string> => {
-    // If we have a new file, upload it
     if (file) {
       const isPdfByType = (file.type || '').toLowerCase().includes('pdf');
       const isPdfByName = /\.pdf$/i.test(file.name);
@@ -128,15 +110,10 @@ export default function CatalogueDashboard() {
         file
       );
 
-      // Get the view URL
       const fileUrl = storage.getFileView(appwriteConfig.bucketId, uploadedFile.$id);
       return fileUrl.toString();
     }
-
-    // If no new file, but we have an existing URL (editing mode), return that
     if (url) return url;
-
-    // Otherwise error
     throw new Error('A PDF file is required.');
   };
 
@@ -153,7 +130,6 @@ export default function CatalogueDashboard() {
         return;
       }
 
-      // Removed 'updatedAt' from payload to fix 400 error
       const data = {
         label: label.trim(),
         url: finalUrl,
@@ -194,9 +170,7 @@ export default function CatalogueDashboard() {
     setFile(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
 
-    // Scroll to form so user sees they are editing
     if (formRef.current) {
-      // Add a small delay to ensure UI renders
       setTimeout(() => {
         formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 100);
@@ -226,26 +200,11 @@ export default function CatalogueDashboard() {
     }
   };
 
-  const logout = async () => {
-    try {
-      await account.deleteSession('current');
-      router.replace('/admin-login');
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  // Enable save if label exists AND (url exists from editOR file selected)
   const canSave = useMemo(() => !!label.trim() && (!!url || !!file), [label, url, file]);
 
   return (
     <section className="bg-[#050505] text-white font-sans selection:bg-[#CC2224] selection:text-white">
       <div className="mx-auto max-w-full px-6 pb-12 pt-6">
-
-        {/* User Profile Section */}
-        {user && (
-          <AdminProfile user={user} setUser={setUser} onLogout={logout} />
-        )}
 
         {/* Dashboard Header */}
         <div className="flex items-center justify-between mb-8">
@@ -257,7 +216,6 @@ export default function CatalogueDashboard() {
 
         {/* Editor Card */}
         <div ref={formRef} className="rounded-3xl border border-white/10 bg-[#111] p-8 shadow-2xl backdrop-blur-sm relative overflow-hidden z-10">
-          {/* Decorative gradients */}
           <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-[#CC2224]/5 blur-[100px] pointer-events-none" />
 
           <div className="flex flex-col md:flex-row md:items-center gap-3 mb-8 pb-6 border-b border-white/5">
@@ -272,7 +230,6 @@ export default function CatalogueDashboard() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Left Column */}
             <div className="space-y-6">
               <div className="space-y-2">
                 <Label className="text-white/60">Label Name</Label>
@@ -299,7 +256,6 @@ export default function CatalogueDashboard() {
               </div>
             </div>
 
-            {/* Right Column (File Upload) */}
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-white/60 mb-2">
@@ -339,7 +295,6 @@ export default function CatalogueDashboard() {
             </div>
           </div>
 
-          {/* Action Footer */}
           <div className="mt-10 pt-6 border-t border-white/5 flex gap-4">
             <Button
               disabled={!canSave || busy}
@@ -373,7 +328,6 @@ export default function CatalogueDashboard() {
           <h3 className="text-lg font-semibold text-white/80 px-2">Active Locations ({rows.length})</h3>
 
           <div className="rounded-2xl border border-white/10 bg-[#111] overflow-x-auto">
-            {/* Desktop Table View */}
             <div className="hidden md:block">
               <table className="w-full text-left border-collapse">
                 <thead>
@@ -451,7 +405,6 @@ export default function CatalogueDashboard() {
               </table>
             </div>
 
-            {/* Mobile Card View */}
             <div className="md:hidden divide-y divide-white/5">
               {rows.map((r) => (
                 <div key={r.id} className="p-4 space-y-3 bg-[#111]">

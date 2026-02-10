@@ -10,85 +10,85 @@ export default function MobileStoreScroll() {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
+    const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     const [loadingProgress, setLoadingProgress] = useState(0);
     const [isReady, setIsReady] = useState(false);
     const [blobUrl, setBlobUrl] = useState<string | null>(null);
     const [isIOS, setIsIOS] = useState(false);
 
-    // Detect iOS
+    const state = useRef({
+        targetTime: 0,
+        currentTime: 0,
+        lastAppliedTime: -1,
+    });
+
     useEffect(() => {
         const ua = navigator.userAgent.toLowerCase();
         const isIosDevice = /iphone|ipad|ipod/.test(ua);
         setIsIOS(isIosDevice);
     }, []);
 
-    // 1. Fetch Video Source
     useEffect(() => {
-        const videoUrl = "/WhatsApp%20Video%202026-02-09%20at%201.18.17%20PM(2).mp4";
+        const videoUrl = "IMG_9541.mp4";
 
         if (isIOS) {
-            // iOS: Fetch as Blob for smooth seeking on canvas
             const xhr = new XMLHttpRequest();
             xhr.open('GET', videoUrl, true);
             xhr.responseType = 'blob';
-
             xhr.onprogress = (event) => {
                 if (event.lengthComputable) {
-                    const percent = Math.round((event.loaded / event.total) * 100);
-                    setLoadingProgress(percent);
+                    setLoadingProgress(Math.round((event.loaded / event.total) * 100));
                 }
             };
-
             xhr.onload = () => {
                 if (xhr.status === 200) {
-                    const blob = xhr.response;
-                    const url = URL.createObjectURL(blob);
-                    setBlobUrl(url);
+                    setBlobUrl(URL.createObjectURL(xhr.response));
                 }
             };
-
             xhr.send();
-
-            return () => {
-                xhr.abort();
-                if (blobUrl) URL.revokeObjectURL(blobUrl);
-            };
+            return () => { if (blobUrl) URL.revokeObjectURL(blobUrl); };
         } else {
-            // Android/Desktop: Use direct URL for native streaming (smoothest)
             setBlobUrl(videoUrl);
             setIsReady(true);
         }
     }, [isIOS]);
 
-    // 2. Setup Animation
     useEffect(() => {
         if (!blobUrl || !containerRef.current || !videoRef.current) return;
 
         const video = videoRef.current;
-        const canvas = canvasRef.current; // might be null on non-iOS
-        let ctx: CanvasRenderingContext2D | null = null;
-
-        if (isIOS && canvas) {
-            ctx = canvas.getContext('2d');
-        }
+        const canvas = canvasRef.current;
+        const ctx = isIOS && canvas ? canvas.getContext('2d', { alpha: false }) : null;
 
         video.src = blobUrl;
         video.load();
 
         let ctxGsap: gsap.Context;
+        let frameId: number;
 
-        // Render function (iOS only)
         const render = () => {
-            if (!ctx || !video || !isIOS || !canvas) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (!ctx || !video || !isIOS || !canvas || video.readyState < 2) return;
+
+            const lerpFactor = 0.06;
+            state.current.currentTime += (state.current.targetTime - state.current.currentTime) * lerpFactor;
+
+            if (Math.abs(state.current.currentTime - state.current.lastAppliedTime) > 0.03) {
+                video.currentTime = state.current.currentTime;
+                state.current.lastAppliedTime = state.current.currentTime;
+            }
 
             const w = canvas.width;
             const h = canvas.height;
-            const vw = video.videoWidth || 1080;
-            const vh = video.videoHeight || 1920;
+            const vw = video.videoWidth;
+            const vh = video.videoHeight;
 
-            const scale = Math.max(w / vw, h / vh);
+            // SMART SCALE: A balanced compromise between "contain" and "cover"
+            // It zooms in enough to reduce empty space but doesn't crop the subject
+            const containScale = Math.min(w / vw, h / vh);
+            const coverScale = Math.max(w / vw, h / vh);
+            const scale = containScale + (coverScale - containScale) * 0.4; // 40% zoom towards cover
+
             const rw = vw * scale;
             const rh = vh * scale;
             const cx = (w - rw) / 2;
@@ -97,111 +97,105 @@ export default function MobileStoreScroll() {
             ctx.drawImage(video, cx, cy, rw, rh);
         };
 
-        const initScrollAnimation = () => {
-            ScrollTrigger.config({
-                ignoreMobileResize: true,
-                autoRefreshEvents: "visibilitychange,DOMContentLoaded,load"
-            });
-
-            ctxGsap = gsap.context(() => {
-                const vDur = (isFinite(video.duration) && video.duration > 0) ? video.duration : 20;
-
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: containerRef.current,
-                        start: 'top top',
-                        end: '+=5000',
-                        scrub: 1.5,
-                        pin: true,
-                        invalidateOnRefresh: true,
-                    },
-                });
-
-                tl.to(video, {
-                    currentTime: vDur - 0.1,
-                    duration: 1,
-                    ease: 'none',
-                    onUpdate: render,
-                });
-
-            }, containerRef);
-
-            ScrollTrigger.refresh();
-        };
-
-        const onLoadedMetadata = () => {
+        const initIOS = () => {
+            canvas!.width = window.innerWidth * (window.devicePixelRatio || 1);
+            canvas!.height = window.innerHeight * (window.devicePixelRatio || 1);
             setIsReady(true);
 
-            if (isIOS && canvas && ctx) {
-                // iOS: Setup Canvas and Scroll Animation
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                render();
-                initScrollAnimation();
-            } else {
-                // Android/Desktop: Native Loop (Start -> End)
-                // Reverse playback (yoyo) creates lag on mobile due to keyframe decoding
-                // So we stick to a smooth forward native loop for best performance
-                video.play().catch(e => console.log('Autoplay blocked', e));
-            }
+            ctxGsap = gsap.context(() => {
+                const vDur = video.duration || 6;
+                ScrollTrigger.create({
+                    trigger: containerRef.current,
+                    start: 'top top',
+                    end: '+=1500',
+                    pin: true,
+                    scrub: true,
+                    onUpdate: (self) => {
+                        state.current.targetTime = self.progress * (vDur - 0.1);
+                    }
+                });
+
+                const tick = () => {
+                    render();
+                    frameId = requestAnimationFrame(tick);
+                };
+                frameId = requestAnimationFrame(tick);
+            }, containerRef);
         };
 
-        video.addEventListener('loadedmetadata', onLoadedMetadata);
-
-        const handleResize = () => {
-            if (isIOS && canvas) {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                render();
-                ScrollTrigger.refresh();
-            }
+        const initAndroid = () => {
+            ctxGsap = gsap.context(() => {
+                const tl = gsap.timeline({ repeat: -1 });
+                const slides = contentRefs.current;
+                gsap.set(slides, { autoAlpha: 0, y: 20 });
+                slides.forEach((slide, i) => {
+                    if (!slide) return;
+                    tl.to(slide, { autoAlpha: 1, y: 0, duration: 0.8 })
+                        .to(slide, { autoAlpha: 0, y: -20, duration: 0.8 }, "+=1.5");
+                });
+            }, containerRef);
+            video.play().catch(() => { });
         };
 
-        window.addEventListener('resize', handleResize);
-        window.addEventListener('orientationchange', handleResize);
+        const onLoaded = () => {
+            if (isIOS) initIOS(); else initAndroid();
+        };
 
+        video.addEventListener('loadedmetadata', onLoaded);
         return () => {
-            video.removeEventListener('loadedmetadata', onLoadedMetadata);
-            window.removeEventListener('resize', handleResize);
-            window.removeEventListener('orientationchange', handleResize);
+            video.removeEventListener('loadedmetadata', onLoaded);
             if (ctxGsap) ctxGsap.revert();
+            if (frameId) cancelAnimationFrame(frameId);
         };
     }, [blobUrl, isIOS]);
 
     return (
-        <div
-            ref={containerRef}
-            className={`relative w-full h-[100dvh] bg-black ${isIOS ? 'overflow-y-scroll' : 'overflow-hidden'}`}
-            style={isIOS ? {
-                touchAction: 'pan-y',
-                WebkitOverflowScrolling: 'touch'
-            } : undefined}
-        >
-            {/* Video Source - Visible on Non-iOS */}
-            <video
-                ref={videoRef}
-                muted
-                playsInline
-                preload="auto"
-                loop={!isIOS} // Enable native loop for non-iOS
-                autoPlay={!isIOS} // Enable native autoplay for non-iOS
-                className={isIOS ? "hidden" : "absolute inset-0 w-full h-full object-cover"}
-                style={isIOS ? { display: 'none' } : undefined}
-            />
+        <div ref={containerRef} className="relative w-full h-[100dvh] bg-black overflow-hidden">
+            {/*
+                For Android, we use a custom scale wrapper to mimic the "Smart Scale"
+                since CSS object-fit doesn't support interpolating between contain and cover
+            */}
+            <div className={`absolute inset-0 flex items-center justify-center ${isIOS ? 'hidden' : 'block'}`}>
+                <video
+                    ref={videoRef}
+                    muted
+                    playsInline
+                    loop={!isIOS}
+                    autoPlay={!isIOS}
+                    className="w-full h-full"
+                    style={{
+                        objectFit: 'cover',
+                        // We scale the video component itself down slightly if it's too cropped
+                        transform: 'scale(0.85)',
+                        display: isIOS ? 'none' : 'block'
+                    }}
+                />
+            </div>
 
-            {/* Loading Overlay */}
-            {!isReady && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black z-50">
-                    <div className="text-center">
-                        <div className="w-16 h-16 border-4 border-gray-800 border-t-white rounded-full animate-spin mb-4" />
-                        <p className="text-white/50 text-sm">{loadingProgress}%</p>
+            {!isIOS && <div className="absolute inset-0 bg-black/40 z-[1]" />}
+            {isIOS && <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />}
+
+            {!isIOS && (
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-6 pointer-events-none">
+                    <div ref={el => { contentRefs.current[0] = el; }} className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+                        <h2 className="text-4xl font-bold text-white mb-2 uppercase italic">ZenZebra</h2>
+                        <p className="text-sm text-white/70 tracking-widest uppercase">The New Era of Retail</p>
+                    </div>
+                    <div ref={el => { contentRefs.current[1] = el; }} className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+                        <h2 className="text-4xl font-bold text-white mb-2 uppercase italic">Curated Spaces</h2>
+                        <p className="text-sm text-white/70 tracking-widest uppercase">Experience Modernity</p>
+                    </div>
+                    <div ref={el => { contentRefs.current[2] = el; }} className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+                        <h2 className="text-4xl font-bold text-white mb-6 uppercase italic">Join Us</h2>
+                        <button className="pointer-events-auto px-10 py-3 bg-white text-black text-sm font-bold rounded-full uppercase">Shop Now</button>
                     </div>
                 </div>
             )}
 
-            {/* Canvas - Only for iOS Scroll Animation */}
-            {isIOS && (
-                <canvas ref={canvasRef} className="absolute inset-0 block w-full h-full" />
+            {!isReady && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black z-50">
+                    <div className="w-10 h-10 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                </div>
             )}
         </div>
     );

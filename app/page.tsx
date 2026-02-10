@@ -7,6 +7,7 @@ import What from '@/components/what';
 import Why from '@/components/why';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import StoreScrollAnimation from '@/components/StoreScrollAnimation.';
 const Ticker = dynamic(() => import('@/components/Ticker'));
 const Locations = dynamic(() => import('@/components/Locations'));
 
@@ -53,6 +54,7 @@ export default function Home() {
   return (
     <main className="bg-black">
       <Hero />
+      <StoreScrollAnimation />
       <div className="flex justify-center lg:block">
         <Image
           src={

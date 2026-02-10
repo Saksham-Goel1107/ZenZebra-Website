@@ -6,7 +6,8 @@ import {
     LogOut,
     MapPin,
     Settings2,
-    SquareTerminal
+    SquareTerminal,
+    User
 } from "lucide-react"
 import * as React from "react"
 
@@ -25,10 +26,11 @@ import {
 } from "@/components/ui/sidebar"
 import { account } from "@/lib/appwrite"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const router = useRouter();
+    const pathname = usePathname();
 
     const handleLogout = async () => {
         try {
@@ -38,6 +40,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             console.error(e);
         }
     };
+
+    const navItems = [
+        { title: "Dashboard", href: "/admin-login/dashboard", icon: SquareTerminal },
+        { title: "Catalogue", href: "/admin-login/catalogue-dashboard", icon: BookOpen },
+        { title: "Locations", href: "/admin-login/locations", icon: MapPin },
+        { title: "Settings", href: "/admin-login/settings", icon: Settings2 },
+    ]
 
     return (
         <Sidebar collapsible="icon" {...props} className="dark">
@@ -63,38 +72,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SidebarGroupLabel>Platform</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild tooltip="Dashboard">
-                                    <Link href="/admin-login/catalogue-dashboard">
-                                        <SquareTerminal />
-                                        <span>Dashboard</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild tooltip="Catalogue">
-                                    <Link href="#">
-                                        <BookOpen />
-                                        <span>Catalogue</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild tooltip="Locations">
-                                    <Link href="#">
-                                        <MapPin />
-                                        <span>Locations</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild tooltip="Settings">
-                                    <Link href="#">
-                                        <Settings2 />
-                                        <span>Settings</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
+                            {navItems.map((item) => (
+                                <SidebarMenuItem key={item.title}>
+                                    <SidebarMenuButton
+                                        asChild
+                                        tooltip={item.title}
+                                        isActive={pathname === item.href}
+                                    >
+                                        <Link href={item.href}>
+                                            <item.icon />
+                                            <span>{item.title}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
@@ -102,7 +93,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarFooter>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton onClick={handleLogout} tooltip="Log out" className="text-destructive hover:bg-destructive/10 hover:text-destructive">
+                        <SidebarMenuButton
+                            asChild
+                            tooltip="Profile"
+                            className="cursor-pointer"
+                            isActive={pathname === "/admin-login/profile"}
+                        >
+                            <Link href="/admin-login/profile">
+                                <User />
+                                <span>Profile</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton onClick={handleLogout} tooltip="Log out" className="text-destructive hover:bg-destructive/10 hover:text-destructive cursor-pointer">
                             <LogOut />
                             <span>Log out</span>
                         </SidebarMenuButton>
