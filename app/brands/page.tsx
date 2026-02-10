@@ -1,10 +1,10 @@
 import {
-  Hero,
-  WhatYouGet,
-  WhyJoin,
-  Network,
   BrandsCarousel,
   FinalCTA,
+  Hero,
+  Network,
+  WhatYouGet,
+  WhyJoin,
 } from '@/components/brandsPage';
 import Image from 'next/image';
 
@@ -50,7 +50,7 @@ export default function BrandsPage() {
     <main className="bg-black text-white relative">
       <Image
         src={
-          '/https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/69858f000011da237d9a/view?project=698585dc0014c943f45e&mode=admin.jpg'
+          'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/69858f000011da237d9a/view?project=698585dc0014c943f45e&mode=admin'
         }
         alt="blob image"
         width={1920}

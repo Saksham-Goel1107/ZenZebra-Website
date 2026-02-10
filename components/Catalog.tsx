@@ -1,29 +1,61 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, ExternalLink, MapPin, FileText, ArrowRight } from 'lucide-react';
+import { appwriteConfig, databases } from '@/lib/appwrite';
+import { Query } from 'appwrite';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronDown, ExternalLink, FileText, MapPin } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-const LOCATIONS = [
-  {
-    label: 'Smartworks - Gurugram',
-    file: 'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/6985948c0032c75accac/view?project=698585dc0014c943f45e&mode=admin',
-  },
-  {
-    label: 'Awfis - Ambience Mall, Gurugram',
-    file: 'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698594700032770b178b/view?project=698585dc0014c943f45e&mode=admin',
-  },
-  {
-    label: 'The Lodhi - New Delhi',
-    file: 'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/69859478003d9e1fab8d/view?project=698585dc0014c943f45e&mode=admin',
-  },
-];
+type LocationItem = {
+  id: string;
+  label: string;
+  file: string;
+};
 
 export default function CataloguePage() {
-  const [selected, setSelected] = useState(LOCATIONS[0].file);
+  const [locations, setLocations] = useState<LocationItem[]>([]);
+  const [selected, setSelected] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const currentLabel = LOCATIONS.find((l) => l.file === selected)?.label || 'Select Location';
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const response = await databases.listDocuments(
+          appwriteConfig.databaseId,
+          appwriteConfig.locationsCollectionId,
+          [
+            Query.equal('active', true),
+            Query.orderAsc('label')
+          ]
+        );
+        const mapped: LocationItem[] = response.documents.map((doc: any) => ({
+          id: doc.$id,
+          label: doc.label,
+          file: doc.url,
+        }));
+        setLocations(mapped);
+        if (mapped.length > 0) {
+          setSelected(mapped[0].file);
+        }
+      } catch (error) {
+        console.error('Failed to fetch locations:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchLocations();
+  }, []);
+
+  const currentLabel = locations.find((l) => l.file === selected)?.label || 'Select Location';
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-[#050505] text-white flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-[#050505] text-white flex flex-col items-center px-6 py-24 relative overflow-hidden">
@@ -99,18 +131,17 @@ export default function CataloguePage() {
                     transition={{ duration: 0.2 }}
                     className="absolute top-full left-0 right-0 mt-2 bg-[#1A1A1A] border border-white/10 rounded-xl shadow-2xl overflow-hidden z-40 p-1.5"
                   >
-                    {LOCATIONS.map((loc) => (
+                    {locations.map((loc) => (
                       <button
-                        key={loc.file}
+                        key={loc.id}
                         onClick={() => {
                           setSelected(loc.file);
                           setIsOpen(false);
                         }}
-                        className={`w-full flex items-center justify-between px-4 py-3 text-sm rounded-lg transition-all group ${
-                          selected === loc.file
+                        className={`w-full flex items-center justify-between px-4 py-3 text-sm rounded-lg transition-all group ${selected === loc.file
                             ? 'bg-white/10 text-white'
                             : 'text-white/60 hover:text-white hover:bg-white/5'
-                        }`}
+                          }`}
                       >
                         <span className="font-medium">{loc.label}</span>
                         {selected === loc.file && (
@@ -118,6 +149,11 @@ export default function CataloguePage() {
                         )}
                       </button>
                     ))}
+                    {locations.length === 0 && (
+                      <div className="px-4 py-3 text-sm text-white/40 text-center">
+                        No locations found
+                      </div>
+                    )}
                   </motion.div>
                 </>
               )}

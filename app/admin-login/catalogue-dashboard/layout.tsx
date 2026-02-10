@@ -1,7 +1,6 @@
 'use client';
 
-import { auth } from '@/firebase'; // import from firebase module
-import { onAuthStateChanged } from 'firebase/auth';
+import { account } from '@/lib/appwrite';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -10,11 +9,15 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
   const router = useRouter();
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
-      if (!user) router.replace('/admin-login');
-      else setReady(true);
-    });
-    return () => unsub();
+    const checkAuth = async () => {
+      try {
+        await account.get();
+        setReady(true);
+      } catch (error) {
+        router.replace('/admin-login');
+      }
+    };
+    checkAuth();
   }, [router]);
 
   if (!ready) return null;

@@ -25,7 +25,7 @@
   "dependencies": {
     "@heroicons/react": "latest",
     "@sentry/nextjs": "^10.38.0",
-    "firebase": "^12.8.0",
+    "appwrite": "^22.0.0",
     "gsap": "^3.14.2",
     "lucide-react": "latest",
     "motion": "latest",
