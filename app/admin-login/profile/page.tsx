@@ -26,12 +26,19 @@ export default function ProfilePage() {
                 setUser(u);
             } catch (error) {
                 console.error('Failed to fetch user:', error);
+                router.replace('/admin-login');
             }
         };
         fetchUser();
-    }, []);
+    }, [router]);
 
-    if (!user) return null;
+    if (!user) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="w-8 h-8 border-4 border-[#CC2224] border-t-transparent rounded-full animate-spin" />
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-1 flex-col gap-4 py-8">

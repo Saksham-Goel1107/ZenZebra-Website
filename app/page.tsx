@@ -3,11 +3,11 @@ import Hero from '@/components/hero';
 import How from '@/components/How';
 
 import OurPromise from '@/components/promise';
+import StoreScrollAnimation from '@/components/StoreScrollAnimation';
 import What from '@/components/what';
 import Why from '@/components/why';
-import Image from 'next/image';
 import dynamic from 'next/dynamic';
-import StoreScrollAnimation from '@/components/StoreScrollAnimation.';
+import Image from 'next/image';
 const Ticker = dynamic(() => import('@/components/Ticker'));
 const Locations = dynamic(() => import('@/components/Locations'));
 

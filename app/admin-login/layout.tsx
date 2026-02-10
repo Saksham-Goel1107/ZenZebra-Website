@@ -60,6 +60,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   // Determine breadcrumb based on path
   const isProfile = pathname.includes('/profile');
   const isDashboard = pathname.includes('/catalogue-dashboard');
+  const isAnalytics = pathname.includes('/analytics');
+
+  const getBreadcrumbLabel = () => {
+    if (isProfile) return 'My Profile';
+    if (isDashboard) return 'Catalogue Dashboard';
+    if (isAnalytics) return 'Traffic Analytics';
+    if (pathname.includes('/locations')) return 'Home Locations';
+    if (pathname.includes('/dashboard')) return 'Overview';
+    return 'Admin';
+  };
 
   return (
     <div className="dark min-h-screen bg-background text-white">
@@ -77,7 +87,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
                   <BreadcrumbPage>
-                    {isProfile ? 'My Profile' : isDashboard ? 'Dashboard' : 'Admin'}
+                    {getBreadcrumbLabel()}
                   </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>

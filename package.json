@@ -23,6 +23,7 @@
     ]
   },
   "dependencies": {
+    "@google-analytics/data": "^5.2.1",
     "@heroicons/react": "latest",
     "@sentry/nextjs": "^10.38.0",
     "@vercel/analytics": "^1.6.1",
@@ -30,6 +31,7 @@
     "appwrite": "^22.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "google-auth-library": "^10.5.0",
     "gsap": "^3.14.2",
     "lucide-react": "latest",
     "motion": "latest",
@@ -38,6 +40,7 @@
     "radix-ui": "^1.4.3",
     "react": "latest",
     "react-dom": "latest",
+    "recharts": "^3.7.0",
     "sonner": "^2.0.7",
     "swiper": "latest",
     "tailwind-merge": "^3.4.0"

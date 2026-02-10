@@ -1,6 +1,7 @@
 "use client"
 
 import {
+    Activity,
     BookOpen,
     Command,
     LogOut,
@@ -43,6 +44,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
     const navItems = [
         { title: "Dashboard", href: "/admin-login/dashboard", icon: SquareTerminal },
+        { title: "Traffic Analytics", href: "/admin-login/analytics", icon: Activity },
         { title: "Catalogue", href: "/admin-login/catalogue-dashboard", icon: BookOpen },
         { title: "Locations", href: "/admin-login/locations", icon: MapPin },
         { title: "Settings", href: "/admin-login/settings", icon: Settings2 },
@@ -54,7 +56,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href="/admin-login/catalogue-dashboard">
+                            <Link href="/">
                                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                                     <Command className="size-4" />
                                 </div>

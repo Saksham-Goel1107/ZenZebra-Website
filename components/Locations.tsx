@@ -1,16 +1,74 @@
 'use client';
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, A11y } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import LazyVideo from '@/components/LazyVideo';
+import { appwriteConfig, databases } from '@/lib/appwrite';
+import { Query } from 'appwrite';
 import { m } from 'framer-motion';
 import { MapPin } from 'lucide-react';
 import Image from 'next/image';
-import LazyVideo from '@/components/LazyVideo';
+import { useEffect, useState } from 'react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { A11y, Navigation, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+type HomeLocation = {
+  id: string;
+  title: string;
+  description: string;
+  mediaUrl: string;
+  mediaType: 'image' | 'video';
+  active: boolean;
+  order: number;
+};
 
 export default function Locations() {
+  const [locations, setLocations] = useState<HomeLocation[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const response = await databases.listDocuments(
+          appwriteConfig.databaseId,
+          appwriteConfig.homeLocationsCollectionId,
+          [
+            Query.equal('active', true),
+            Query.orderAsc('order'),
+            Query.orderDesc('$createdAt')
+          ]
+        );
+        const list: HomeLocation[] = response.documents.map((doc: any) => ({
+          id: doc.$id,
+          title: doc.title,
+          description: doc.description,
+          mediaUrl: doc.mediaUrl,
+          mediaType: doc.mediaType,
+          active: doc.active,
+          order: doc.order || 0,
+        }));
+        setLocations(list);
+      } catch (error) {
+        console.error('Error fetching home locations:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchLocations();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="relative py-24 px-6 min-h-[400px] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-[#CC2224]/20 border-t-[#CC2224] rounded-full animate-spin" />
+      </section>
+    );
+  }
+
+  // If no locations are found, we can show a placeholder or nothing
+  if (locations.length === 0) return null;
+
   return (
     <section className="relative py-24 px-6">
       <div className="mx-auto max-w-6xl">
@@ -38,126 +96,81 @@ export default function Locations() {
               1024: { slidesPerView: 3, spaceBetween: 28 }, // ≥ lg
             }}
           >
-            {/* Slide 1 */}
-            <SwiperSlide>
-              <m.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.02, y: -5 }}
-                className="rounded-xl bg-white text-[#353535] shadow-xl overflow-hidden"
-              >
-                <div className="relative aspect-[3/4] bg-black">
-                  <LazyVideo
-                    src="https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/69858ed90020b5b5266f/view?project=698585dc0014c943f45e&mode=admin"
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
-                </div>
-                <div className="p-5">
-                  <div className="flex items-center gap-2 text-[#CC2224] font-semibold text-sm">
-                    <MapPin className="h-4 w-4" />
-                    <span>Awfis, Ambience Mall - Gurugram</span>
+            {locations.map((loc, index) => (
+              <SwiperSlide key={loc.id}>
+                <m.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.05 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  className="rounded-xl bg-white text-[#353535] shadow-xl overflow-hidden h-full flex flex-col"
+                >
+                  <div className="relative aspect-[3/4] bg-black">
+                    {loc.mediaType === 'video' ? (
+                      <LazyVideo
+                        src={loc.mediaUrl}
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
+                    ) : (
+                      <Image
+                        src={loc.mediaUrl}
+                        alt={loc.title}
+                        width={600}
+                        height={800}
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
+                    )}
                   </div>
-                  <p className="mt-2 text-sm text-[#353535]/70">
-                    Discover top brands and try them before you buy inside Ambience Mall.
-                  </p>
-                </div>
-              </m.div>
-            </SwiperSlide>
+                  <div className="p-5 flex-1 flex flex-col">
+                    <div className="flex items-center gap-2 text-[#CC2224] font-semibold text-sm">
+                      <MapPin className="h-4 w-4 shrink-0" />
+                      <span className="line-clamp-1">{loc.title}</span>
+                    </div>
+                    <p className="mt-2 text-sm text-[#353535]/70 line-clamp-3">
+                      {loc.description}
+                    </p>
+                  </div>
+                </m.div>
+              </SwiperSlide>
+            ))}
 
-            {/* Slide 2 */}
-            <SwiperSlide>
-              <m.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.05 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.02, y: -5 }}
-                className="rounded-xl bg-white text-[#353535] shadow-xl overflow-hidden"
-              >
-                <div className="relative aspect-[3/4] bg-black">
-                  <LazyVideo
-                    src="https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698593b4000346adc43d/view?project=698585dc0014c943f45e&mode=admin"
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
-                </div>
-                <div className="p-5">
-                  <div className="flex items-center gap-2 text-[#CC2224] font-semibold text-sm">
-                    <MapPin className="h-4 w-4" />
-                    <span>Smartworks - Gurugram</span>
+            {/* coming soon card - only show if few locations */}
+            {locations.length < 3 && (
+              <SwiperSlide>
+                <m.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  className="rounded-xl bg-white text-[#353535] shadow-xl overflow-hidden h-full"
+                >
+                  <div className="relative aspect-[3/4] bg-black">
+                    <Image
+                      src="https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698593a40025156f230b/view?project=698585dc0014c943f45e&mode=admin"
+                      alt="coming soon"
+                      width={600}
+                      height={800}
+                      className="w-full h-full object-cover opacity-50"
+                    />
                   </div>
-                  <p className="mt-2 text-sm text-[#353535]/70">
-                    Experience ZenZebra at the heart of Gurugram’s professional spaces.
-                  </p>
-                </div>
-              </m.div>
-            </SwiperSlide>
-
-            {/* Slide 3 */}
-            <SwiperSlide>
-              <m.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.02, y: -5 }}
-                className="rounded-xl bg-white text-[#353535] shadow-xl overflow-hidden"
-              >
-                <div className="relative aspect-[3/4] bg-black">
-                  <LazyVideo
-                    src="https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/69859035002d1561907e/view?project=698585dc0014c943f45e&mode=admin"
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
-                </div>
-                <div className="p-5">
-                  <div className="flex items-center gap-2 text-[#CC2224] font-semibold text-sm">
-                    <MapPin className="h-4 w-4" />
-                    <span>The Lodhi - New Delhi</span>
+                  <div className="p-5">
+                    <div className="flex items-center gap-2 text-[#CC2224] font-semibold text-sm">
+                      <MapPin className="h-4 w-4" />
+                      <span>More locations loading...</span>
+                    </div>
+                    <p className="mt-2 text-sm text-[#353535]/70">
+                      Stay tuned as we expand to more spaces near you.
+                    </p>
                   </div>
-                  <p className="mt-2 text-sm text-[#353535]/70">
-                    A luxurious experience meets better living - right where you unwind.
-                  </p>
-                </div>
-              </m.div>
-            </SwiperSlide>
-
-            {/* coming soon card */}
-            <SwiperSlide>
-              <m.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.02, y: -5 }}
-                className="rounded-xl bg-white text-[#353535] shadow-xl overflow-hidden"
-              >
-                <div className="relative aspect-[3/4] bg-black">
-                  <Image
-                    src={
-                      'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698593a40025156f230b/view?project=698585dc0014c943f45e&mode=admin'
-                    }
-                    alt="coming soon"
-                    width={600}
-                    height={800}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-5">
-                  <div className="flex items-center gap-2 text-[#CC2224] font-semibold text-sm">
-                    <MapPin className="h-4 w-4" />
-                    <span>More locations loading...</span>
-                  </div>
-                  <p className="mt-2 text-sm text-[#353535]/70">
-                    <br />
-                    <br />
-                  </p>
-                </div>
-              </m.div>
-            </SwiperSlide>
+                </m.div>
+              </SwiperSlide>
+            )}
           </Swiper>
         </div>
       </div>
     </section>
   );
 }
+

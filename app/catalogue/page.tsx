@@ -22,6 +22,9 @@ export const metadata = {
     type: 'website',
   },
   metadataBase: new URL('https://zenzebra.in'),
+};
+
+export const viewport = {
   themeColor: '#CC2224',
 };
 

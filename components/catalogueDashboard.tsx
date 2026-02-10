@@ -153,6 +153,7 @@ export default function CatalogueDashboard() {
         );
         toast.success("Location created successfully");
       }
+      await fetchLocations();
       resetForm();
     } catch (e: any) {
       console.error(e);
@@ -191,6 +192,7 @@ export default function CatalogueDashboard() {
         deleteDialog.row.id
       );
       toast.success(`Deleted "${deleteDialog.row.label}"`);
+      await fetchLocations();
       if (editingId === deleteDialog.row.id) resetForm();
     } catch (e: any) {
       console.error(e);

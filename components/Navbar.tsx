@@ -12,7 +12,7 @@ function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
 
-  if (pathname?.startsWith('/admin-login')) return null;
+
 
   const navItems = [
     { label: 'Home', href: '/' },
@@ -33,6 +33,8 @@ function Navbar() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  if (pathname?.startsWith('/admin-login')) return null;
 
   return (
     <m.nav
