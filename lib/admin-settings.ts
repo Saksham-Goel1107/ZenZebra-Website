@@ -22,6 +22,11 @@ export interface SystemSettings {
   socialLinkedIn: string;
   logoUrl: string;
   ogImageUrl: string;
+  emailNotificationsEnabled: boolean;
+  inquiryConfirmationSubject: string;
+  inquiryConfirmationTemplate: string;
+  inquiryStatusUpdateSubject: string;
+  inquiryStatusUpdateTemplate: string;
 }
 
 const DEFAULT_SETTINGS: SystemSettings = {
@@ -40,6 +45,13 @@ const DEFAULT_SETTINGS: SystemSettings = {
     'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/6985926d0013323cc0ca/view?project=698585dc0014c943f45e&mode=admin',
   ogImageUrl:
     'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/6985926d0013323cc0ca/view?project=698585dc0014c943f45e&mode=admin',
+  emailNotificationsEnabled: true,
+  inquiryConfirmationSubject: 'ZenZebra - Inquiry Received: {name}',
+  inquiryConfirmationTemplate:
+    'Hello {name},\n\nThank you for reaching out to ZenZebra. We have received your inquiry regarding: {query}\n\nOur team will get back to you shortly.\n\nBest regards,\nZenZebra Team',
+  inquiryStatusUpdateSubject: 'ZenZebra - Inquiry Update: {status}',
+  inquiryStatusUpdateTemplate:
+    'Hello {name},\n\nYour inquiry status has been updated to: {status}.\n\nThank you for choosing ZenZebra!',
 };
 
 // --- Helpers ---

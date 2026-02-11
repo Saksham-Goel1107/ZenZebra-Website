@@ -1,3 +1,4 @@
+import { getSystemSettings } from '@/lib/admin-settings';
 import { NextResponse } from 'next/server';
 import { Pingram } from 'pingram';
 
@@ -115,12 +116,22 @@ export async function PATCH(request: Request) {
     );
 
     // 3. Send Email Notification
-    const statusLabel = status.replace('_', ' ');
-    await sendEmailNotification(
-      inquiry.email,
-      `ZenZebra - Inquiry Update: ${statusLabel}`,
-      `Hello ${inquiry.name},\n\nYour inquiry status has been updated to: ${statusLabel}.\n\nThank you for choosing ZenZebra!`,
-    );
+    const settings = await getSystemSettings();
+    if (settings.emailNotificationsEnabled) {
+      const statusLabel = status.replace('_', ' ');
+      const subject = (settings.inquiryStatusUpdateSubject || 'ZenZebra - Inquiry Update: {status}')
+        .replace(/{name}/g, inquiry.name)
+        .replace(/{status}/g, statusLabel);
+
+      const message = (
+        settings.inquiryStatusUpdateTemplate ||
+        'Hello {name},\n\nYour inquiry status has been updated to: {status}.\n\nThank you for choosing ZenZebra!'
+      )
+        .replace(/{name}/g, inquiry.name)
+        .replace(/{status}/g, statusLabel);
+
+      await sendEmailNotification(inquiry.email, subject, message);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

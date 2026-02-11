@@ -29,6 +29,11 @@ interface SettingsData {
     socialLinkedIn: string;
     logoUrl: string;
     ogImageUrl: string;
+    emailNotificationsEnabled: boolean;
+    inquiryConfirmationSubject: string;
+    inquiryConfirmationTemplate: string;
+    inquiryStatusUpdateSubject: string;
+    inquiryStatusUpdateTemplate: string;
 }
 
 const DEFAULT_SETTINGS: SettingsData = {
@@ -43,7 +48,12 @@ const DEFAULT_SETTINGS: SettingsData = {
     socialInstagram: "",
     socialLinkedIn: "",
     logoUrl: "",
-    ogImageUrl: ""
+    ogImageUrl: "",
+    emailNotificationsEnabled: true,
+    inquiryConfirmationSubject: "",
+    inquiryConfirmationTemplate: "",
+    inquiryStatusUpdateSubject: "",
+    inquiryStatusUpdateTemplate: ""
 };
 
 export default function SettingsPage() {
@@ -158,6 +168,12 @@ export default function SettingsPage() {
                         onClick={() => setActiveTab('performance')}
                         icon={<Zap className="w-5 h-5" />}
                         label="Performance"
+                    />
+                    <SettingsTab
+                        active={activeTab === 'notifications'}
+                        onClick={() => setActiveTab('notifications')}
+                        icon={<Bell className="w-5 h-5" />}
+                        label="Notifications"
                     />
                     <div className="h-px bg-border my-4" />
                     <Link href="/admin-login/inquiries" className="block">
@@ -327,6 +343,81 @@ export default function SettingsPage() {
                                         More performance settings (caching, CDN, Image Optimization) are managed via your Vercel/Next.js hosting dashboard.
                                     </p>
                                 </div>
+                            </div>
+                        </Section>
+                    )}
+
+                    {activeTab === 'notifications' && (
+                        <Section title="Email Notifications" description="Configure automated emails sent to users for inquiries and updates.">
+                            <div className="space-y-8">
+                                <div className="flex items-center justify-between p-6 rounded-3xl bg-muted/30 border border-border group hover:border-[#CC2224]/30 transition-colors">
+                                    <div className="flex flex-col">
+                                        <span className="text-foreground font-bold text-sm flex items-center gap-2 uppercase tracking-tighter">
+                                            Enable Email Notifications
+                                            {settings.emailNotificationsEnabled && <span className="px-2 py-0.5 rounded-md bg-green-500 text-[8px] text-white uppercase tracking-wider">Active</span>}
+                                        </span>
+                                        <span className="text-[10px] text-muted-foreground font-medium mt-1 leading-tight">Globally enable or disable automated email responses.</span>
+                                    </div>
+                                    <Switch
+                                        checked={settings.emailNotificationsEnabled}
+                                        onChange={(checked) => updateSetting('emailNotificationsEnabled', checked)}
+                                    />
+                                </div>
+
+                                {settings.emailNotificationsEnabled && (
+                                    <div className="space-y-10 animate-in fade-in slide-in-from-top-4">
+                                        <div className="space-y-6">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                                <h4 className="text-sm font-black uppercase tracking-widest text-foreground">Inquiry Confirmation</h4>
+                                            </div>
+                                            <InputGroup
+                                                label="Subject Line"
+                                                value={settings.inquiryConfirmationSubject}
+                                                onChange={(e) => updateSetting('inquiryConfirmationSubject', e.target.value)}
+                                                placeholder="ZenZebra - Inquiry Received: {name}"
+                                            />
+                                            <InputGroup
+                                                label="Template Body"
+                                                value={settings.inquiryConfirmationTemplate}
+                                                onChange={(e) => updateSetting('inquiryConfirmationTemplate', e.target.value)}
+                                                placeholder="Hello {name}..."
+                                                area
+                                            />
+                                            <p className="text-[10px] text-muted-foreground font-bold italic ml-2">Available variables: <span className="text-primary">{`{name}, {query}`}</span></p>
+                                        </div>
+
+                                        <div className="h-px bg-border" />
+
+                                        <div className="space-y-6">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <div className="w-2 h-2 rounded-full bg-orange-500" />
+                                                <h4 className="text-sm font-black uppercase tracking-widest text-foreground">Status Update Alert</h4>
+                                            </div>
+                                            <InputGroup
+                                                label="Subject Line"
+                                                value={settings.inquiryStatusUpdateSubject}
+                                                onChange={(e) => updateSetting('inquiryStatusUpdateSubject', e.target.value)}
+                                                placeholder="ZenZebra - Inquiry Update: {status}"
+                                            />
+                                            <InputGroup
+                                                label="Template Body"
+                                                value={settings.inquiryStatusUpdateTemplate}
+                                                onChange={(e) => updateSetting('inquiryStatusUpdateTemplate', e.target.value)}
+                                                placeholder="Hello {name}..."
+                                                area
+                                            />
+                                            <p className="text-[10px] text-muted-foreground font-bold italic ml-2">Available variables: <span className="text-primary">{`{name}, {status}`}</span></p>
+                                        </div>
+
+                                        <div className="p-4 rounded-2xl bg-muted/50 border border-border flex items-start gap-3">
+                                            <Shield className="w-4 h-4 text-blue-500 mt-0.5" />
+                                            <p className="text-[10px] text-muted-foreground font-medium leading-relaxed">
+                                                <strong>SAFEGUARD:</strong> The system automatically fallbacks to standard formatting if variables are missing. Line breaks in the template are automatically converted to HTML tags.
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </Section>
                     )}

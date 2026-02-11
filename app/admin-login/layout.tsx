@@ -26,12 +26,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [ready, setReady] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  // Check if we're on the login page exactly
-  const isLoginPage = pathname === '/admin-login';
+  // Check if we're on a page that doesn't require authentication (Login or Reset Password)
+  const isPublicAdminPage = pathname === '/admin-login' || pathname === '/admin-login/reset-password';
 
   useEffect(() => {
     // If we're on the login page, we don't need auth check or sidebar
-    if (isLoginPage) {
+    if (isPublicAdminPage) {
       setReady(true);
       return;
     }
@@ -49,12 +49,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       }
     };
     init();
-  }, [isLoginPage, router]);
+  }, [isPublicAdminPage, router]);
 
   if (!ready) return null;
 
   // Don't wrap login page in sidebar
-  if (isLoginPage) {
+  if (isPublicAdminPage) {
     return <>{children}</>;
   }
 

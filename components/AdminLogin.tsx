@@ -29,6 +29,11 @@ export default function AdminLogin() {
     const [totpCode, setTotpCode] = useState('');
     const [challengeId, setChallengeId] = useState('');
 
+    // Recovery State
+    const [recoveryMode, setRecoveryMode] = useState(false);
+    const [recoverySent, setRecoverySent] = useState(false);
+    const [recoveryEmail, setRecoveryEmail] = useState('');
+
     const router = useRouter();
 
     const handleLogin = async (e: React.FormEvent) => {
@@ -106,6 +111,24 @@ export default function AdminLogin() {
         }
     };
 
+    const handleRequestRecovery = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+
+        try {
+            // The destination URL where users will be sent to set their new password
+            const recoveryUrl = `${window.location.origin}/admin-login/reset-password`;
+            await account.createRecovery(recoveryEmail, recoveryUrl);
+            setRecoverySent(true);
+            setLoading(false);
+        } catch (err: any) {
+            console.error('Recovery error:', err);
+            setError(err.message || 'Failed to send recovery email. Please try again.');
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="flex min-h-screen items-center justify-center bg-[#050505] relative overflow-hidden font-sans">
             {/* Background Effects */}
@@ -170,7 +193,54 @@ export default function AdminLogin() {
                                     setMfaRequired(false);
                                     setTotpCode('');
                                     setError('');
-                                    // Optionally logout implicitly? No, just go back to login form.
+                                }}
+                                className="w-full text-xs text-white/30 hover:text-white transition-colors flex items-center justify-center gap-1"
+                            >
+                                <ArrowLeft className="w-3 h-3" /> Back to login
+                            </button>
+                        </form>
+                    ) : recoveryMode ? (
+                        <form onSubmit={handleRequestRecovery} className="space-y-6 relative z-10 animate-in fade-in slide-in-from-right-4">
+                            <div className="text-center space-y-2">
+                                <h3 className="text-lg font-semibold text-white">Reset Password</h3>
+                                <p className="text-white/50 text-sm">
+                                    {recoverySent
+                                        ? "We've sent a recovery link to your email address."
+                                        : "Enter your email address and we'll send you a link to reset your password."}
+                                </p>
+                            </div>
+
+                            {!recoverySent && (
+                                <div className="space-y-2">
+                                    <label className="text-xs font-medium uppercase tracking-wider text-white/50 ml-1">Email Address</label>
+                                    <div className="relative group">
+                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 group-focus-within:text-[#CC2224] transition-colors" />
+                                        <Input
+                                            type="email"
+                                            value={recoveryEmail}
+                                            onChange={(e) => setRecoveryEmail(e.target.value)}
+                                            className="w-full bg-black/40 border border-white/10 rounded-xl py-6 pl-12 pr-4 text-white placeholder:text-white/20 focus-visible:ring-1 focus-visible:ring-[#CC2224]/50 focus-visible:border-[#CC2224]/50 transition-all font-medium"
+                                            placeholder="admin@zenzebra.in"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            <Button
+                                type="submit"
+                                disabled={loading || recoverySent}
+                                className="w-full py-6 bg-[#CC2224] hover:bg-[#b01c1e] text-white rounded-xl font-semibold transition-all disabled:opacity-50"
+                            >
+                                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : recoverySent ? "Email Sent" : "Send Reset Link"}
+                            </Button>
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setRecoveryMode(false);
+                                    setRecoverySent(false);
+                                    setError('');
                                 }}
                                 className="w-full text-xs text-white/30 hover:text-white transition-colors flex items-center justify-center gap-1"
                             >
@@ -195,7 +265,9 @@ export default function AdminLogin() {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-medium uppercase tracking-wider text-white/50 ml-1">Password</label>
+                                <div className="flex items-center justify-between ml-1">
+                                    <label className="text-xs font-medium uppercase tracking-wider text-white/50">Password</label>
+                                </div>
                                 <div className="relative group">
                                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 group-focus-within:text-[#CC2224] transition-colors" />
                                     <Input
@@ -212,6 +284,15 @@ export default function AdminLogin() {
                                         className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-white/30 hover:text-white transition-colors"
                                     >
                                         {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                    </button>
+                                </div>
+                                <div className="flex items-center justify-between ml-1">
+                                    <button
+                                        type="button"
+                                        onClick={() => setRecoveryMode(true)}
+                                        className="text-[10px] font-bold uppercase tracking-widest text-[#CC2224] hover:text-[#e02b2e] transition-colors"
+                                    >
+                                        Forgot Password?
                                     </button>
                                 </div>
                             </div>

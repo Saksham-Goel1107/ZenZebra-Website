@@ -1,3 +1,4 @@
+import { getSystemSettings } from '@/lib/admin-settings';
 import { NextResponse } from 'next/server';
 import { Pingram } from 'pingram';
 
@@ -105,11 +106,21 @@ export async function POST(request: Request) {
     );
 
     // 5. Send Confirmation Email
-    await sendEmailNotification(
-      email.trim().toLowerCase(),
-      'ZenZebra - Inquiry Received',
-      `Hello ${name.trim()},\n\nThank you for reaching out to ZenZebra! We have received your query and it is currently: Queued.\n\nOur team will get back to you shortly.\n\nQuery: "${query.trim()}"`,
-    );
+    const settings = await getSystemSettings();
+    if (settings.emailNotificationsEnabled) {
+      const subject = (
+        settings.inquiryConfirmationSubject || 'ZenZebra - Inquiry Received'
+      ).replace(/{name}/g, name.trim());
+
+      const message = (
+        settings.inquiryConfirmationTemplate ||
+        'Hello {name},\n\nThank you for reaching out to ZenZebra. We have received your inquiry regarding: {query}\n\nOur team will get back to you shortly.\n\nBest regards,\nZenZebra Team'
+      )
+        .replace(/{name}/g, name.trim())
+        .replace(/{query}/g, query.trim());
+
+      await sendEmailNotification(email.trim().toLowerCase(), subject, message);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
