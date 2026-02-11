@@ -64,7 +64,11 @@ export async function POST(request: Request) {
         name,
       );
 
-      // 3. Set Preferences (Forced MFA & Password Reset)
+      // 3. Auto-Verify Email & Set Preferences
+      // Automatically mark email as verified since admin created it
+      await users.updateEmailVerification(response.$id, true);
+
+      // Enforce security policies (MFA + Password Reset)
       await users.updatePrefs(response.$id, {
         mustResetPassword: true,
         mfaRequired: true,

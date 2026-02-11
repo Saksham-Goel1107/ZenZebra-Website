@@ -14,7 +14,7 @@ export default function Footer({ settings }: { settings: SystemSettings }) {
   if (pathname?.startsWith('/admin-login')) return null;
 
   return (
-    <footer className="relative z-10 bg-black/40 backdrop-blur-md text-white py-16 px-6">
+    <footer className="relative z-10 bg-black/60 text-white py-16 px-6">
       <div className="border-t border-white/10 mt-12 pt-6 text-center text-xs text-white/60"></div>
       <div className="max-w-6xl mx-auto grid gap-10 md:grid-cols-3">
         {/* 1 — Brand & Tagline */}
