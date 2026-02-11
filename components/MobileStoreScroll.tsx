@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function MobileStoreScroll() {
+export default function MobileStoreScroll({ isBackground }: { isBackground: boolean }) {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -105,10 +105,10 @@ export default function MobileStoreScroll() {
             ctxGsap = gsap.context(() => {
                 const vDur = video.duration || 6;
                 ScrollTrigger.create({
-                    trigger: containerRef.current,
-                    start: 'top top',
-                    end: '+=1500',
-                    pin: true,
+                    trigger: isBackground ? "html" : containerRef.current,
+                    start: "top top",
+                    end: isBackground ? "bottom bottom" : "+=1500",
+                    pin: !isBackground,
                     scrub: true,
                     onUpdate: (self) => {
                         state.current.targetTime = self.progress * (vDur - 0.1);
@@ -175,7 +175,7 @@ export default function MobileStoreScroll() {
             {!isIOS && <div className="absolute inset-0 bg-black/40 z-[1]" />}
             {isIOS && <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />}
 
-            {!isIOS && (
+            {!isBackground && !isIOS && (
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-6 pointer-events-none">
                     <div ref={el => { contentRefs.current[0] = el; }} className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
                         <h2 className="text-4xl font-bold text-white mb-2 uppercase italic">ZenZebra</h2>

@@ -1,11 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Search, FlaskConical, ShoppingBag } from 'lucide-react';
+import { FlaskConical, Search, ShoppingBag } from 'lucide-react';
 
 export default function How() {
   return (
-    <section className="relative py-20 bg-[#CC2224] text-white">
+    <section className="relative py-20 text-white">
       <div className="mx-auto max-w-6xl px-6 grid gap-10 md:grid-cols-2">
         {/* Left: big message */}
         <div className="flex flex-col justify-center">
@@ -14,10 +14,10 @@ export default function How() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
             viewport={{ once: true }}
-            className="text-3xl sm:text-4xl font-extrabold leading-tight"
+            className="text-3xl sm:text-4xl font-extrabold leading-tight text-white"
           >
             Discovery <br />
-            <span className="text-black">To</span> Destination
+            <span className="text-[#CC2224]">To</span> Destination
           </motion.h2>
 
           <motion.p

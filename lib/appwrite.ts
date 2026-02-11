@@ -15,6 +15,27 @@ export const appwriteConfig = {
   homeLocationsCollectionId: process.env.NEXT_PUBLIC_APPWRITE_HOME_LOCATIONS_COLLECTION_ID!,
   settingsCollectionId: process.env.NEXT_PUBLIC_APPWRITE_SETTINGS_COLLECTION_ID!,
   bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
+  projectId: process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID!,
+};
+
+export const isOwner = async (userId: string | undefined) => {
+  if (!userId) return false;
+  try {
+    const { jwt } = await account.createJWT();
+    const res = await fetch('/api/admin/users', {
+      headers: {
+        'X-Appwrite-JWT': jwt,
+      },
+    });
+    const users = await res.json();
+    if (!Array.isArray(users)) return false;
+    const sorted = [...users].sort(
+      (a, b) => new Date(a.registration).getTime() - new Date(b.registration).getTime(),
+    );
+    return sorted[0]?.$id === userId;
+  } catch {
+    return false;
+  }
 };
 
 export default client;

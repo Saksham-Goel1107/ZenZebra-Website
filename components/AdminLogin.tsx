@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { account } from '@/lib/appwrite';
+import { secureError, secureLog } from '@/lib/logger';
 import { OAuthProvider } from 'appwrite';
 import { ArrowLeft, ArrowRight, Eye, EyeOff, Loader2, Lock, Mail, ShieldCheck, Smartphone } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -41,36 +42,69 @@ export default function AdminLogin() {
         setLoading(true);
         setError('');
 
+        const cleanEmail = email.trim();
         try {
-            await account.createEmailPasswordSession(email, password);
+            await account.createEmailPasswordSession(cleanEmail, password);
 
             // Success! But check if MFA is required for this session
             const user = await account.get();
+            const prefs = user.prefs || {};
+
+            secureLog('LOGIN SUCCESS - User State:', {
+                userId: user.$id,
+                email: user.email,
+                mfaEnabled: user.mfa,
+                prefs: prefs,
+                mustResetPassword: prefs.mustResetPassword,
+                mfaRequired: prefs.mfaRequired
+            });
+
+            if (prefs.mustResetPassword) {
+                secureLog('Redirecting to password reset...');
+                router.push('/admin-login/reset-password?force=true');
+                return;
+            }
+
+            // Check if MFA is enabled on the account
             if (user.mfa) {
+                secureLog('MFA is enabled, creating challenge...');
                 const challenge = await account.createMFAChallenge({ factor: 'totp' as any });
+                secureLog('MFA Challenge created:', challenge.$id);
                 setChallengeId(challenge.$id);
                 setMfaRequired(true);
                 setLoading(false);
                 return;
             }
 
+            // If MFA is not enabled on account but required by policy
+            if (prefs.mfaRequired && !user.mfa) {
+                secureLog('MFA setup required, redirecting...');
+                router.push('/admin-login/mfa-setup');
+                return;
+            }
+
+            secureLog('No additional security required, redirecting to dashboard...');
+
             router.push('/admin-login/catalogue-dashboard');
         } catch (err: any) {
-            console.log('Login error caught:', err);
+            secureError('CRITICAL LOGIN FAILURE:', {
+                message: err.message,
+                type: err.type,
+                code: err.code,
+                email: cleanEmail // Helpful for checking hidden spaces
+            });
 
             // If error is "More factors are required", it means login was correct but we need MFA
             if (err.message?.includes('factors') || err.type === 'user_more_factors_required') {
-                console.log('MFA is confirmed required (via Exception), creating challenge...');
+                secureLog('MFA challenge initiated...');
                 try {
                     const challenge = await account.createMFAChallenge({ factor: 'totp' as any });
-                    console.log('MFA Challenge created:', challenge);
                     setChallengeId(challenge.$id);
                     setMfaRequired(true);
                     setLoading(false);
-                    return; // Stop here and show MFA UI
+                    return;
                 } catch (mfaErr: any) {
-                    console.error('Failed to create MFA challenge:', mfaErr);
-                    setError('Login succeeded but failed to start MFA: ' + mfaErr.message);
+                    setError('MFA Initialization Failed: ' + (mfaErr as Error).message);
                     setLoading(false);
                     return;
                 }
@@ -87,12 +121,12 @@ export default function AdminLogin() {
         setError('');
 
         try {
-            console.log('Verifying MFA challenge...', { challengeId, totpCode });
+            secureLog('Verifying MFA challenge...', { challengeId, totpCode });
             await account.updateMFAChallenge({ challengeId, otp: totpCode });
-            console.log('MFA verified, redirecting...');
+            secureLog('MFA verified, redirecting...');
             router.push('/admin-login/catalogue-dashboard');
         } catch (err: any) {
-            console.error('MFA verification error:', err);
+            secureError('MFA verification error:', err);
             setError(err.message || 'Invalid code. Please try again.');
             setLoading(false);
         }

@@ -26,8 +26,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [ready, setReady] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  // Check if we're on a page that doesn't require authentication (Login or Reset Password)
-  const isPublicAdminPage = pathname === '/admin-login' || pathname === '/admin-login/reset-password';
+  // Check if we're on a page that doesn't require authentication (Login, Reset Password, or MFA Setup)
+  const isPublicAdminPage = pathname === '/admin-login' || pathname === '/admin-login/reset-password' || pathname === '/admin-login/mfa-setup';
 
   useEffect(() => {
     // If we're on the login page, we don't need auth check or sidebar
@@ -38,8 +38,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     const init = async () => {
       try {
-        await account.get();
-        // Check sidebar state from cookie
+        const user = await account.get();
+
+        // 1. Security Check: Forced Password Reset
+        if (user.prefs?.mustResetPassword) {
+          router.replace('/admin-login/reset-password?force=true');
+          return;
+        }
+
+        // 2. Security Check: MFA Setup Required
+        if (user.prefs?.mfaRequired && !user.mfa) {
+          router.replace('/admin-login/mfa-setup');
+          return;
+        }
+
+        // 3. State Sync
         const match = document.cookie.match(new RegExp('(^| )sidebar_state=([^;]+)'));
         const savedState = match ? match[2] === 'true' : true;
         setSidebarOpen(savedState);
@@ -69,6 +82,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (isAnalytics) return 'Traffic Analytics';
     if (pathname.includes('/inquiries')) return 'User Inquiries';
     if (pathname.includes('/locations')) return 'Home Locations';
+    if (pathname.includes('/users')) return 'Team Management';
     if (pathname.includes('/dashboard')) return 'Overview';
     return 'Admin';
   };

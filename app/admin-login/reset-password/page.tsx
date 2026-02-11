@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { account } from '@/lib/appwrite';
+import { secureError, secureLog } from '@/lib/logger';
 import { CheckCircle2, Eye, EyeOff, Loader2, Lock, ShieldCheck } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
@@ -19,12 +20,13 @@ function ResetPasswordForm() {
     const searchParams = useSearchParams();
     const userId = searchParams.get('userId');
     const secret = searchParams.get('secret');
+    const isForced = searchParams.get('force') === 'true';
 
     useEffect(() => {
-        if (!userId || !secret) {
+        if (!isForced && (!userId || !secret)) {
             setError('Invalid or expired reset link. Please request a new one.');
         }
-    }, [userId, secret]);
+    }, [userId, secret, isForced]);
 
     const handleReset = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -33,20 +35,54 @@ function ResetPasswordForm() {
             return;
         }
 
+        if (password.length < 8) {
+            setError('Password must be at least 8 characters');
+            return;
+        }
+
         setLoading(true);
         setError('');
 
         try {
-            await account.updateRecovery(userId!, secret!, password);
+            if (isForced) {
+                // Handle forced reset for logged-in user via API
+                secureLog('Initiating forced password reset...');
+                const { jwt } = await account.createJWT();
+                const response = await fetch('/api/admin/reset-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Appwrite-JWT': jwt
+                    },
+                    body: JSON.stringify({ newPassword: password })
+                });
+
+                const data = await response.json();
+                if (!response.ok || data.error) {
+                    throw new Error(data.error || 'Failed to reset password');
+                }
+
+                secureLog('Password reset successful, clearing flag...');
+            } else {
+                // Standard recovery flow
+                secureLog('Using recovery flow...');
+                await account.updateRecovery(userId!, secret!, password);
+            }
+
             setSuccess(true);
             setLoading(false);
-            // Optionally redirect after a few seconds
             setTimeout(() => {
                 router.push('/admin-login');
             }, 3000);
         } catch (err: any) {
-            console.error('Reset error:', err);
-            setError(err.message || 'Failed to reset password. The link may have expired.');
+            secureError('RESET ERROR DETAILS:', {
+                message: err.message,
+                type: err.type,
+                code: err.code,
+                isForced,
+                passwordLength: password.length
+            });
+            setError(err.message || 'Failed to update password. Please try again.');
             setLoading(false);
         }
     };
@@ -132,7 +168,7 @@ function ResetPasswordForm() {
 
                             <Button
                                 type="submit"
-                                disabled={loading || !userId || !secret}
+                                disabled={loading || (!isForced && (!userId || !secret))}
                                 className="w-full py-6 bg-[#CC2224] hover:bg-[#b01c1e] text-white rounded-xl font-semibold transition-all shadow-[0_8px_20px_rgba(204,34,36,0.25)] mt-2"
                             >
                                 {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Reset Password"}

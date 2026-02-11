@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  serverExternalPackages: ['node-appwrite'],
 };
 
 export default withSentryConfig(nextConfig, {

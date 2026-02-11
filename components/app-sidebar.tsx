@@ -10,6 +10,7 @@ import {
     Monitor,
     Moon,
     Settings2,
+    Shield,
     SquareTerminal,
     Sun,
     User
@@ -35,15 +36,30 @@ import {
     SidebarMenuItem,
     SidebarRail,
 } from "@/components/ui/sidebar"
-import { account } from "@/lib/appwrite"
+import { account, isOwner } from "@/lib/appwrite"
 import { useTheme } from "next-themes"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const router = useRouter();
     const pathname = usePathname();
     const { setTheme, theme } = useTheme();
+    const [isSysOwner, setIsSysOwner] = useState(false);
+
+    useEffect(() => {
+        const checkOwner = async () => {
+            try {
+                const user = await account.get();
+                const owner = await isOwner(user.$id);
+                setIsSysOwner(owner);
+            } catch (e) {
+                console.error('Owner check failed:', e);
+            }
+        };
+        checkOwner();
+    }, []);
 
     const handleLogout = async () => {
         try {
@@ -60,6 +76,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         { title: "Catalogue", href: "/admin-login/catalogue-dashboard", icon: BookOpen },
         { title: "Inquiries", href: "/admin-login/inquiries", icon: MessageSquare },
         { title: "Locations", href: "/admin-login/locations", icon: MapPin },
+    ]
+
+    // Admin only sections
+    const adminItems = [
+        { title: "Team Management", href: "/admin-login/users", icon: Shield },
         { title: "Settings", href: "/admin-login/settings", icon: Settings2 },
     ]
 
@@ -70,12 +91,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <Link href="/">
-                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-[#CC2224] text-white shadow-[0_0_15px_rgba(204,34,36,0.3)]">
                                     <Command className="size-4" />
                                 </div>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-semibold">ZenZebra</span>
-                                    <span className="truncate text-xs text-muted-foreground">Admin Portal</span>
+                                    <span className="truncate font-black italic uppercase tracking-tighter">ZenZebra</span>
+                                    <span className="truncate text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Command Center</span>
                                 </div>
                             </Link>
                         </SidebarMenuButton>
@@ -84,7 +105,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Platform</SidebarGroupLabel>
+                    <SidebarGroupLabel className="text-[10px] uppercase font-bold tracking-widest py-4">Standard Operations</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {navItems.map((item) => (
@@ -93,10 +114,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                         asChild
                                         tooltip={item.title}
                                         isActive={pathname === item.href}
+                                        className="transition-all duration-300 hover:bg-[#CC2224]/5"
                                     >
                                         <Link href={item.href}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
+                                            <item.icon className={pathname === item.href ? "text-[#CC2224]" : ""} />
+                                            <span className={pathname === item.href ? "font-bold text-foreground" : ""}>{item.title}</span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
@@ -104,31 +126,56 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
+
+                {isSysOwner && (
+                    <SidebarGroup className="animate-in fade-in slide-in-from-left duration-500">
+                        <SidebarGroupLabel className="text-[10px] uppercase font-bold tracking-widest py-4 text-[#CC2224]/60">Classified Access</SidebarGroupLabel>
+                        <SidebarGroupContent>
+                            <SidebarMenu>
+                                {adminItems.map((item) => (
+                                    <SidebarMenuItem key={item.title}>
+                                        <SidebarMenuButton
+                                            asChild
+                                            tooltip={item.title}
+                                            isActive={pathname === item.href}
+                                            className="transition-all duration-300 hover:bg-[#CC2224]/5"
+                                        >
+                                            <Link href={item.href}>
+                                                <item.icon className={pathname === item.href ? "text-[#CC2224]" : ""} />
+                                                <span className={pathname === item.href ? "font-bold text-foreground" : ""}>{item.title}</span>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                ))}
+                            </SidebarMenu>
+                        </SidebarGroupContent>
+                    </SidebarGroup>
+                )}
             </SidebarContent>
             <SidebarFooter>
                 <SidebarMenu>
-                    <SidebarMenuItem>
+                    <SidebarMenuItem className="border-t border-border/50 pt-2">
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton tooltip="Theme">
+                                <SidebarMenuButton tooltip="Interface Theme">
                                     <div className="flex relative items-center justify-center size-4 shrink-0">
-                                        <Sun className="absolute size-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                                        <Moon className="absolute size-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                                        <Sun className="absolute size-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-amber-500" />
+                                        <Moon className="absolute size-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-[#CC2224]" />
                                     </div>
-                                    <span className="truncate">Theme</span>
+                                    <span className="truncate">Interface Theme</span>
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="start" side="right" className="w-48">
-                                <DropdownMenuItem onClick={() => setTheme("light")}>
-                                    <Sun className="mr-2 h-4 w-4" />
+                            <DropdownMenuContent align="end" side="right" className="w-48 bg-card border-border">
+                                <DropdownMenuItem onClick={() => setTheme("light")} className="cursor-pointer">
+                                    <Sun className="mr-2 h-4 w-4 text-amber-500" />
                                     <span>Light</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => setTheme("dark")}>
-                                    <Moon className="mr-2 h-4 w-4" />
+                                <DropdownMenuItem onClick={() => setTheme("dark")} className="cursor-pointer">
+                                    <Moon className="mr-2 h-4 w-4 text-[#CC2224]" />
                                     <span>Dark</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => setTheme("system")}>
-                                    <Monitor className="mr-2 h-4 w-4" />
+                                <DropdownMenuItem onClick={() => setTheme("system")} className="cursor-pointer">
+                                    <Monitor className="mr-2 h-4 w-4 text-blue-500" />
                                     <span>System</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>

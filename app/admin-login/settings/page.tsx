@@ -1,5 +1,6 @@
 'use client';
 
+import { account, isOwner } from '@/lib/appwrite';
 import {
     AlertTriangle,
     Bell,
@@ -13,6 +14,7 @@ import {
     Zap
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -61,14 +63,34 @@ export default function SettingsPage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [activeTab, setActiveTab] = useState('general');
+    const router = useRouter();
 
     useEffect(() => {
-        fetchSettings();
-    }, []);
+        const checkPermission = async () => {
+            try {
+                const user = await account.get();
+                const owner = await isOwner(user.$id);
+                if (!owner) {
+                    toast.error("Unauthorized Access", { description: "You do not have permission to modify global system settings." });
+                    router.push('/admin-login/catalogue-dashboard');
+                    return;
+                }
+                fetchSettings();
+            } catch (error) {
+                router.push('/admin-login');
+            }
+        };
+        checkPermission();
+    }, [router]);
 
     const fetchSettings = async () => {
         try {
-            const res = await fetch('/api/settings');
+            const { jwt } = await account.createJWT();
+            const res = await fetch('/api/settings', {
+                headers: {
+                    'X-Appwrite-JWT': jwt
+                }
+            });
             if (res.ok) {
                 const data = await res.json();
                 setSettings(prev => ({ ...prev, ...data }));
@@ -86,9 +108,13 @@ export default function SettingsPage() {
     const handleSave = async () => {
         setSaving(true);
         try {
+            const { jwt } = await account.createJWT();
             const res = await fetch('/api/settings', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Appwrite-JWT': jwt
+                },
                 body: JSON.stringify(settings)
             });
 

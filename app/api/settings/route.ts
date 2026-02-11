@@ -1,8 +1,12 @@
 import { getSystemSettings, updateSystemSettings } from '@/lib/admin-settings';
+import { validateOwner } from '@/lib/appwrite-server';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    if (!(await validateOwner(request))) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    }
     const settings = await getSystemSettings();
     return NextResponse.json(settings);
   } catch (error) {
@@ -13,11 +17,10 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
+    if (!(await validateOwner(req))) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    }
     const body = await req.json();
-    // Here we should check for admin authentication
-    // This is a naive check. In production, use session validation from cookies/headers.
-    // Assuming this route is protected by middleware or layout auth check.
-
     const updated = await updateSystemSettings(body);
     return NextResponse.json(updated);
   } catch (error) {

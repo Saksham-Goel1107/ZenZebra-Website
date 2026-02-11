@@ -2,13 +2,12 @@
 
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import MobileStoreScroll from './MobileStoreScroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function StoreScrollAnimation() {
+export default function StoreScrollAnimation({ isBackground = false }: { isBackground?: boolean }) {
   const [isMobile, setIsMobile] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
@@ -21,13 +20,13 @@ export default function StoreScrollAnimation() {
   }, []);
 
   if (isClient && isMobile) {
-    return <MobileStoreScroll />;
+    return <MobileStoreScroll isBackground={isBackground} />;
   }
 
-  return <DesktopStoreScroll />;
+  return <DesktopStoreScroll isBackground={isBackground} />;
 }
 
-function DesktopStoreScroll() {
+function DesktopStoreScroll({ isBackground }: { isBackground: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -110,10 +109,10 @@ function DesktopStoreScroll() {
       ctxGsap = gsap.context(() => {
         const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top top',
-            end: '+=300%',
-            pin: true,
+            trigger: isBackground ? "html" : containerRef.current,
+            start: "top top",
+            end: isBackground ? "bottom bottom" : "+=300%",
+            pin: !isBackground,
             scrub: true,
             onUpdate: (self) => {
               state.current.targetTime = self.progress * (state.current.vDur - 0.1);
@@ -121,14 +120,16 @@ function DesktopStoreScroll() {
           }
         });
 
-        const [slide1, slide2, slide3] = contentRefs.current;
-        if (slide1 && slide2 && slide3) {
-          gsap.set([slide1, slide2, slide3], { autoAlpha: 0, y: 30 });
-          tl.to(slide1, { autoAlpha: 1, y: 0, duration: 1 }, 0.1)
-            .to(slide1, { autoAlpha: 0, y: -30, duration: 1 }, 0.8);
-          tl.to(slide2, { autoAlpha: 1, y: 0, duration: 1 }, 1.2)
-            .to(slide2, { autoAlpha: 0, y: -30, duration: 1 }, 2.0);
-          tl.to(slide3, { autoAlpha: 1, y: 0, duration: 1 }, 2.4);
+        if (!isBackground) {
+          const [slide1, slide2, slide3] = contentRefs.current;
+          if (slide1 && slide2 && slide3) {
+            gsap.set([slide1, slide2, slide3], { autoAlpha: 0, y: 30 });
+            tl.to(slide1, { autoAlpha: 1, y: 0, duration: 1 }, 0.1)
+              .to(slide1, { autoAlpha: 0, y: -30, duration: 1 }, 0.8);
+            tl.to(slide2, { autoAlpha: 1, y: 0, duration: 1 }, 1.2)
+              .to(slide2, { autoAlpha: 0, y: -30, duration: 1 }, 2.0);
+            tl.to(slide3, { autoAlpha: 1, y: 0, duration: 1 }, 2.4);
+          }
         }
 
         const tick = () => {
@@ -156,20 +157,22 @@ function DesktopStoreScroll() {
       <video ref={videoRef} muted playsInline className="hidden" style={{ display: 'none' }} />
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full object-cover" />
       <div className="absolute inset-0 bg-black/30 z-[1] pointer-events-none" />
-      <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
-        <div ref={el => { contentRefs.current[0] = el; }} className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-          <h2 className="text-5xl md:text-8xl font-bold text-white mb-4 uppercase italic">Revolutionizing</h2>
-          <p className="text-xl md:text-2xl text-white/80 uppercase tracking-widest">The Retail Experience</p>
+      {!isBackground && (
+        <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
+          <div ref={el => { contentRefs.current[0] = el; }} className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+            <h2 className="text-5xl md:text-8xl font-bold text-white mb-4 uppercase italic">Revolutionizing</h2>
+            <p className="text-xl md:text-2xl text-white/80 uppercase tracking-widest">The Retail Experience</p>
+          </div>
+          <div ref={el => { contentRefs.current[1] = el; }} className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+            <h2 className="text-5xl md:text-8xl font-bold text-white mb-4 uppercase italic">Curated Spaces</h2>
+            <p className="text-xl md:text-2xl text-white/80 uppercase tracking-widest">Modernity Meets Zebra</p>
+          </div>
+          <div ref={el => { contentRefs.current[2] = el; }} className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+            <h2 className="text-5xl md:text-8xl font-bold text-white mb-6 uppercase italic">Join the Stripe</h2>
+            {/* <Link href="/catalogue" className="pointer-events-auto px-12 py-4 bg-white text-black font-bold rounded-full">Explore Collection</Link> */}
+          </div>
         </div>
-        <div ref={el => { contentRefs.current[1] = el; }} className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-          <h2 className="text-5xl md:text-8xl font-bold text-white mb-4 uppercase italic">Curated Spaces</h2>
-          <p className="text-xl md:text-2xl text-white/80 uppercase tracking-widest">Modernity Meets Zebra</p>
-        </div>
-        <div ref={el => { contentRefs.current[2] = el; }} className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-          <h2 className="text-5xl md:text-8xl font-bold text-white mb-6 uppercase italic">Join the Stripe</h2>
-          <Link href="/catalogue" className="pointer-events-auto px-12 py-4 bg-white text-black font-bold rounded-full">Explore Collection</Link>
-        </div>
-      </div>
+      )}
       {!isReady && (
         <div className="absolute inset-0 flex items-center justify-center bg-black z-50">
           <div className="w-10 h-10 border-2 border-white/20 border-t-white rounded-full animate-spin" />

@@ -20,7 +20,6 @@ export default function GeneralDashboard() {
     const [stats, setStats] = useState({
         activeUsers: '...',
         totalViews: '...',
-        growth: '+14.2%'
     });
 
     const [activities, setActivities] = useState<any[]>([]);
@@ -93,11 +92,17 @@ export default function GeneralDashboard() {
                 <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 blur-[120px] pointer-events-none group-hover:bg-primary/10 transition-all duration-1000" />
                 <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
                     <div>
+                        <div className="flex items-center gap-3 text-primary mb-3">
+                            <div className="p-2 rounded-xl bg-primary/10 border border-primary/20">
+                                <LayoutDashboard className="w-5 h-5" />
+                            </div>
+                            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Operations Console</span>
+                        </div>
                         <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-foreground mb-4 italic uppercase">
-                            Admin <span className="text-primary">Overview</span>
+                            COMMAND <span className="text-primary">CENTER</span>
                         </h1>
                         <p className="text-muted-foreground text-lg max-w-xl font-medium">
-                            Welcome back to ZenZebra Command.
+                            Operational overview and real-time system performance monitor.
                         </p>
                     </div>
                     <div className="flex gap-4">
@@ -155,10 +160,6 @@ export default function GeneralDashboard() {
                                 <Activity className="w-5 h-5 text-muted-foreground" />
                             </div>
                             <h3 className="text-xl font-bold text-foreground">System Activity</h3>
-                        </div>
-                        <div className="flex items-center gap-2 text-green-500 text-sm font-bold bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20">
-                            <TrendingUp className="w-4 h-4" />
-                            <span>{stats.growth} Growth</span>
                         </div>
                     </div>
 
