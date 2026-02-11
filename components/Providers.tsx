@@ -1,8 +1,8 @@
 'use client';
 
 import { LazyMotion, domAnimation } from 'framer-motion';
-
 import { useEffect } from 'react';
+import { ThemeProvider } from './theme-provider';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -19,5 +19,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
     );
   }, []);
 
-  return <LazyMotion features={domAnimation}>{children}</LazyMotion>;
+  return (
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <LazyMotion features={domAnimation}>{children}</LazyMotion>
+    </ThemeProvider>
+  );
 }

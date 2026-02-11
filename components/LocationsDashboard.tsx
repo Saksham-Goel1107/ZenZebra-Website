@@ -228,20 +228,20 @@ export default function LocationsDashboard() {
             {/* Dashboard Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white mb-2">Home Page Locations</h1>
-                    <p className="text-white/40">Manage the "Spotted in the Wild" section on your homepage</p>
+                    <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">Home Page Locations</h1>
+                    <p className="text-muted-foreground">Manage the "Spotted in the Wild" section on your homepage</p>
                 </div>
             </div>
 
             {/* Editor Card */}
-            <div ref={formRef} className="rounded-3xl border border-white/10 bg-[#111] p-8 shadow-2xl backdrop-blur-sm relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-[#CC2224]/5 blur-[100px] pointer-events-none" />
+            <div ref={formRef} className="rounded-3xl border border-border bg-card text-card-foreground p-8 shadow-sm backdrop-blur-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-primary/5 blur-[100px] pointer-events-none" />
 
-                <div className="flex items-center gap-3 mb-8 pb-6 border-b border-white/5">
-                    <div className="p-2.5 bg-[#CC2224]/10 rounded-xl text-[#CC2224]">
+                <div className="flex items-center gap-3 mb-8 pb-6 border-b border-border">
+                    <div className="p-2.5 bg-primary/10 rounded-xl text-primary">
                         {editingId ? <Edit2 className="w-5 h-5" /> : <MapPin className="w-5 h-5" />}
                     </div>
-                    <h2 className="text-xl font-semibold text-white/90">
+                    <h2 className="text-xl font-semibold text-foreground">
                         {editingId ? 'Edit Location' : 'Add New Location'}
                     </h2>
                 </div>
@@ -249,33 +249,33 @@ export default function LocationsDashboard() {
                 <div className="grid lg:grid-cols-2 gap-8">
                     <div className="space-y-6">
                         <div className="space-y-2">
-                            <Label className="text-white/60">Location Title</Label>
+                            <Label className="text-muted-foreground">Location Title</Label>
                             <Input
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 placeholder="e.g. Awfis, Ambience Mall - Gurugram"
-                                className="bg-black/40 border-white/10 text-white placeholder:text-white/20 h-12"
+                                className="bg-background/50 border-input text-foreground placeholder:text-muted-foreground h-12"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <Label className="text-white/60">Description</Label>
+                            <Label className="text-muted-foreground">Description</Label>
                             <Textarea
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 placeholder="Give a short detail about this location..."
-                                className="bg-black/40 border-white/10 text-white placeholder:text-white/20 min-h-[100px] resize-none"
+                                className="bg-background/50 border-input text-foreground placeholder:text-muted-foreground min-h-[100px] resize-none"
                             />
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label className="text-white/60">Display Order</Label>
+                                <Label className="text-muted-foreground">Display Order</Label>
                                 <Input
                                     type="number"
                                     value={order}
                                     onChange={(e) => setOrder(parseInt(e.target.value) || 0)}
-                                    className="bg-black/40 border-white/10 text-white"
+                                    className="bg-background/50 border-input text-foreground"
                                 />
                             </div>
                             <div className="flex items-end pb-2">
@@ -284,9 +284,9 @@ export default function LocationsDashboard() {
                                         id="active-status"
                                         checked={active}
                                         onCheckedChange={(checked) => setActive(checked === true)}
-                                        className="border-white/20 data-[state=checked]:bg-[#CC2224] data-[state=checked]:border-[#CC2224]"
+                                        className="border-input data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                     />
-                                    <Label htmlFor="active-status" className="cursor-pointer text-white/80 font-medium whitespace-nowrap">
+                                    <Label htmlFor="active-status" className="cursor-pointer text-foreground/80 font-medium whitespace-nowrap">
                                         Active on Website
                                     </Label>
                                 </div>
@@ -296,19 +296,19 @@ export default function LocationsDashboard() {
 
                     <div className="space-y-6">
                         <div className="space-y-2">
-                            <Label className="text-white/60">Media Type</Label>
+                            <Label className="text-muted-foreground">Media Type</Label>
                             <Select value={mediaType} onValueChange={(val: 'image' | 'video') => setMediaType(val)}>
-                                <SelectTrigger className="bg-black/40 border-white/10 text-white h-12">
+                                <SelectTrigger className="bg-background/50 border-input text-foreground h-12">
                                     <SelectValue placeholder="Select media type" />
                                 </SelectTrigger>
-                                <SelectContent className="bg-[#1a1a1a] border-white/10 text-white">
-                                    <SelectItem value="video" className="focus:bg-[#CC2224] focus:text-white">
+                                <SelectContent className="bg-popover border-border text-popover-foreground">
+                                    <SelectItem value="video" className="focus:bg-primary/10 focus:text-primary">
                                         <div className="flex items-center gap-2">
                                             <Film className="w-4 h-4" />
                                             <span>Video</span>
                                         </div>
                                     </SelectItem>
-                                    <SelectItem value="image" className="focus:bg-[#CC2224] focus:text-white">
+                                    <SelectItem value="image" className="focus:bg-primary/10 focus:text-primary">
                                         <div className="flex items-center gap-2">
                                             <ImageIcon className="w-4 h-4" />
                                             <span>Image</span>
@@ -319,10 +319,10 @@ export default function LocationsDashboard() {
                         </div>
 
                         <div className="space-y-2">
-                            <Label className="text-white/60">
+                            <Label className="text-muted-foreground">
                                 Media File {editingId && '(Upload to replace)'}
                             </Label>
-                            <div className={`relative group border-2 border-dashed rounded-xl transition-all h-[160px] flex items-center justify-center ${file ? 'border-[#CC2224]/50 bg-[#CC2224]/5' : 'border-white/10 hover:border-white/20 bg-white/[0.02]'}`}>
+                            <div className={`relative group border-2 border-dashed rounded-xl transition-all h-[160px] flex items-center justify-center ${file ? 'border-primary/50 bg-primary/5' : 'border-border hover:border-primary/50 bg-muted/20'}`}>
                                 <input
                                     ref={fileInputRef}
                                     type="file"
@@ -333,20 +333,20 @@ export default function LocationsDashboard() {
                                 <div className="p-4 flex flex-col items-center text-center">
                                     {file ? (
                                         <>
-                                            <FileUp className="w-8 h-8 text-[#CC2224] mb-2" />
-                                            <p className="text-sm font-medium text-white truncate max-w-[200px]">{file.name}</p>
-                                            <p className="text-xs text-white/40 mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                                            <FileUp className="w-8 h-8 text-primary mb-2" />
+                                            <p className="text-sm font-medium text-foreground truncate max-w-[200px]">{file.name}</p>
+                                            <p className="text-xs text-muted-foreground mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
                                         </>
                                     ) : (
                                         <>
-                                            <div className="p-3 bg-white/5 rounded-full mb-3">
-                                                {mediaType === 'video' ? <Film className="w-6 h-6 text-white/30" /> : <ImageIcon className="w-6 h-6 text-white/30" />}
+                                            <div className="p-3 bg-background rounded-full mb-3 shadow-sm">
+                                                {mediaType === 'video' ? <Film className="w-6 h-6 text-muted-foreground" /> : <ImageIcon className="w-6 h-6 text-muted-foreground" />}
                                             </div>
-                                            <p className="text-sm text-white/40 group-hover:text-white/60 transition-colors font-medium">
+                                            <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors font-medium">
                                                 Click or drag {mediaType} file here
                                             </p>
                                             {mediaUrl && (
-                                                <p className="text-[10px] text-[#CC2224] mt-2 font-bold uppercase tracking-wider">
+                                                <p className="text-[10px] text-primary mt-2 font-bold uppercase tracking-wider">
                                                     Current Media Loaded
                                                 </p>
                                             )}
@@ -358,11 +358,11 @@ export default function LocationsDashboard() {
                     </div>
                 </div>
 
-                <div className="mt-10 pt-6 border-t border-white/5 flex gap-4">
+                <div className="mt-10 pt-6 border-t border-border flex gap-4">
                     <Button
                         disabled={!canSave || busy}
                         onClick={handleSave}
-                        className="flex-1 md:flex-none bg-[#CC2224] hover:bg-[#b01c1e] text-white font-bold h-12 px-10 rounded-xl shadow-lg shadow-[#CC2224]/20 transition-all active:scale-95"
+                        className="flex-1 md:flex-none bg-primary hover:bg-primary/90 text-primary-foreground font-bold h-12 px-10 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95"
                     >
                         {busy ? (
                             <>
@@ -378,7 +378,7 @@ export default function LocationsDashboard() {
                         <Button
                             variant="outline"
                             onClick={resetForm}
-                            className="bg-white/5 hover:bg-white/10 text-white/80 border-transparent hover:text-white h-12 px-8 rounded-xl transition-all"
+                            className="bg-muted hover:bg-muted/80 text-foreground border-transparent h-12 px-8 rounded-xl transition-all"
                         >
                             Cancel
                         </Button>
@@ -388,30 +388,30 @@ export default function LocationsDashboard() {
 
             {/* List Section */}
             <div className="space-y-4">
-                <h3 className="text-xl font-bold text-white/90 flex items-center gap-2">
+                <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
                     Published Locations
-                    <span className="text-sm font-medium text-white/30 bg-white/5 px-2 py-0.5 rounded-md">{locations.length}</span>
+                    <span className="text-sm font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-md">{locations.length}</span>
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {locations.map((loc) => (
-                        <div key={loc.id} className="group rounded-2xl border border-white/10 bg-[#111] overflow-hidden hover:border-[#CC2224]/30 transition-all">
-                            <div className="relative aspect-video bg-black overflow-hidden">
+                        <div key={loc.id} className="group rounded-2xl border border-border bg-card overflow-hidden hover:border-primary/50 transition-all">
+                            <div className="relative aspect-video bg-muted-foreground/10 overflow-hidden">
                                 {loc.mediaType === 'video' ? (
-                                    <video src={loc.mediaUrl} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" />
+                                    <video src={loc.mediaUrl} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" />
                                 ) : (
-                                    <img src={loc.mediaUrl} alt={loc.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" />
+                                    <img src={loc.mediaUrl} alt={loc.title} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" />
                                 )}
                                 <div className="absolute top-3 right-3 flex gap-2">
                                     <button
                                         onClick={() => startEdit(loc)}
-                                        className="p-2 rounded-lg bg-black/60 backdrop-blur-md text-white/70 hover:text-white hover:bg-[#CC2224] transition-all"
+                                        className="p-2 rounded-lg bg-black/60 backdrop-blur-md text-white/90 hover:text-white hover:bg-primary transition-all"
                                     >
                                         <Edit2 className="w-4 h-4" />
                                     </button>
                                     <button
                                         onClick={() => handleDeleteClick(loc)}
-                                        className="p-2 rounded-lg bg-black/60 backdrop-blur-md text-white/70 hover:text-red-500 hover:bg-red-500/10 transition-all"
+                                        className="p-2 rounded-lg bg-black/60 backdrop-blur-md text-white/90 hover:text-red-500 hover:bg-red-500/20 transition-all"
                                     >
                                         <Trash2 className="w-4 h-4" />
                                     </button>
@@ -426,18 +426,18 @@ export default function LocationsDashboard() {
                             </div>
                             <div className="p-5">
                                 <div className="flex items-center justify-between mb-2">
-                                    <h4 className="font-bold text-white text-lg truncate pr-2">{loc.title}</h4>
-                                    <span className="text-[10px] font-black text-white/20 uppercase tracking-tighter">Order: {loc.order}</span>
+                                    <h4 className="font-bold text-foreground text-lg truncate pr-2">{loc.title}</h4>
+                                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-tighter">Order: {loc.order}</span>
                                 </div>
-                                <p className="text-sm text-white/40 line-clamp-2 min-h-[40px] mb-4">
+                                <p className="text-sm text-muted-foreground line-clamp-2 min-h-[40px] mb-4">
                                     {loc.description}
                                 </p>
-                                <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                                <div className="flex items-center justify-between pt-4 border-t border-border">
                                     <div className="flex items-center gap-2">
-                                        {loc.mediaType === 'video' ? <Film className="w-3 h-3 text-white/20" /> : <ImageIcon className="w-3 h-3 text-white/20" />}
-                                        <span className="text-[10px] font-bold text-white/20 uppercase">{loc.mediaType}</span>
+                                        {loc.mediaType === 'video' ? <Film className="w-3 h-3 text-muted-foreground" /> : <ImageIcon className="w-3 h-3 text-muted-foreground" />}
+                                        <span className="text-[10px] font-bold text-muted-foreground uppercase">{loc.mediaType}</span>
                                     </div>
-                                    <span className="text-[10px] text-white/20 font-medium">
+                                    <span className="text-[10px] text-muted-foreground font-medium">
                                         {loc.$updatedAt ? new Date(loc.$updatedAt).toLocaleDateString() : '—'}
                                     </span>
                                 </div>
@@ -446,28 +446,28 @@ export default function LocationsDashboard() {
                     ))}
 
                     {locations.length === 0 && (
-                        <div className="col-span-full py-20 rounded-3xl border border-dashed border-white/10 flex flex-col items-center justify-center text-center">
-                            <div className="p-5 bg-white/5 rounded-full mb-4">
-                                <MapPin className="w-10 h-10 text-white/20" />
+                        <div className="col-span-full py-20 rounded-3xl border border-dashed border-border flex flex-col items-center justify-center text-center">
+                            <div className="p-5 bg-muted rounded-full mb-4">
+                                <MapPin className="w-10 h-10 text-muted-foreground" />
                             </div>
-                            <h4 className="text-white font-bold">No locations found</h4>
-                            <p className="text-white/40 text-sm mt-1">Start by adding your first "Spotted in the Wild" location above.</p>
+                            <h4 className="text-foreground font-bold">No locations found</h4>
+                            <p className="text-muted-foreground text-sm mt-1">Start by adding your first "Spotted in the Wild" location above.</p>
                         </div>
                     )}
                 </div>
             </div>
 
             <AlertDialog open={deleteDialog.isOpen} onOpenChange={(open) => !open && setDeleteDialog(prev => ({ ...prev, isOpen: false }))}>
-                <AlertDialogContent className="bg-[#111] border-white/10 text-white rounded-3xl">
+                <AlertDialogContent className="bg-card border-border text-card-foreground rounded-3xl">
                     <AlertDialogHeader>
                         <AlertDialogTitle className="text-xl font-bold">Delete Location?</AlertDialogTitle>
-                        <AlertDialogDescription className="text-white/60">
-                            This will permanently remove <span className="font-bold text-white">"{deleteDialog.location?.title}"</span> from the homepage. This action cannot be undone.
+                        <AlertDialogDescription className="text-muted-foreground">
+                            This will permanently remove <span className="font-bold text-foreground">"{deleteDialog.location?.title}"</span> from the homepage. This action cannot be undone.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="mt-4 gap-3">
-                        <AlertDialogCancel className="bg-white/5 border-white/10 hover:bg-white/10 rounded-xl transition-all">Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={confirmDelete} className="bg-red-600 hover:bg-red-700 text-white border-none rounded-xl transition-all">Delete Forever</AlertDialogAction>
+                        <AlertDialogCancel className="bg-muted border-border hover:bg-muted/80 rounded-xl transition-all">Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90 text-destructive-foreground border-none rounded-xl transition-all">Delete Forever</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

@@ -6,54 +6,18 @@ import OurPromise from '@/components/promise';
 import StoreScrollAnimation from '@/components/StoreScrollAnimation';
 import What from '@/components/what';
 import Why from '@/components/why';
+import { getSystemSettings } from '@/lib/admin-settings';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 const Ticker = dynamic(() => import('@/components/Ticker'));
 const Locations = dynamic(() => import('@/components/Locations'));
 
-export const metadata = {
-  title: 'ZenZebra - Curated Lifestyle Where You Already Are',
-  description:
-    'ZenZebra brings curated lifestyle products directly into your daily spaces - offices, gyms, cafés, and malls. Try first, own after. No pressure, no guesswork, just better living by design.',
-  keywords: [
-    'ZenZebra',
-    'lifestyle brand',
-    'lifestyle integrated brand',
-    'try before you buy',
-    'curated experiences',
-    'consumer convenience',
-    'brand sampling',
-    'modern retail India',
-  ],
-  authors: [{ name: 'ZenZebra Team' }],
-  openGraph: {
-    title: 'ZenZebra - Curated Lifestyle Where You Already Are',
-    description:
-      'World’s first lifestyle-integrated brand. Discover, try, and buy premium products right where you live, work, and relax.',
-    url: 'https://zenzebra.in',
-    siteName: 'ZenZebra',
-    images: [
-      {
-        url: 'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/6985926d0013323cc0ca/view?project=698585dc0014c943f45e&mode=admin',
-        width: 1200,
-        height: 630,
-        alt: 'ZenZebra Lifestyle Experience',
-      },
-    ],
-    locale: 'en_IN',
-    type: 'website',
-  },
-  metadataBase: new URL('https://zenzebra.in'),
-};
+export default async function Home() {
+  const settings = await getSystemSettings();
 
-export const viewport = {
-  themeColor: '#CC2224',
-};
-
-export default function Home() {
   return (
     <main className="bg-black">
-      <Hero />
+      <Hero settings={settings} />
       <StoreScrollAnimation />
       <div className="flex justify-center lg:block">
         <Image

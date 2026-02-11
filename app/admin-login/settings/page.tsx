@@ -1,97 +1,336 @@
 'use client';
 
 import {
+    AlertTriangle,
     Bell,
+    ExternalLink,
     Globe,
+    Loader2,
+    Lock,
+    MessageSquare,
     Save,
     Shield,
     Zap
 } from 'lucide-react';
-import { useState } from 'react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-export default function SettingsPage() {
-    const [busy, setBusy] = useState(false);
+interface SettingsData {
+    siteName: string;
+    siteDescription: string;
+    maintenanceMode: boolean;
+    maintenanceMessage: string;
+    adminLocked: boolean;
+    supportEmail: string;
+    supportPhone: string;
+    googleAnalyticsId: string;
+    socialInstagram: string;
+    socialLinkedIn: string;
+    logoUrl: string;
+    ogImageUrl: string;
+}
 
-    const handleSave = () => {
-        setBusy(true);
-        setTimeout(() => {
-            setBusy(false);
-            toast.success("Global settings updated successfully");
-        }, 1200);
+const DEFAULT_SETTINGS: SettingsData = {
+    siteName: "",
+    siteDescription: "",
+    maintenanceMode: false,
+    maintenanceMessage: "We're currently upgrading our systems to provide a better experience. Please check back soon.",
+    adminLocked: false,
+    supportEmail: "",
+    supportPhone: "",
+    googleAnalyticsId: "",
+    socialInstagram: "",
+    socialLinkedIn: "",
+    logoUrl: "",
+    ogImageUrl: ""
+};
+
+export default function SettingsPage() {
+    const [settings, setSettings] = useState<SettingsData>(DEFAULT_SETTINGS);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [activeTab, setActiveTab] = useState('general');
+
+    useEffect(() => {
+        fetchSettings();
+    }, []);
+
+    const fetchSettings = async () => {
+        try {
+            const res = await fetch('/api/settings');
+            if (res.ok) {
+                const data = await res.json();
+                setSettings(prev => ({ ...prev, ...data }));
+            } else {
+                toast.error("Failed to load settings");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Error connecting to server");
+        } finally {
+            setLoading(false);
+        }
     };
 
+    const handleSave = async () => {
+        setSaving(true);
+        try {
+            const res = await fetch('/api/settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(settings)
+            });
+
+            if (res.ok) {
+                toast.success("Global settings updated. Changes may take up to 30s to propagate.");
+                if (settings.adminLocked) {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                }
+            } else {
+                toast.error("Failed to save settings");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Error saving settings");
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const updateSetting = (key: keyof SettingsData, value: any) => {
+        setSettings(prev => ({ ...prev, [key]: value }));
+    };
+
+    if (loading) {
+        return (
+            <div className="flex h-[50vh] items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-[#CC2224]" />
+            </div>
+        );
+    }
+
     return (
-        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-5xl mx-auto py-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-5xl mx-auto py-6 pb-20">
+            {/* Header - Theme Aware */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sticky top-0 z-20 bg-background/80 backdrop-blur-md py-4 -mx-4 px-4 border-b border-border">
                 <div>
-                    <h1 className="text-4xl font-black tracking-tighter text-white mb-2 uppercase italic">
+                    <h1 className="text-4xl font-black tracking-tighter text-foreground mb-2 uppercase italic">
                         System <span className="text-[#CC2224]">Settings</span>
                     </h1>
-                    <p className="text-white/40 font-medium">Configure global application behavior and security.</p>
+                    <p className="text-muted-foreground font-medium text-sm">Configure global application behavior and security.</p>
                 </div>
                 <button
                     onClick={handleSave}
-                    disabled={busy}
+                    disabled={saving}
                     className="flex items-center gap-2 bg-[#CC2224] hover:bg-[#b01c1e] text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-[#CC2224]/20 transition-all active:scale-95 disabled:opacity-50"
                 >
-                    <Save className="w-5 h-5" />
-                    {busy ? 'Saving Changes...' : 'Save Settings'}
+                    {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+                    {saving ? 'Saving...' : 'Save Settings'}
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Navigation Sidebar for Settings (Internal) */}
-                <div className="space-y-2">
-                    <SettingsTab active icon={<Globe />} label="General & SEO" />
-                    <SettingsTab icon={<Shield />} label="Security & Access" />
-                    <SettingsTab icon={<Bell />} label="Notifications" />
-                    <SettingsTab icon={<Zap />} label="Performance" />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 sm:px-0">
+                {/* Navigation Sidebar */}
+                <div className="space-y-2 lg:sticky lg:top-32 h-fit">
+                    <SettingsTab
+                        active={activeTab === 'general'}
+                        onClick={() => setActiveTab('general')}
+                        icon={<Globe className="w-5 h-5" />}
+                        label="General & SEO"
+                    />
+                    <SettingsTab
+                        active={activeTab === 'security'}
+                        onClick={() => setActiveTab('security')}
+                        icon={<Shield className="w-5 h-5" />}
+                        label="Security & Access"
+                    />
+                    <SettingsTab
+                        active={activeTab === 'social'}
+                        onClick={() => setActiveTab('social')}
+                        icon={<Bell className="w-5 h-5" />}
+                        label="Contact & Social"
+                    />
+                    <SettingsTab
+                        active={activeTab === 'performance'}
+                        onClick={() => setActiveTab('performance')}
+                        icon={<Zap className="w-5 h-5" />}
+                        label="Performance"
+                    />
+                    <div className="h-px bg-border my-4" />
+                    <Link href="/admin-login/inquiries" className="block">
+                        <SettingsTab
+                            active={false}
+                            icon={<MessageSquare className="w-5 h-5" />}
+                            label="User Inquiries"
+                            isLink
+                        />
+                    </Link>
                 </div>
 
                 {/* Settings Panel */}
                 <div className="lg:col-span-2 space-y-8">
-                    {/* General Section */}
-                    <Section title="General Configuration" description="Manage your site's public identity and metadata.">
-                        <div className="space-y-6">
-                            <InputGroup label="Website Title" placeholder="ZenZebra - Curated Lifestyle" />
-                            <InputGroup label="Meta Description" placeholder="World's first lifestyle-integrated brand..." area />
-                            <div className="flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/5 group">
-                                <div className="flex flex-col">
-                                    <span className="text-white font-bold text-sm">Maintenance Mode</span>
-                                    <span className="text-xs text-white/30">Disable public access while performing updates</span>
-                                </div>
-                                <Switch />
-                            </div>
-                        </div>
-                    </Section>
 
-                    {/* Security Section */}
-                    <Section title="Security Enforcement" description="Configure authentication policies and data protection.">
-                        <div className="space-y-6">
-                            <div className="flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/5">
-                                <div className="flex flex-col">
-                                    <span className="text-white font-bold text-sm">Force 2FA for Admins</span>
-                                    <span className="text-xs text-white/30">Require Multi-Factor Authentication for all portal access</span>
+                    {activeTab === 'general' && (
+                        <Section title="General Configuration" description="Manage your site's public identity and metadata.">
+                            <div className="space-y-6">
+                                <InputGroup
+                                    label="Website Title"
+                                    value={settings.siteName}
+                                    onChange={(e) => updateSetting('siteName', e.target.value)}
+                                    placeholder="ZenZebra - Curated Lifestyle"
+                                />
+                                <InputGroup
+                                    label="Meta Description"
+                                    value={settings.siteDescription}
+                                    onChange={(e) => updateSetting('siteDescription', e.target.value)}
+                                    placeholder="World's first lifestyle-integrated brand..."
+                                    area
+                                />
+                                <div className="h-px bg-border w-full my-2" />
+                                <InputGroup
+                                    label="Site Logo URL"
+                                    value={settings.logoUrl}
+                                    onChange={(e) => updateSetting('logoUrl', e.target.value)}
+                                    placeholder="https://..."
+                                />
+                                <InputGroup
+                                    label="Social Share Image (OG) URL"
+                                    value={settings.ogImageUrl}
+                                    onChange={(e) => updateSetting('ogImageUrl', e.target.value)}
+                                    placeholder="https://..."
+                                />
+                                <div className="h-px bg-border w-full my-2" />
+                                <div className="flex items-center justify-between p-4 rounded-3xl bg-muted/30 border border-border group hover:border-[#CC2224]/30 transition-colors">
+                                    <div className="flex flex-col">
+                                        <span className="text-foreground font-bold text-sm flex items-center gap-2 uppercase tracking-tighter">
+                                            Maintenance Mode
+                                            {settings.maintenanceMode && <span className="px-2 py-0.5 rounded-md bg-[#CC2224] text-[8px] text-white uppercase tracking-wider">Active</span>}
+                                        </span>
+                                        <span className="text-[10px] text-muted-foreground font-medium mt-1 leading-tight">Disable public access while performing updates.</span>
+                                    </div>
+                                    <Switch
+                                        checked={settings.maintenanceMode}
+                                        onChange={(checked) => updateSetting('maintenanceMode', checked)}
+                                    />
                                 </div>
-                                <Switch defaultChecked />
+                                {settings.maintenanceMode && (
+                                    <div className="animate-in fade-in slide-in-from-top-2">
+                                        <InputGroup
+                                            label="Maintenance Message"
+                                            value={settings.maintenanceMessage}
+                                            onChange={(e) => updateSetting('maintenanceMessage', e.target.value)}
+                                            placeholder="Message shown to visitors..."
+                                            area
+                                        />
+                                    </div>
+                                )}
                             </div>
-                            <div className="flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/5">
-                                <div className="flex flex-col">
-                                    <span className="text-white font-bold text-sm">Session Timeout</span>
-                                    <span className="text-xs text-white/30">Automatically log out inactive administrators</span>
+                        </Section>
+                    )}
+
+                    {activeTab === 'security' && (
+                        <Section title="Security Enforcement" description="Configure sensitive access controls.">
+                            <div className="space-y-6">
+                                <div className={`p-6 rounded-[2rem] border transition-all duration-300 ${settings.adminLocked ? 'bg-destructive/10 border-destructive shadow-[0_0_30px_-5px_oklch(var(--destructive)/0.2)]' : 'bg-muted/30 border-border hover:border-[#CC2224]/30'}`}>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex flex-col gap-1">
+                                            <span className={`font-black text-sm uppercase tracking-tighter flex items-center gap-2 ${settings.adminLocked ? 'text-destructive' : 'text-foreground'}`}>
+                                                {settings.adminLocked ? <Lock className="w-4 h-4" /> : <Shield className="w-4 h-4" />}
+                                                Admin Emergency Kill Switch
+                                            </span>
+                                            <span className="text-[10px] text-muted-foreground font-medium max-w-[280px] leading-tight">
+                                                {settings.adminLocked
+                                                    ? "SYSTEM LOCKDOWN IMMINENT. Saving will disable all admin access immediately."
+                                                    : "Immediately disable the entire admin dashboard. Use only in case of a security breach."}
+                                            </span>
+                                        </div>
+                                        <Switch
+                                            checked={settings.adminLocked}
+                                            onChange={(checked) => updateSetting('adminLocked', checked)}
+                                        />
+                                    </div>
+                                    {settings.adminLocked && (
+                                        <div className="mt-4 p-4 bg-destructive/10 rounded-2xl border border-destructive/20 text-[11px] text-destructive flex gap-3 items-start font-bold">
+                                            <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                                            <div>
+                                                <strong>CRITICAL WARNING:</strong> This will lock YOU out. You will need direct database access to Appwrite to revert this setting (`adminLocked: false`).
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
-                                <select
-                                    defaultValue="24 Hours"
-                                    className="bg-black/40 border-white/10 rounded-xl px-3 py-1 text-xs font-bold text-white/60 focus:ring-1 focus:ring-[#CC2224] outline-none"
-                                >
-                                    <option>1 Hour</option>
-                                    <option>4 Hours</option>
-                                    <option>12 Hours</option>
-                                    <option>24 Hours</option>
-                                </select>                            </div>
-                        </div>
-                    </Section>
+
+                                <div className="p-6 bg-muted/20 rounded-[1.5rem] border border-border flex items-center gap-4">
+                                    <div className="p-3 rounded-full bg-blue-500/10 text-blue-500">
+                                        <Shield className="w-5 h-5" />
+                                    </div>
+                                    <p className="text-[11px] text-muted-foreground font-bold leading-relaxed italic">
+                                        Note: Advanced authentication policies (2FA, Password Complexity) are managed directly within your Appwrite Cloud Console Auth Security.
+                                    </p>
+                                </div>
+                            </div>
+                        </Section>
+                    )}
+
+                    {activeTab === 'social' && (
+                        <Section title="Contact & Social" description="Manage public contact information and social media links.">
+                            <div className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <InputGroup
+                                        label="Support Email"
+                                        value={settings.supportEmail}
+                                        onChange={(e) => updateSetting('supportEmail', e.target.value)}
+                                        placeholder="support@zenzebra.in"
+                                    />
+                                    <InputGroup
+                                        label="Support Phone"
+                                        value={settings.supportPhone}
+                                        onChange={(e) => updateSetting('supportPhone', e.target.value)}
+                                        placeholder="+91-..."
+                                    />
+                                </div>
+                                <div className="h-px bg-border w-full my-4" />
+                                <div className="space-y-4">
+                                    <InputGroup
+                                        label="Instagram URL"
+                                        value={settings.socialInstagram}
+                                        onChange={(e) => updateSetting('socialInstagram', e.target.value)}
+                                        placeholder="https://instagram.com/..."
+                                    />
+                                    <InputGroup
+                                        label="LinkedIn URL"
+                                        value={settings.socialLinkedIn}
+                                        onChange={(e) => updateSetting('socialLinkedIn', e.target.value)}
+                                        placeholder="https://linkedin.com/company/..."
+                                    />
+                                </div>
+                            </div>
+                        </Section>
+                    )}
+
+                    {activeTab === 'performance' && (
+                        <Section title="Analytics & Integration" description="Third-party tracking and performance monitoring.">
+                            <div className="space-y-6">
+                                <InputGroup
+                                    label="Google Analytics ID"
+                                    value={settings.googleAnalyticsId}
+                                    onChange={(e) => updateSetting('googleAnalyticsId', e.target.value)}
+                                    placeholder="G-XXXXXXXXXX"
+                                />
+                                <div className="p-6 rounded-3xl bg-primary/5 border border-primary/10 flex gap-4 items-center">
+                                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                                        <Zap className="w-4 h-4" />
+                                    </div>
+                                    <p className="text-[11px] text-muted-foreground font-bold">
+                                        More performance settings (caching, CDN, Image Optimization) are managed via your Vercel/Next.js hosting dashboard.
+                                    </p>
+                                </div>
+                            </div>
+                        </Section>
+                    )}
+
                 </div>
             </div>
         </div>
@@ -100,53 +339,83 @@ export default function SettingsPage() {
 
 function Section({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
     return (
-        <div className="rounded-[2rem] border border-white/10 bg-[#111] p-8 shadow-2xl relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-[#CC2224]/5 blur-[80px] pointer-events-none group-hover:bg-[#CC2224]/10 transition-all duration-1000" />
+        <div className="rounded-[2.5rem] border border-border bg-card p-8 sm:p-10 shadow-2xl shadow-black/5 relative overflow-hidden group hover:border-primary/20 transition-all duration-500">
+            {/* Subtle gloss effect */}
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/[0.03] blur-[100px] pointer-events-none group-hover:bg-primary/[0.07] transition-all duration-1000" />
+
             <div className="relative z-10">
-                <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-                <p className="text-sm text-white/40 mb-8 max-w-md">{description}</p>
+                <h3 className="text-2xl font-black tracking-tighter uppercase italic text-foreground mb-1">{title}</h3>
+                <p className="text-xs text-muted-foreground mb-10 max-w-sm font-medium">{description}</p>
                 {children}
             </div>
         </div>
     );
 }
 
-function SettingsTab({ label, icon, active = false }: { label: string; icon: React.ReactNode; active?: boolean }) {
+function SettingsTab({ label, icon, active = false, onClick, isLink = false }: { label: string; icon: React.ReactNode; active?: boolean; onClick?: () => void; isLink?: boolean }) {
     return (
-        <button className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 group ${active ? 'bg-[#CC2224] text-white shadow-xl shadow-[#CC2224]/20' : 'hover:bg-white/5 text-white/40 hover:text-white border border-transparent hover:border-white/5'}`}>
-            <span className={`p-2 rounded-xl transition-colors ${active ? 'bg-white/20' : 'bg-white/5 group-hover:bg-white/10'}`}>
+        <button
+            onClick={onClick}
+            className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 group ${active
+                ? 'bg-[#CC2224] text-white shadow-xl shadow-[#CC2224]/30 scale-[1.02]'
+                : 'hover:bg-muted text-muted-foreground hover:text-foreground border border-transparent hover:border-border'
+                }`}
+        >
+            <span className={`p-2 rounded-xl transition-colors flex items-center justify-center ${active ? 'bg-white/20' : 'bg-muted group-hover:bg-muted-foreground/10'}`}>
                 {icon}
             </span>
-            <span className="font-bold text-sm uppercase tracking-tighter">{label}</span>
+            <span className="font-black text-xs uppercase tracking-tighter text-left flex-1">{label}</span>
+            {isLink && <ExternalLink className="w-3 h-3 opacity-40 group-hover:opacity-100 transition-opacity" />}
         </button>
     );
 }
 
-function InputGroup({ label, placeholder, area = false }: { label: string; placeholder: string; area?: boolean }) {
+function InputGroup({
+    label,
+    placeholder,
+    area = false,
+    value,
+    onChange
+}: {
+    label: string;
+    placeholder: string;
+    area?: boolean;
+    value?: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+}) {
     return (
-        <div className="space-y-2">
-            <label className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] ml-1">{label}</label>
+        <div className="space-y-2 group">
+            <label className="text-[10px] font-black italic text-muted-foreground uppercase tracking-[0.2em] ml-1 group-focus-within:text-[#CC2224] transition-colors">{label}</label>
             {area ? (
                 <textarea
-                    className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white text-sm placeholder:text-white/10 focus:ring-1 focus:ring-[#CC2224]/50 focus:border-[#CC2224]/50 transition-all min-h-[100px] outline-none resize-none"
+                    className="w-full bg-background border border-border rounded-2xl p-4 text-foreground text-sm placeholder:text-muted-foreground/30 focus:ring-2 focus:ring-[#CC2224]/30 focus:border-[#CC2224] transition-all min-h-[120px] outline-none resize-none font-medium"
                     placeholder={placeholder}
+                    value={value}
+                    onChange={onChange}
                 />
             ) : (
                 <input
                     type="text"
-                    className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white text-sm placeholder:text-white/10 focus:ring-1 focus:ring-[#CC2224]/50 focus:border-[#CC2224]/50 transition-all outline-none"
+                    className="w-full bg-background border border-border rounded-2xl px-5 py-4 text-foreground text-sm placeholder:text-muted-foreground/30 focus:ring-2 focus:ring-[#CC2224]/30 focus:border-[#CC2224] transition-all outline-none font-medium"
                     placeholder={placeholder}
+                    value={value}
+                    onChange={onChange}
                 />
             )}
         </div>
     );
 }
 
-function Switch({ defaultChecked = false }: { defaultChecked?: boolean }) {
+function Switch({ checked = false, onChange }: { checked?: boolean; onChange: (checked: boolean) => void }) {
     return (
-        <label className="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" defaultChecked={defaultChecked} className="sr-only peer" />
-            <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white/40 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#CC2224] peer-checked:after:bg-white peer-checked:after:shadow-lg"></div>
+        <label className="relative inline-flex items-center cursor-pointer group">
+            <input
+                type="checkbox"
+                checked={checked}
+                onChange={(e) => onChange(e.target.checked)}
+                className="sr-only peer"
+            />
+            <div className="w-14 h-8 bg-muted border border-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-muted-foreground after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#CC2224] peer-checked:after:bg-white peer-checked:after:shadow-lg group-hover:bg-muted transition-colors"></div>
         </label>
     );
 }

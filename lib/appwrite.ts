@@ -13,6 +13,7 @@ export const appwriteConfig = {
   databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
   locationsCollectionId: process.env.NEXT_PUBLIC_APPWRITE_LOCATIONS_COLLECTION_ID!,
   homeLocationsCollectionId: process.env.NEXT_PUBLIC_APPWRITE_HOME_LOCATIONS_COLLECTION_ID!,
+  settingsCollectionId: process.env.NEXT_PUBLIC_APPWRITE_SETTINGS_COLLECTION_ID!,
   bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
 };
 

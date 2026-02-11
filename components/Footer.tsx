@@ -1,5 +1,6 @@
 'use client';
 
+import { SystemSettings } from '@/lib/admin-settings';
 import { m } from 'framer-motion';
 import { Instagram, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 import Image from 'next/image';
@@ -7,7 +8,7 @@ import Link from 'next/link';
 
 import { usePathname } from 'next/navigation';
 
-export default function Footer() {
+export default function Footer({ settings }: { settings: SystemSettings }) {
   const pathname = usePathname();
 
   if (pathname?.startsWith('/admin-login')) return null;
@@ -25,9 +26,9 @@ export default function Footer() {
         >
           <Link href="/">
             <Image
-              alt="ZenZebra Logo"
+              alt={`${settings?.siteName || 'ZenZebra'} Logo`}
               src={
-                'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698592c00021ba481e19/view?project=698585dc0014c943f45e&mode=admin'
+                settings?.logoUrl || 'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698592c00021ba481e19/view?project=698585dc0014c943f45e&mode=admin'
               }
               height={175}
               width={175}
@@ -79,12 +80,8 @@ export default function Footer() {
               <Mail className="h-4 w-4 text-[#CC2224]" />
               <span>
                 {' '}
-                <a href="mailto:tanmay@zenzebra.in" target="_blank" rel="noopener noreferrer">
-                  tanmay@zenzebra.in
-                </a>{' '}
-                |{' '}
-                <a href="mailto:gurpreet@zenzebra.in" target="_blank" rel="noopener noreferrer">
-                  gurpreet@zenzebra.in
+                <a href={`mailto:${settings?.supportEmail || 'support@zenzebra.in'}`} target="_blank" rel="noopener noreferrer">
+                  {settings?.supportEmail || 'support@zenzebra.in'}
                 </a>
               </span>
             </div>
@@ -92,12 +89,8 @@ export default function Footer() {
               <Phone className="h-4 w-4 text-[#CC2224]" />
               <span>
                 {' '}
-                <a href="tel:+919910605187" target="_blank" rel="noopener noreferrer">
-                  +91 9910605187
-                </a>{' '}
-                |{' '}
-                <a href="tel:+919958680856" target="_blank" rel="noopener noreferrer">
-                  +91 9958680856
+                <a href={`tel:${settings?.supportPhone || '+919910605187'}`} target="_blank" rel="noopener noreferrer">
+                  {settings?.supportPhone || '+91 9910605187'}
                 </a>
               </span>
             </div>
@@ -115,10 +108,10 @@ export default function Footer() {
 
           <div className="flex gap-4 mt-4">
             <a
-              href="https://www.instagram.com/zenzebraindia/"
+              href={settings?.socialInstagram || "https://www.instagram.com/zenzebraindia/"}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Visit ZenZebra Instagram"
+              aria-label={`Visit ${settings?.siteName || 'ZenZebra'} Instagram`}
             >
               <Instagram
                 className="h-5 w-5 text-white hover:text-[#CC2224] transition-colors"
@@ -126,10 +119,10 @@ export default function Footer() {
               />
             </a>
             <a
-              href="https://www.linkedin.com/company/zenzebraindia/posts/?feedView=all"
+              href={settings?.socialLinkedIn || "https://www.linkedin.com/company/zenzebraindia/posts/?feedView=all"}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Visit ZenZebra LinkedIn"
+              aria-label={`Visit ${settings?.siteName || 'ZenZebra'} LinkedIn`}
             >
               <Linkedin
                 className="h-5 w-5 text-white hover:text-[#CC2224] transition-colors"
@@ -153,7 +146,7 @@ export default function Footer() {
 
       {/* Divider */}
       <div className="border-t border-white/10 mt-12 pt-6 text-center text-xs text-white/60">
-        © {new Date().getFullYear()} ZenZebra. All rights reserved.
+        © {new Date().getFullYear()} {settings?.siteName || 'ZenZebra'}. All rights reserved.
       </div>
     </footer>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import { AppSidebar } from '@/components/app-sidebar';
+import { ThemeProvider } from '@/components/theme-provider';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -66,38 +67,46 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (isProfile) return 'My Profile';
     if (isDashboard) return 'Catalogue Dashboard';
     if (isAnalytics) return 'Traffic Analytics';
+    if (pathname.includes('/inquiries')) return 'User Inquiries';
     if (pathname.includes('/locations')) return 'Home Locations';
     if (pathname.includes('/dashboard')) return 'Overview';
     return 'Admin';
   };
 
   return (
-    <div className="dark min-h-screen bg-background text-white">
-      <SidebarProvider defaultOpen={sidebarOpen}>
-        <AppSidebar />
-        <SidebarInset className="min-w-0">
-          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-            <SidebarTrigger className="-ml-1 h-9 w-9 bg-white/5 border border-white/10 text-white/90 hover:bg-white/10 hover:text-white transition-all shadow-sm" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="/admin-login/catalogue-dashboard">Admin</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>
-                    {getBreadcrumbLabel()}
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </header>
-          <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-            {children}
-          </div>
-        </SidebarInset>
-      </SidebarProvider>
+    <div className="min-h-screen bg-background text-foreground animate-in fade-in transition-colors duration-300">
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <SidebarProvider defaultOpen={sidebarOpen}>
+          <AppSidebar />
+          <SidebarInset className="min-w-0 transition-all duration-300 ease-in-out">
+            <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 transition-colors">
+              <SidebarTrigger className="-ml-1 h-9 w-9 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-all shadow-sm" />
+              <Separator orientation="vertical" className="mr-2 h-4" />
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem className="hidden md:block">
+                    <BreadcrumbLink href="/admin-login/catalogue-dashboard">Admin</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator className="hidden md:block" />
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>
+                      {getBreadcrumbLabel()}
+                    </BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+            </header>
+            <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+              {children}
+            </div>
+          </SidebarInset>
+        </SidebarProvider>
+      </ThemeProvider>
     </div>
   );
 }

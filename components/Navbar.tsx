@@ -1,4 +1,5 @@
 'use client';
+import { SystemSettings } from '@/lib/admin-settings';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/16/solid';
 import { m } from 'framer-motion';
 import Image from 'next/image';
@@ -7,12 +8,10 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import MenuItem from './MenuItem';
 
-function Navbar() {
+function Navbar({ settings }: { settings: SystemSettings }) {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
-
-
 
   const navItems = [
     { label: 'Home', href: '/' },
@@ -48,12 +47,12 @@ function Navbar() {
         <div className="flex justify-between items-center">
           <div className="flex items-center md:gap-3">
             <m.div whileHover={{ scale: 1.1 }} transition={{ duration: 1.05, ease: 'easeOut' }}>
-              <Link href={'/'} aria-label="ZenZebra Home">
+              <Link href={'/'} aria-label={`${settings?.siteName || 'ZenZebra'} Home`}>
                 <Image
-                  src="https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/6985926d0013323cc0ca/view?project=698585dc0014c943f45e&mode=admin"
+                  src={settings?.logoUrl || "https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/6985926d0013323cc0ca/view?project=698585dc0014c943f45e&mode=admin"}
                   width={175}
                   height={175}
-                  alt="ZenZebra Logo"
+                  alt={`${settings?.siteName || 'ZenZebra'} Logo`}
                   priority
                   style={{ width: 'auto', height: 'auto' }}
                 />

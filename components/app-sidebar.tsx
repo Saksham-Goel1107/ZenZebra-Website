@@ -6,12 +6,22 @@ import {
     Command,
     LogOut,
     MapPin,
+    MessageSquare,
+    Monitor,
+    Moon,
     Settings2,
     SquareTerminal,
+    Sun,
     User
 } from "lucide-react"
 import * as React from "react"
 
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import {
     Sidebar,
     SidebarContent,
@@ -26,12 +36,14 @@ import {
     SidebarRail,
 } from "@/components/ui/sidebar"
 import { account } from "@/lib/appwrite"
+import { useTheme } from "next-themes"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const router = useRouter();
     const pathname = usePathname();
+    const { setTheme, theme } = useTheme();
 
     const handleLogout = async () => {
         try {
@@ -46,12 +58,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         { title: "Dashboard", href: "/admin-login/dashboard", icon: SquareTerminal },
         { title: "Traffic Analytics", href: "/admin-login/analytics", icon: Activity },
         { title: "Catalogue", href: "/admin-login/catalogue-dashboard", icon: BookOpen },
+        { title: "Inquiries", href: "/admin-login/inquiries", icon: MessageSquare },
         { title: "Locations", href: "/admin-login/locations", icon: MapPin },
         { title: "Settings", href: "/admin-login/settings", icon: Settings2 },
     ]
 
     return (
-        <Sidebar collapsible="icon" {...props} className="dark">
+        <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
@@ -94,6 +107,33 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarContent>
             <SidebarFooter>
                 <SidebarMenu>
+                    <SidebarMenuItem>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <SidebarMenuButton tooltip="Theme">
+                                    <div className="flex relative items-center justify-center size-4 shrink-0">
+                                        <Sun className="absolute size-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                                        <Moon className="absolute size-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                                    </div>
+                                    <span className="truncate">Theme</span>
+                                </SidebarMenuButton>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start" side="right" className="w-48">
+                                <DropdownMenuItem onClick={() => setTheme("light")}>
+                                    <Sun className="mr-2 h-4 w-4" />
+                                    <span>Light</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setTheme("dark")}>
+                                    <Moon className="mr-2 h-4 w-4" />
+                                    <span>Dark</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setTheme("system")}>
+                                    <Monitor className="mr-2 h-4 w-4" />
+                                    <span>System</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton
                             asChild

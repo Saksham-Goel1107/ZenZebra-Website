@@ -179,22 +179,22 @@ export function AdminProfile({ user, setUser, onLogout }: AdminProfileProps) {
     if (!user) return null;
 
     return (
-        <Card className="bg-[#111] border-white/10 text-white overflow-hidden backdrop-blur-sm relative mb-12">
+        <Card className="bg-card border-border text-foreground overflow-hidden backdrop-blur-sm relative mb-12 shadow-sm">
             {/* Background Effects */}
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-500/5 blur-[120px] pointer-events-none" />
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/5 blur-[120px] pointer-events-none" />
 
             <CardContent className="p-0">
-                <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-white/10">
+                <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-border">
 
                     {/* Main Profile Section */}
                     <div className="flex-1 p-6 md:p-8 relative z-10">
                         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                             <div className="relative group/avatar shrink-0">
-                                <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-white/10 shadow-lg relative bg-neutral-900">
+                                <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-border shadow-lg relative bg-muted">
                                     {userAvatar ? (
                                         <img src={userAvatar} alt={user.name} className="w-full h-full object-cover" />
                                     ) : (
-                                        <div className="w-full h-full bg-[#CC2224] flex items-center justify-center text-2xl font-bold">
+                                        <div className="w-full h-full bg-primary flex items-center justify-center text-2xl font-bold text-primary-foreground">
                                             {user.name.charAt(0)}
                                         </div>
                                     )}
@@ -208,8 +208,8 @@ export function AdminProfile({ user, setUser, onLogout }: AdminProfileProps) {
                                 </div>
 
                                 {!isEditing && user.emailVerification && (
-                                    <div className="absolute -bottom-2 -right-2 bg-green-500 text-black p-1 rounded-full border-2 border-[#111]" title="Email Verified">
-                                        <CheckCircle2 className="w-3.5 h-3.5" />
+                                    <div className="absolute -bottom-2 -right-2 bg-green-500 text-black p-1 rounded-full border-2 border-card" title="Email Verified">
+                                        <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                                     </div>
                                 )}
                             </div>
@@ -218,29 +218,29 @@ export function AdminProfile({ user, setUser, onLogout }: AdminProfileProps) {
                                 {isEditing ? (
                                     <div className="space-y-4 w-full animate-in fade-in slide-in-from-top-2 duration-200">
                                         <div className="space-y-2">
-                                            <Label className="text-white/60 text-xs uppercase tracking-wider">Full Name</Label>
+                                            <Label className="text-muted-foreground text-xs uppercase tracking-wider">Full Name</Label>
                                             <Input
                                                 value={formData.name}
                                                 onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                                className="bg-black/20 border-white/10 text-white focus-visible:ring-[#CC2224]/50"
+                                                className="bg-muted/50 border-input text-foreground focus-visible:ring-primary/50"
                                             />
                                         </div>
 
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div className="space-y-2">
-                                                <Label className="text-white/60 text-xs uppercase tracking-wider">Email</Label>
+                                                <Label className="text-muted-foreground text-xs uppercase tracking-wider">Email</Label>
                                                 <Input
                                                     value={formData.email}
                                                     onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                                    className="bg-black/20 border-white/10 text-white focus-visible:ring-[#CC2224]/50"
+                                                    className="bg-muted/50 border-input text-foreground focus-visible:ring-primary/50"
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <Label className="text-white/60 text-xs uppercase tracking-wider">Phone</Label>
+                                                <Label className="text-muted-foreground text-xs uppercase tracking-wider">Phone</Label>
                                                 <Input
                                                     value={formData.phone}
                                                     onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                                                    className="bg-black/20 border-white/10 text-white focus-visible:ring-[#CC2224]/50"
+                                                    className="bg-muted/50 border-input text-foreground focus-visible:ring-primary/50"
                                                     placeholder="+1234567890"
                                                 />
                                             </div>
@@ -248,36 +248,36 @@ export function AdminProfile({ user, setUser, onLogout }: AdminProfileProps) {
 
                                         <div className="pt-2">
                                             <Label className="text-red-400 text-xs font-semibold uppercase tracking-wider">Current Password</Label>
-                                            <p className="text-xs text-white/40 mb-1.5">Required for changing sensitive info (email/phone)</p>
+                                            <p className="text-xs text-muted-foreground mb-1.5">Required for changing sensitive info (email/phone)</p>
                                             <Input
                                                 type="password"
                                                 value={password}
                                                 onChange={e => setPassword(e.target.value)}
-                                                className="bg-red-500/5 border-red-500/20 text-white focus-visible:ring-red-500/50 placeholder:text-red-500/30"
+                                                className="bg-red-500/5 border-red-500/20 text-foreground focus-visible:ring-red-500/50 placeholder:text-red-500/30"
                                                 placeholder="••••••••"
                                             />
                                         </div>
 
                                         <div className="flex gap-2 pt-2 justify-center sm:justify-start">
-                                            <Button onClick={handleUpdateProfile} disabled={busy} className="bg-[#CC2224] hover:bg-[#b01c1e] text-white">
+                                            <Button onClick={handleUpdateProfile} disabled={busy} className="bg-primary hover:bg-primary/90 text-primary-foreground">
                                                 {busy ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
                                                 Save Changes
                                             </Button>
-                                            <Button variant="ghost" onClick={() => setIsEditing(false)} className="hover:bg-white/10 text-white/70 hover:text-white">
+                                            <Button variant="ghost" onClick={() => setIsEditing(false)} className="hover:bg-muted text-muted-foreground hover:text-foreground">
                                                 Cancel
                                             </Button>
                                         </div>
                                     </div>
                                 ) : (
                                     <div className="relative sm:pr-12 group flex flex-col items-center sm:block text-center sm:text-left">
-                                        <h2 className="text-2xl sm:text-3xl font-bold title-font text-white mb-1">{user.name}</h2>
-                                        <div className="flex items-center gap-2 text-white/60 mb-3 justify-center sm:justify-start">
+                                        <h2 className="text-2xl sm:text-3xl font-bold title-font text-foreground mb-1">{user.name}</h2>
+                                        <div className="flex items-center gap-2 text-muted-foreground mb-3 justify-center sm:justify-start">
                                             <Mail className="w-3.5 h-3.5" />
                                             <span className="text-sm font-medium">{user.email}</span>
                                         </div>
 
                                         <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-                                            <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${user.status ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>
+                                            <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${user.status ? 'bg-green-500/10 text-green-500 border-green-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
                                                 {user.status ? 'Active Account' : 'Blocked'}
                                             </span>
                                             {user.labels?.map((label: string) => (
@@ -292,7 +292,7 @@ export function AdminProfile({ user, setUser, onLogout }: AdminProfileProps) {
                                                 size="icon"
                                                 variant="ghost"
                                                 onClick={() => setIsEditing(true)}
-                                                className="h-9 w-9 bg-white/5 hover:bg-white/10 text-white/50 hover:text-white rounded-xl"
+                                                className="h-9 w-9 bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground rounded-xl"
                                                 title="Edit Profile"
                                             >
                                                 <Edit2 className="w-4 h-4" />
@@ -314,90 +314,90 @@ export function AdminProfile({ user, setUser, onLogout }: AdminProfileProps) {
                     </div>
 
                     {/* Details & MFA Section */}
-                    <div className="w-full md:w-[400px] bg-white/[0.02] p-6 md:p-8 space-y-6">
+                    <div className="w-full md:w-[400px] bg-muted/20 p-6 md:p-8 space-y-6">
                         <div>
-                            <h3 className="text-sm font-semibold text-white/90 uppercase tracking-wider mb-4 flex items-center gap-2">
-                                <ShieldCheck className="w-4 h-4 text-[#CC2224]" />
+                            <h3 className="text-sm font-semibold text-foreground/90 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                <ShieldCheck className="w-4 h-4 text-primary" />
                                 Security & Details
                             </h3>
 
                             <div className="grid grid-cols-1 gap-4">
                                 <div className="flex items-start justify-between group">
-                                    <div className="flex items-center gap-2 text-white/50 text-sm">
+                                    <div className="flex items-center gap-2 text-muted-foreground text-sm">
                                         <User className="w-3.5 h-3.5" />
                                         <span>User ID</span>
                                     </div>
-                                    <code className="text-xs font-mono bg-white/5 px-2 py-1 rounded text-white/70 select-all hover:bg-white/10 transition-colors">
+                                    <code className="text-xs font-mono bg-muted px-2 py-1 rounded text-foreground/80 select-all hover:bg-muted/80 transition-colors">
                                         {user.$id}
                                     </code>
                                 </div>
 
                                 <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-2 text-white/50 text-sm">
+                                    <div className="flex items-center gap-2 text-muted-foreground text-sm">
                                         <Phone className="w-3.5 h-3.5" />
                                         <span>Phone</span>
                                     </div>
-                                    <span className="text-sm text-white/80">
+                                    <span className="text-sm text-foreground/80">
                                         {user.phone ? (
                                             <span className="flex items-center gap-1">
                                                 {user.phone}
                                                 {user.phoneVerification && <CheckCircle2 className="w-3 h-3 text-green-500" />}
                                             </span>
                                         ) : (
-                                            <span className="text-white/30 italic">Not set</span>
+                                            <span className="text-muted-foreground/60 italic">Not set</span>
                                         )}
                                     </span>
                                 </div>
 
                                 <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-2 text-white/50 text-sm">
+                                    <div className="flex items-center gap-2 text-muted-foreground text-sm">
                                         <Calendar className="w-3.5 h-3.5" />
                                         <span>Registered</span>
                                     </div>
-                                    <span className="text-sm text-white/80">
+                                    <span className="text-sm text-foreground/80">
                                         {new Date(user.registration).toLocaleDateString()}
                                     </span>
                                 </div>
                             </div>
                         </div>
 
-                        <Separator className="bg-white/10" />
+                        <Separator className="bg-border" />
 
                         <div>
                             <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-sm font-semibold text-white/90 uppercase tracking-wider flex items-center gap-2">
-                                    <Smartphone className="w-4 h-4 text-[#CC2224]" />
+                                <h3 className="text-sm font-semibold text-foreground/90 uppercase tracking-wider flex items-center gap-2">
+                                    <Smartphone className="w-4 h-4 text-primary" />
                                     Two-Factor Auth
                                 </h3>
-                                <span className={user.mfa ? "text-xs text-green-400 font-medium px-2 py-0.5 bg-green-500/10 rounded-full border border-green-500/20" : "text-xs text-white/40 font-medium px-2 py-0.5 bg-white/5 rounded-full"}>
+                                <span className={user.mfa ? "text-xs text-green-500 font-medium px-2 py-0.5 bg-green-500/10 rounded-full border border-green-500/20" : "text-xs text-muted-foreground font-medium px-2 py-0.5 bg-muted rounded-full"}>
                                     {user.mfa ? 'Enabled' : 'Disabled'}
                                 </span>
                             </div>
 
                             {mfaSetup ? (
-                                <div className="bg-black/40 p-4 rounded-xl border border-white/10 space-y-4 animate-in zoom-in-95 duration-200">
+                                <div className="bg-muted/50 p-4 rounded-xl border border-border space-y-4 animate-in zoom-in-95 duration-200">
                                     <div className="text-center space-y-2">
-                                        <p className="text-sm text-white/80 font-medium">Scan QR Code</p>
+                                        <p className="text-sm text-foreground/80 font-medium">Scan QR Code</p>
                                         <div className="bg-white p-2 rounded-lg inline-block">
                                             {qrCode && <img src={qrCode} alt="QR" className="w-32 h-32" />}
                                         </div>
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label className="text-xs text-white/50">Enter Authenticator Code</Label>
+                                        <Label className="text-xs text-muted-foreground">Enter Authenticator Code</Label>
                                         <div className="flex gap-2">
                                             <Input
                                                 value={totpCode}
                                                 onChange={e => setTotpCode(e.target.value)}
-                                                className="bg-black border-white/20 text-center font-mono tracking-widest text-lg h-10"
+                                                className="bg-background border-input text-center font-mono tracking-widest text-lg h-10 text-foreground"
                                                 placeholder="000 000"
                                                 maxLength={6}
                                             />
-                                            <Button onClick={confirmMfa} size="icon" className="bg-[#CC2224] hover:bg-[#b01c1e] w-10 shrink-0">
+                                            <Button onClick={confirmMfa} size="icon" className="bg-primary hover:bg-primary/90 w-10 shrink-0 text-primary-foreground">
                                                 <CheckCircle2 className="w-4 h-4" />
                                             </Button>
                                         </div>
-                                        <Button variant="ghost" size="sm" onClick={() => setMfaSetup(false)} className="w-full text-xs text-white/40 h-8 hover:text-white">
+                                        <Button variant="ghost" size="sm" onClick={() => setMfaSetup(false)} className="w-full text-xs text-muted-foreground h-8 hover:text-foreground">
                                             Cancel Setup
                                         </Button>
                                     </div>
@@ -407,7 +407,7 @@ export function AdminProfile({ user, setUser, onLogout }: AdminProfileProps) {
                                     <Button
                                         variant="outline"
                                         onClick={initiateMfa}
-                                        className="w-full border-dashed border-white/20 bg-transparent hover:bg-white/5 text-white/60 hover:text-white hover:border-white/40"
+                                        className="w-full border-dashed border-border bg-transparent hover:bg-muted text-muted-foreground hover:text-foreground"
                                     >
                                         <QrCode className="w-4 h-4 mr-2" />
                                         Setup Authenticator

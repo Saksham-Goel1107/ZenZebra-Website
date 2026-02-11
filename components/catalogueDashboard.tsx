@@ -205,27 +205,27 @@ export default function CatalogueDashboard() {
   const canSave = useMemo(() => !!label.trim() && (!!url || !!file), [label, url, file]);
 
   return (
-    <section className="bg-[#050505] text-white font-sans selection:bg-[#CC2224] selection:text-white">
-      <div className="mx-auto max-w-full px-6 pb-12 pt-6">
+    <section className="bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
+      <div className="mx-auto max-w-full pb-12 pt-6">
 
         {/* Dashboard Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-white mb-2">My Catalogue</h1>
-            <p className="text-white/40">Manage your catalogue locations and files</p>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">My Catalogue</h1>
+            <p className="text-muted-foreground">Manage your catalogue locations and files</p>
           </div>
         </div>
 
         {/* Editor Card */}
-        <div ref={formRef} className="rounded-3xl border border-white/10 bg-[#111] p-8 shadow-2xl backdrop-blur-sm relative overflow-hidden z-10">
-          <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-[#CC2224]/5 blur-[100px] pointer-events-none" />
+        <div ref={formRef} className="rounded-3xl border border-border bg-card text-card-foreground p-8 shadow-sm backdrop-blur-sm relative overflow-hidden z-10">
+          <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-primary/5 blur-[100px] pointer-events-none" />
 
-          <div className="flex flex-col md:flex-row md:items-center gap-3 mb-8 pb-6 border-b border-white/5">
+          <div className="flex flex-col md:flex-row md:items-center gap-3 mb-8 pb-6 border-b border-border">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-[#CC2224]/10 rounded-xl text-[#CC2224]">
+              <div className="p-2.5 bg-primary/10 rounded-xl text-primary">
                 {editingId ? <Edit2 className="w-5 h-5" /> : <FileUp className="w-5 h-5" />}
               </div>
-              <h2 className="text-xl font-semibold text-white/90">
+              <h2 className="text-xl font-semibold text-foreground/90">
                 {editingId ? 'Edit Location' : 'Add New Location'}
               </h2>
             </div>
@@ -234,12 +234,12 @@ export default function CatalogueDashboard() {
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-6">
               <div className="space-y-2">
-                <Label className="text-white/60">Label Name</Label>
+                <Label className="text-muted-foreground">Label Name</Label>
                 <Input
                   value={label}
                   onChange={(e) => setLabel(e.target.value)}
                   placeholder="e.g. Awfis – Ambience Mall"
-                  className="bg-black/40 border-white/10 text-white placeholder:text-white/20 h-12 focus-visible:ring-[#CC2224]/50 focus-visible:border-[#CC2224]/50"
+                  className="bg-muted/50 border-input text-foreground placeholder:text-muted-foreground h-12 focus-visible:ring-primary/50 focus-visible:border-primary/50"
                 />
               </div>
 
@@ -249,9 +249,9 @@ export default function CatalogueDashboard() {
                     id="active-status"
                     checked={active}
                     onCheckedChange={(checked) => setActive(checked === true)}
-                    className="border-white/20 data-[state=checked]:bg-[#CC2224] data-[state=checked]:border-[#CC2224]"
+                    className="border-input data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                   />
-                  <Label htmlFor="active-status" className="cursor-pointer text-white/80 font-medium hover:text-white transition-colors">
+                  <Label htmlFor="active-status" className="cursor-pointer text-foreground/80 font-medium hover:text-foreground transition-colors">
                     Active Status
                   </Label>
                 </div>
@@ -260,10 +260,10 @@ export default function CatalogueDashboard() {
 
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-white/60 mb-2">
+                <label className="block text-sm font-medium text-muted-foreground mb-2">
                   Catalogue PDF {editingId && '(Upload to replace)'}
                 </label>
-                <div className={`relative group border-2 border-dashed rounded-xl transition-all ${file ? 'border-[#CC2224]/50 bg-[#CC2224]/5' : 'border-white/10 hover:border-white/20 bg-white/[0.02]'}`}>
+                <div className={`relative group border-2 border-dashed rounded-xl transition-all ${file ? 'border-primary/50 bg-primary/5' : 'border-border hover:border-border/80 bg-muted/20'}`}>
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -274,18 +274,18 @@ export default function CatalogueDashboard() {
                   <div className="p-8 flex flex-col items-center justify-center text-center">
                     {file ? (
                       <>
-                        <FileUp className="w-8 h-8 text-[#CC2224] mb-3" />
-                        <p className="text-sm font-medium text-white">{file.name}</p>
-                        <p className="text-xs text-white/40 mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                        <FileUp className="w-8 h-8 text-primary mb-3" />
+                        <p className="text-sm font-medium text-foreground">{file.name}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
                       </>
                     ) : (
                       <>
-                        <FileUp className="w-8 h-8 text-white/20 group-hover:text-white/40 transition-colors mb-3" />
-                        <p className="text-sm text-white/40 group-hover:text-white/60 transition-colors">
+                        <FileUp className="w-8 h-8 text-muted-foreground group-hover:text-foreground transition-colors mb-3" />
+                        <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
                           Click or drag PDF here
                         </p>
                         {url && editingId && (
-                          <p className="text-xs text-[#CC2224] mt-2 font-medium">
+                          <p className="text-xs text-primary mt-2 font-medium">
                             Current: {url.split('/').pop()?.substring(0, 20)}...
                           </p>
                         )}
@@ -297,11 +297,11 @@ export default function CatalogueDashboard() {
             </div>
           </div>
 
-          <div className="mt-10 pt-6 border-t border-white/5 flex gap-4">
+          <div className="mt-10 pt-6 border-t border-border flex gap-4">
             <Button
               disabled={!canSave || busy}
               onClick={handleSave}
-              className="flex-1 md:flex-none bg-[#CC2224] hover:bg-[#b01c1e] text-white font-medium h-12 px-8 rounded-xl shadow-lg shadow-[#CC2224]/20"
+              className="flex-1 md:flex-none bg-primary hover:bg-primary/90 text-primary-foreground font-medium h-12 px-8 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95"
             >
               {busy ? (
                 <>
@@ -317,7 +317,7 @@ export default function CatalogueDashboard() {
               <Button
                 variant="outline"
                 onClick={resetForm}
-                className="bg-white/5 hover:bg-white/10 text-white/80 border-transparent hover:text-white h-12 px-6 rounded-xl"
+                className="bg-muted hover:bg-muted/80 text-foreground border-transparent hover:text-foreground h-12 px-6 rounded-xl"
               >
                 Cancel
               </Button>
@@ -327,30 +327,30 @@ export default function CatalogueDashboard() {
 
         {/* List Section */}
         <div className="mt-12 space-y-4">
-          <h3 className="text-lg font-semibold text-white/80 px-2">Active Locations ({rows.length})</h3>
+          <h3 className="text-lg font-semibold text-foreground/80 px-2">Active Locations ({rows.length})</h3>
 
-          <div className="rounded-2xl border border-white/10 bg-[#111] overflow-x-auto">
+          <div className="rounded-2xl border border-border bg-card overflow-x-auto">
             <div className="hidden md:block">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-white/10 text-xs uppercase tracking-wider text-white/40 bg-white/[0.02]">
+                  <tr className="border-b border-border text-xs uppercase tracking-wider text-muted-foreground bg-muted/30">
                     <th className="px-6 py-4 font-medium">Label</th>
                     <th className="px-6 py-4 font-medium">Status</th>
                     <th className="px-6 py-4 font-medium">Last Updated</th>
                     <th className="px-6 py-4 font-medium text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-border/50">
                   {rows.map((r) => (
-                    <tr key={r.id} className="group hover:bg-white/[0.02] transition-colors">
+                    <tr key={r.id} className="group hover:bg-muted/30 transition-colors">
                       <td className="px-6 py-4">
-                        <div className="font-medium text-white/90 group-hover:text-[#CC2224] transition-colors">
+                        <div className="font-medium text-foreground group-hover:text-primary transition-colors">
                           {r.label}
                         </div>
                         <a
                           href={r.url}
                           target="_blank"
-                          className="text-xs text-white/30 hover:text-white/60 hover:underline truncate max-w-[200px] block mt-1"
+                          className="text-xs text-muted-foreground hover:text-foreground hover:underline truncate max-w-[200px] block mt-1"
                         >
                           View File
                         </a>
@@ -361,19 +361,19 @@ export default function CatalogueDashboard() {
                             <CheckCircle2 className="w-3 h-3" /> Active
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 text-white/40 text-xs font-medium border border-white/10">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-muted text-muted-foreground text-xs font-medium border border-border">
                             <XCircle className="w-3 h-3" /> Inactive
                           </span>
                         )}
                       </td>
-                      <td className="px-6 py-4 text-sm text-white/40">
+                      <td className="px-6 py-4 text-sm text-muted-foreground">
                         {r.$updatedAt ? new Date(r.$updatedAt).toLocaleDateString() : '—'}
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button
                             onClick={() => startEdit(r)}
-                            className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/80 hover:text-white transition-colors"
+                            className="p-2 rounded-lg bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground transition-colors"
                             title="Edit"
                           >
                             <Edit2 className="w-4 h-4" />
@@ -393,9 +393,9 @@ export default function CatalogueDashboard() {
                   ))}
                   {rows.length === 0 && (
                     <tr>
-                      <td colSpan={4} className="px-6 py-12 text-center text-white/30">
+                      <td colSpan={4} className="px-6 py-12 text-center text-muted-foreground">
                         <div className="flex flex-col items-center gap-4">
-                          <div className="p-4 rounded-full bg-white/5">
+                          <div className="p-4 rounded-full bg-muted">
                             <FileUp className="w-8 h-8 opacity-50" />
                           </div>
                           <p>No locations found. Add your first one above.</p>
@@ -407,16 +407,16 @@ export default function CatalogueDashboard() {
               </table>
             </div>
 
-            <div className="md:hidden divide-y divide-white/5">
+            <div className="md:hidden divide-y divide-border">
               {rows.map((r) => (
-                <div key={r.id} className="p-4 space-y-3 bg-[#111]">
+                <div key={r.id} className="p-4 space-y-3 bg-card">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <h4 className="font-semibold text-white/90 text-sm mb-1">{r.label}</h4>
+                      <h4 className="font-semibold text-foreground text-sm mb-1">{r.label}</h4>
                       <a
                         href={r.url}
                         target="_blank"
-                        className="text-xs text-white/40 hover:text-[#CC2224] flex items-center gap-1 transition-colors"
+                        className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors"
                       >
                         <FileUp className="w-3 h-3" /> View File
                       </a>
@@ -424,7 +424,7 @@ export default function CatalogueDashboard() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => startEdit(r)}
-                        className="p-2 rounded-lg bg-white/5 text-white/70 hover:text-white hover:bg-white/10 active:scale-95 transition-all"
+                        className="p-2 rounded-lg bg-muted text-foreground/70 hover:text-foreground hover:bg-muted/80 active:scale-95 transition-all"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
@@ -437,19 +437,19 @@ export default function CatalogueDashboard() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between text-xs pt-2 border-t border-white/5">
+                  <div className="flex items-center justify-between text-xs pt-2 border-t border-border">
                     <div className="flex items-center gap-2">
                       {r.active ? (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/10 text-green-500 border border-green-500/20">
                           <CheckCircle2 className="w-3 h-3" /> Active
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/5 text-white/40 border border-white/10">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted text-muted-foreground border border-border">
                           <XCircle className="w-3 h-3" /> Inactive
                         </span>
                       )}
                     </div>
-                    <span className="text-white/30">
+                    <span className="text-muted-foreground">
                       {r.$updatedAt ? new Date(r.$updatedAt).toLocaleDateString() : '—'}
                     </span>
                   </div>
@@ -457,7 +457,7 @@ export default function CatalogueDashboard() {
               ))}
 
               {rows.length === 0 && (
-                <div className="p-8 text-center text-white/30">
+                <div className="p-8 text-center text-muted-foreground">
                   <div className="flex flex-col items-center gap-3">
                     <FileUp className="w-8 h-8 opacity-30" />
                     <p className="text-sm">No locations found.</p>
@@ -470,17 +470,17 @@ export default function CatalogueDashboard() {
       </div>
 
       <AlertDialog open={deleteDialog.isOpen} onOpenChange={(open) => !open && setDeleteDialog(prev => ({ ...prev, isOpen: false }))}>
-        <AlertDialogContent className="bg-[#111] border-white/10 text-white">
+        <AlertDialogContent className="bg-card border-border text-card-foreground">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription className="text-white/60">
+            <AlertDialogDescription className="text-muted-foreground">
               This action cannot be undone. This will permanently delete the location
-              <span className="font-semibold text-white"> "{deleteDialog.row?.label}"</span>.
+              <span className="font-semibold text-foreground"> "{deleteDialog.row?.label}"</span>.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-white/5 border-white/10 hover:bg-white/10 hover:text-white">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-red-600 hover:bg-red-700 text-white border-none">Delete</AlertDialogAction>
+            <AlertDialogCancel className="bg-muted border-border hover:bg-muted/80 hover:text-foreground">Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90 text-destructive-foreground border-none">Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

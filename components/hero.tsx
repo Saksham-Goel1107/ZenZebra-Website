@@ -1,12 +1,17 @@
 'use client';
 import { ParticleCanvas } from '@/hooks/particle';
+import { SystemSettings } from '@/lib/admin-settings';
 import { m, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 
-function Hero() {
+function Hero({ settings }: { settings: SystemSettings }) {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, 100]);
+
+  // Use siteDescription if available, or fallback to default hero text
+  const description = settings?.siteDescription || "Curated lifestyle, seamlessly integrated into your daily life.";
+
   return (
     <section className="min-h-screen relative overflow-hidden">
       <ParticleCanvas />
@@ -26,17 +31,7 @@ function Hero() {
               className="text-3xl md:text-5xl font-bold leading-[1.15] md:leading-[1.1] bg-gradient-to-r from-white/80 via-white/50 to-white/30
                     bg-clip-text text-transparent mb-6"
             >
-              Curated lifestyle,
-              <br />
-              <m.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="bg-gradient-to-r from-white/80 via-white/50 to-white/30
-                    bg-clip-text text-transparent"
-              >
-                seamlessly integrated into your daily life.
-              </m.span>
+              {description}
             </m.h1>
 
             <m.p
@@ -58,14 +53,14 @@ function Hero() {
                   transition: { duration: 0.2, ease: 'easeOut' },
                 }}
                 className="relative overflow-hidden px-8 py-4 rounded-full border
-                      border-white/30 hover:border-white/50 transition-all cursor-pointer group"
+                       border-white/30 hover:border-white/50 transition-all cursor-pointer group"
               >
                 <span className="text-white/80 hover:text-white transition-colors">
                   Explore catalogue
                 </span>
 
                 <div
-                  className="absolute inset-0 bg-gradient-to-r 
+                  className="absolute inset-0 bg-gradient-to-r
                                     from-red-600/20 via-red-400/10 to-red-200/5 opacity-0
                                     hover:opacity-100 transition-opacity"
                 />
@@ -97,7 +92,7 @@ function Hero() {
               >
                 <Image
                   src="https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698593ac00096766835b/view?project=698585dc0014c943f45e&mode=admin"
-                  alt="Smartworks interior with ZenZebra branding"
+                  alt={`${settings?.siteName || 'Smartworks'} interior with branding`}
                   width={1920}
                   height={1080}
                   sizes="(max-width: 768px) 100vw, 50vw"
