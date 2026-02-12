@@ -31,7 +31,7 @@ function Hero({ settings }: { settings: SystemSettings }) {
               transition={{ delay: 0.2, duration: 0.5 }}
               className="inline-block"
             >
-              <span className="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs font-medium uppercase tracking-[0.2em] text-white/50 backdrop-blur-sm">
+              <span className="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs font-medium uppercase tracking-[0.2em] text-white/50 backdrop-blur-sm font-bold">
                 Next Gen Catalogue
               </span>
             </m.div>
