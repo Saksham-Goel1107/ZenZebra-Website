@@ -400,11 +400,20 @@ export default function DetailedReportView({ data: rawData, analysis, showFullSc
                                 <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
                                 <XAxis type="number" dataKey="orders" name="Orders" />
                                 <YAxis type="number" dataKey="totalAmount" name="Revenue" unit="₹" />
-                                <ZAxis type="number" dataKey="aov" range={[100, 1000]} name="AOV" />
-                                <Tooltip cursor={{ strokeDasharray: '3 3' }} formatter={(val: any) => val ? val.toLocaleString() : '0'} />
-                                <Scatter name="Category" data={data.categoryPerformance.categories} fill="#8884d8">
-                                    {data.categoryPerformance.categories.map((entry: any, index: number) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
-                                </Scatter>
+                                <ZAxis type="number" dataKey="aov" range={[100, 1000]} name="AOV" unit="₹" />
+                                <Tooltip cursor={{ strokeDasharray: '3 3' }} formatter={(value: any, name: any) => [
+                                    name === 'Revenue' || name === 'AOV' ? formatCurrency(value) : value,
+                                    name
+                                ]} />
+                                <Legend />
+                                {data.categoryPerformance.categories.map((entry: any, index: number) => (
+                                    <Scatter
+                                        key={index}
+                                        name={entry.category}
+                                        data={[entry]}
+                                        fill={COLORS[index % COLORS.length]}
+                                    />
+                                ))}
                             </ScatterChart>
                         </ResponsiveContainer>
                     </ZoomableChart>

@@ -28,6 +28,7 @@ import DetailedReportView from '@/components/DetailedReportView';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import AnalyticsChatbot from "@/components/AnalyticsChatbot";
 
 interface AnalysisResult {
     $id: string;
@@ -302,6 +303,19 @@ export default function ZenZebraAnalyticsPage() {
                     )}
                 </div>
             </div>
+
+            {/* AI Chatbot - Only show when analysis is selected */}
+            {selectedAnalysis && analysisData && (
+                <AnalyticsChatbot
+                    analysisData={analysisData}
+                    analysisMetadata={{
+                        stockFileName: selectedAnalysis.stockFileName,
+                        salesFileName: selectedAnalysis.salesFileName,
+                        deadStockFileName: selectedAnalysis.deadStockFileName,
+                        analyzedAt: selectedAnalysis.analyzedAt,
+                    }}
+                />
+            )}
         </div>
     );
 }
