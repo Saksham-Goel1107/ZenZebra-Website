@@ -16,6 +16,7 @@ export const appwriteConfig = {
   settingsCollectionId: process.env.NEXT_PUBLIC_APPWRITE_SETTINGS_COLLECTION_ID!,
   bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
   projectId: process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID!,
+  analyticsCollectionId: process.env.NEXT_PUBLIC_APPWRITE_ANALYTICS_COLLECTION_ID!,
 };
 
 export const isOwner = async (userId: string | undefined) => {

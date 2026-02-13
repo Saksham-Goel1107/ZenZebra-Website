@@ -2,6 +2,7 @@
 
 import {
     Activity,
+    BarChart3,
     BookOpen,
     Command,
     LogOut,
@@ -73,6 +74,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const navItems = [
         { title: "Dashboard", href: "/admin-login/dashboard", icon: SquareTerminal },
         { title: "Traffic Analytics", href: "/admin-login/analytics", icon: Activity },
+        { title: "Data Analytics", href: "/admin-login/data-analytics", icon: BarChart3 },
         { title: "Catalogue", href: "/admin-login/catalogue-dashboard", icon: BookOpen },
         { title: "Inquiries", href: "/admin-login/inquiries", icon: MessageSquare },
         { title: "Locations", href: "/admin-login/locations", icon: MapPin },
