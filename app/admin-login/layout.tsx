@@ -86,6 +86,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (isProfile) return 'My Profile';
     if (isDashboard) return 'Catalogue Dashboard';
     if (isAnalytics) return 'Traffic Analytics';
+    if (pathname.includes('/deployments')) return 'Vercel Deployments';
+    if (pathname.includes('/secrets')) return 'Doppler Secrets';
     if (pathname.includes('/inquiries')) return 'User Inquiries';
     if (pathname.includes('/locations')) return 'Home Locations';
     if (pathname.includes('/users')) return 'Team Management';

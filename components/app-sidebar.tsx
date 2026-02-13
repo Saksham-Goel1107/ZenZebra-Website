@@ -5,11 +5,13 @@ import {
     BarChart3,
     BookOpen,
     Command,
+    Key,
     LogOut,
     MapPin,
     MessageSquare,
     Monitor,
     Moon,
+    Rocket,
     Settings2,
     Shield,
     SquareTerminal,
@@ -82,6 +84,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
     // Admin only sections
     const adminItems = [
+        { title: "Deployments", href: "/admin-login/deployments", icon: Rocket },
+        { title: "Secrets", href: "/admin-login/secrets", icon: Key },
         { title: "Team Management", href: "/admin-login/users", icon: Shield },
         { title: "Settings", href: "/admin-login/settings", icon: Settings2 },
     ]

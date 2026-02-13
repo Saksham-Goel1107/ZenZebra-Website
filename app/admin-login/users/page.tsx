@@ -30,7 +30,9 @@ import {
     RefreshCcw,
     Search,
     Shield,
+    ShieldBan,
     Trash2,
+    Unlock,
     User as UserIcon,
     UserPlus,
     Users as UsersIcon
@@ -58,6 +60,7 @@ export default function UsersPage() {
     const [loading, setLoading] = useState(true);
     const [creating, setCreating] = useState(false);
     const [deletingId, setDeletingId] = useState<string | null>(null);
+    const [updatingId, setUpdatingId] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const router = useRouter();
@@ -114,6 +117,14 @@ export default function UsersPage() {
             user.email.toLowerCase().includes(searchQuery.toLowerCase())
         );
     }, [users, searchQuery]);
+
+    const ownerId = useMemo(() => {
+        if (users.length === 0) return null;
+        const sorted = [...users].sort(
+            (a, b) => new Date(a.registration).getTime() - new Date(b.registration).getTime()
+        );
+        return sorted[0].$id;
+    }, [users]);
 
     const stats = useMemo(() => {
         return {
@@ -178,6 +189,32 @@ export default function UsersPage() {
             toast.error('Failed to delete', { description: error.message });
         } finally {
             setDeletingId(null);
+        }
+    };
+
+    const handleToggleBlock = async (user: AppwriteUser) => {
+        setUpdatingId(user.$id);
+        try {
+            const { jwt } = await account.createJWT();
+            const response = await fetch(`/api/admin/users/${user.$id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Appwrite-JWT': jwt
+                },
+                body: JSON.stringify({ status: !user.status })
+            });
+            const data = await response.json();
+            if (data.error) throw new Error(data.error);
+
+            toast.success(user.status ? 'Access Blocked' : 'Access Restored', {
+                description: user.status ? `${user.name} has been blocked.` : `${user.name} is now active.`
+            });
+            fetchUsers();
+        } catch (error: any) {
+            toast.error('Update failed', { description: error.message });
+        } finally {
+            setUpdatingId(null);
         }
     };
 
@@ -416,12 +453,42 @@ export default function UsersPage() {
                                             </div>
                                         </div>
 
+                                    </div>
+
+                                    {/* Action Buttons */}
+                                    <div className="absolute top-4 right-4 flex gap-2">
+                                        {/* Block/Unblock Button */}
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            disabled={updatingId === user.$id || user.$id === ownerId}
+                                            onClick={() => handleToggleBlock(user)}
+                                            className={`h-8 w-8 rounded-xl transition-colors ${user.status
+                                                ? 'text-muted-foreground hover:text-orange-500 hover:bg-orange-500/10'
+                                                : 'text-orange-500 bg-orange-500/10 hover:bg-orange-500/20'
+                                                }`}
+                                            title={user.status ? "Block Access" : "Unblock User"}
+                                        >
+                                            {updatingId === user.$id ? (
+                                                <Loader2 className="w-4 h-4 animate-spin" />
+                                            ) : user.status ? (
+                                                <ShieldBan className="w-4 h-4" />
+                                            ) : (
+                                                <Unlock className="w-4 h-4" />
+                                            )}
+                                        </Button>
+
+                                        {/* Delete Button */}
                                         <Dialog>
                                             <DialogTrigger asChild>
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
-                                                    className="h-8 w-8 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 rounded-xl"
+                                                    disabled={user.$id === ownerId}
+                                                    className={`h-8 w-8 rounded-xl transition-colors ${user.$id === ownerId
+                                                        ? 'text-muted-foreground/30 cursor-not-allowed'
+                                                        : 'text-muted-foreground hover:text-red-500 hover:bg-red-500/10'
+                                                        }`}
                                                 >
                                                     <Trash2 className="w-4 h-4" />
                                                 </Button>

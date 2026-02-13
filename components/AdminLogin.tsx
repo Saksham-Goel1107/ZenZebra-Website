@@ -110,7 +110,11 @@ export default function AdminLogin() {
                 }
             }
 
-            setError(err.message || 'Login failed. Please check your credentials.');
+            if (err.type === 'user_blocked' || err.message?.toLowerCase().includes('blocked') || err.message?.toLowerCase().includes('disabled')) {
+                setError('Your account has been blocked by the super admin. Please contact support to get unblocked.');
+            } else {
+                setError(err.message || 'Login failed. Please check your credentials.');
+            }
             setLoading(false);
         }
     };
