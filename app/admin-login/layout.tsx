@@ -11,11 +11,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from '@/components/ui/sidebar';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { account } from '@/lib/appwrite';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -27,7 +23,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Check if we're on a page that doesn't require authentication (Login, Reset Password, or MFA Setup)
-  const isPublicAdminPage = pathname === '/admin-login' || pathname === '/admin-login/reset-password' || pathname === '/admin-login/mfa-setup';
+  const isPublicAdminPage =
+    pathname === '/admin-login' ||
+    pathname === '/admin-login/reset-password' ||
+    pathname === '/admin-login/mfa-setup';
 
   useEffect(() => {
     // If we're on the login page, we don't need auth check or sidebar
@@ -97,12 +96,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen bg-background text-foreground animate-in fade-in transition-colors duration-300">
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
         <SidebarProvider defaultOpen={sidebarOpen}>
           <AppSidebar />
           <SidebarInset className="min-w-0 transition-all duration-300 ease-in-out">
@@ -116,16 +110,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="hidden md:block" />
                   <BreadcrumbItem>
-                    <BreadcrumbPage>
-                      {getBreadcrumbLabel()}
-                    </BreadcrumbPage>
+                    <BreadcrumbPage>{getBreadcrumbLabel()}</BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>
             </header>
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-              {children}
-            </div>
+            <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
           </SidebarInset>
         </SidebarProvider>
       </ThemeProvider>

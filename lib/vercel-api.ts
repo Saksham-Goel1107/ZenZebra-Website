@@ -202,7 +202,6 @@ export async function getProjectSettings(): Promise<VercelProject> {
   return vercelFetch(`/v9/projects/${VERCEL_PROJECT_ID}${teamParam}`);
 }
 
-
 export async function promoteDeployment(deploymentId: string) {
   const teamParam = VERCEL_TEAM_ID ? `?teamId=${VERCEL_TEAM_ID}` : '';
 

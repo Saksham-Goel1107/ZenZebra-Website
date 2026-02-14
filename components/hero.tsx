@@ -6,7 +6,8 @@ import Link from 'next/link';
 
 function Hero({ settings }: { settings: SystemSettings }) {
   // Use siteDescription if available, or fallback to default hero text
-  const description = settings?.siteDescription || "Curated lifestyle, seamlessly integrated into your daily life.";
+  const description =
+    settings?.siteDescription || 'Curated lifestyle, seamlessly integrated into your daily life.';
 
   return (
     <section className="min-h-screen relative flex items-center justify-center overflow-hidden pt-20">
@@ -16,7 +17,6 @@ function Hero({ settings }: { settings: SystemSettings }) {
 
       <div className="max-w-7xl mx-auto px-6 z-10 w-full">
         <div className="flex flex-col items-center justify-center text-center">
-
           {/* Main Content */}
           <m.div
             initial={{ opacity: 0, y: 30 }}
@@ -73,15 +73,12 @@ function Hero({ settings }: { settings: SystemSettings }) {
                              tracking-wide overflow-hidden shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]
                              hover:shadow-[0_0_60px_-15px_rgba(255,255,255,0.5)] transition-all duration-300"
                 >
-                  <span className="relative z-10 flex items-center gap-2">
-                    Explore Catalogue
-                  </span>
+                  <span className="relative z-10 flex items-center gap-2">Explore Catalogue</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-gray-200 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </m.button>
               </Link>
             </m.div>
           </m.div>
-
         </div>
       </div>
     </section>

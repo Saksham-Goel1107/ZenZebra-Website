@@ -9,14 +9,14 @@ export default function How() {
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15
-      }
-    }
+        staggerChildren: 0.15,
+      },
+    },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, x: 20 },
-    show: { opacity: 1, x: 0, transition: { type: "spring" as const, stiffness: 50 } }
+    show: { opacity: 1, x: 0, transition: { type: 'spring' as const, stiffness: 50 } },
   };
 
   return (
@@ -33,10 +33,15 @@ export default function How() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <span className="text-[#CC2224] font-bold tracking-[0.2em] uppercase text-sm mb-4 block">The Experience</span>
+            <span className="text-[#CC2224] font-bold tracking-[0.2em] uppercase text-sm mb-4 block">
+              The Experience
+            </span>
             <h2 className="text-5xl md:text-7xl font-black text-white leading-[0.9]">
               THE <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">CURATED</span> <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">
+                CURATED
+              </span>{' '}
+              <br />
               APPROACH
             </h2>
           </motion.div>
@@ -48,7 +53,8 @@ export default function How() {
             viewport={{ once: true }}
             className="text-xl text-white/70 max-w-md leading-relaxed"
           >
-            We find the cult brands so you don't have to. Discovery happens here—physically, instantly, and right where you are.
+            We find the cult brands so you don't have to. Discovery happens here—physically,
+            instantly, and right where you are.
           </motion.p>
         </div>
 
@@ -58,7 +64,7 @@ export default function How() {
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: '-100px' }}
         >
           {/* Card 1 */}
           <motion.div variants={itemVariants} className="group relative">
@@ -68,9 +74,12 @@ export default function How() {
                 <Sparkles className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#CC2224] transition-colors">Fresh Drops</h3>
+                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#CC2224] transition-colors">
+                  Fresh Drops
+                </h3>
                 <p className="text-white/60 leading-relaxed text-sm">
-                  Discover the latest and greatest from the brands you love. We curate the excitement so you just enjoy the find.
+                  Discover the latest and greatest from the brands you love. We curate the
+                  excitement so you just enjoy the find.
                 </p>
               </div>
             </div>
@@ -83,9 +92,12 @@ export default function How() {
                 <RefreshCcw className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#CC2224] transition-colors">Fast Rotations</h3>
+                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#CC2224] transition-colors">
+                  Fast Rotations
+                </h3>
                 <p className="text-white/60 leading-relaxed text-sm">
-                  New brands, new flavors, new obsessions. Our lineup rotates fast, so there&apos;s always something fresh to discover.
+                  New brands, new flavors, new obsessions. Our lineup rotates fast, so there&apos;s
+                  always something fresh to discover.
                 </p>
               </div>
             </div>
@@ -98,14 +110,16 @@ export default function How() {
                 <Gem className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#CC2224] transition-colors">Chosen For You</h3>
+                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#CC2224] transition-colors">
+                  Chosen For You
+                </h3>
                 <p className="text-white/60 leading-relaxed text-sm">
-                  No guesswork. No pressure. Just the best products by the best brands, curated specifically for your space.
+                  No guesswork. No pressure. Just the best products by the best brands, curated
+                  specifically for your space.
                 </p>
               </div>
             </div>
           </motion.div>
-
         </motion.div>
       </div>
     </section>

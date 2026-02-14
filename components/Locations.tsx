@@ -33,11 +33,7 @@ export default function Locations() {
         const response = await databases.listDocuments(
           appwriteConfig.databaseId,
           appwriteConfig.homeLocationsCollectionId,
-          [
-            Query.equal('active', true),
-            Query.orderAsc('order'),
-            Query.orderDesc('$createdAt')
-          ]
+          [Query.equal('active', true), Query.orderAsc('order'), Query.orderDesc('$createdAt')],
         );
         const list: HomeLocation[] = response.documents.map((doc: any) => ({
           id: doc.$id,
@@ -127,9 +123,7 @@ export default function Locations() {
                       <MapPin className="h-4 w-4 shrink-0" />
                       <span className="line-clamp-1">{loc.title}</span>
                     </div>
-                    <p className="mt-2 text-sm text-[#353535]/70 line-clamp-3">
-                      {loc.description}
-                    </p>
+                    <p className="mt-2 text-sm text-[#353535]/70 line-clamp-3">{loc.description}</p>
                   </div>
                 </m.div>
               </SwiperSlide>
@@ -173,4 +167,3 @@ export default function Locations() {
     </section>
   );
 }
-

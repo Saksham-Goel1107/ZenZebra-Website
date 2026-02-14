@@ -19,17 +19,19 @@ function What() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
           viewport={{ once: true }}
           className="text-xl md:text-2xl leading-relaxed text-white/80 font-light space-y-8"
         >
           <p>
-            <span className="text-white font-bold">ZenZebra</span> is the curated pause in your "always-on" day. We&apos;ve replaced the boring vending machine with a{" "}
+            <span className="text-white font-bold">ZenZebra</span> is the curated pause in your
+            "always-on" day. We&apos;ve replaced the boring vending machine with a{' '}
             <span className="text-[#CC2224] font-bold">BreakSpot</span> designed for the curious.
           </p>
 
           <p>
-            Whether it&apos;s an office, gym, or your favorite café, we bring the internet&apos;s most exciting brands directly into your hands.
+            Whether it&apos;s an office, gym, or your favorite café, we bring the internet&apos;s
+            most exciting brands directly into your hands.
           </p>
 
           <p className="text-white font-semibold text-2xl md:text-3xl py-4">

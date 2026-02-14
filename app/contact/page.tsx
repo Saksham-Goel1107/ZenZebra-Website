@@ -12,8 +12,14 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: `Contact | ${siteName}`,
       description: settings.siteDescription || 'Get in touch with us.',
-      images: [{ url: settings.ogImageUrl || 'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698592c00021ba481e19/view?project=698585dc0014c943f45e&mode=admin' }],
-    }
+      images: [
+        {
+          url:
+            settings.ogImageUrl ||
+            'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698592c00021ba481e19/view?project=698585dc0014c943f45e&mode=admin',
+        },
+      ],
+    },
   };
 }
 

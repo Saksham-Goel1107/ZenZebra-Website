@@ -16,7 +16,7 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
     name: '',
     email: '',
     phone: '',
-    query: ''
+    query: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -42,7 +42,7 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          phone: phoneDigits // Send clean digits to API
+          phone: phoneDigits, // Send clean digits to API
         }),
       });
 
@@ -77,7 +77,8 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
             Get in <span className="text-[#CC2224]">Touch</span>
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
-            Whether you&apos;re a brand, a partner, or just curious - we&apos;d love to hear from you.
+            Whether you&apos;re a brand, a partner, or just curious - we&apos;d love to hear from
+            you.
           </p>
         </motion.div>
 
@@ -96,7 +97,10 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
                   <Mail className="h-6 w-6 text-[#CC2224]" />
                 </div>
                 <h3 className="text-lg font-bold mb-1">Email</h3>
-                <a href={`mailto:${email}`} className="text-muted-foreground hover:text-[#CC2224] transition-colors text-sm break-all font-medium">
+                <a
+                  href={`mailto:${email}`}
+                  className="text-muted-foreground hover:text-[#CC2224] transition-colors text-sm break-all font-medium"
+                >
                   {email}
                 </a>
               </motion.div>
@@ -113,7 +117,10 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
                   <Phone className="h-6 w-6 text-[#CC2224]" />
                 </div>
                 <h3 className="text-lg font-bold mb-1">Phone</h3>
-                <a href={`tel:${phone}`} className="text-muted-foreground hover:text-[#CC2224] transition-colors text-sm font-medium">
+                <a
+                  href={`tel:${phone}`}
+                  className="text-muted-foreground hover:text-[#CC2224] transition-colors text-sm font-medium"
+                >
                   {phone}
                 </a>
               </motion.div>
@@ -140,16 +147,18 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
 
             {/* Social Links */}
             <div className="flex items-center gap-4 pt-4">
-              <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground mr-4">Follow Us</p>
+              <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground mr-4">
+                Follow Us
+              </p>
               <a
-                href={settings?.socialInstagram || "https://www.instagram.com/zenzebraindia/"}
+                href={settings?.socialInstagram || 'https://www.instagram.com/zenzebraindia/'}
                 target="_blank"
                 className="w-12 h-12 rounded-2xl border border-border flex items-center justify-center hover:bg-[#CC2224] hover:border-[#CC2224] hover:text-white transition-all transform hover:-translate-y-1"
               >
                 <Instagram className="h-5 w-5" />
               </a>
               <a
-                href={settings?.socialLinkedIn || "https://www.linkedin.com/company/zenzebraindia/"}
+                href={settings?.socialLinkedIn || 'https://www.linkedin.com/company/zenzebraindia/'}
                 target="_blank"
                 className="w-12 h-12 rounded-2xl border border-border flex items-center justify-center hover:bg-[#CC2224] hover:border-[#CC2224] hover:text-white transition-all transform hover:-translate-y-1"
               >
@@ -170,7 +179,9 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
 
             <form onSubmit={handleSubmit} className="relative z-10 space-y-6">
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Full Name</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">
+                  Full Name
+                </label>
                 <input
                   required
                   type="text"
@@ -183,7 +194,9 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
 
               <div className="grid sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Email Address</label>
+                  <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">
+                    Email Address
+                  </label>
                   <input
                     required
                     type="email"
@@ -194,7 +207,9 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Phone Number</label>
+                  <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">
+                    Phone Number
+                  </label>
                   <input
                     required
                     type="tel"
@@ -207,7 +222,9 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Your Query</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">
+                  Your Query
+                </label>
                 <textarea
                   required
                   rows={4}

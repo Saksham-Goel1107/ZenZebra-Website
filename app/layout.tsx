@@ -2,8 +2,8 @@ import { Providers } from '@/components/Providers';
 import PublicLayout from '@/components/PublicLayout';
 import { Toaster } from '@/components/ui/sonner';
 import { getSystemSettings } from '@/lib/admin-settings';
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
 import Script from 'next/script';
@@ -20,7 +20,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: settings.siteName || 'ZenZebra - Curated Lifestyle Where You Already Are',
-    description: settings.siteDescription ||
+    description:
+      settings.siteDescription ||
       'ZenZebra brings curated lifestyle products directly into your daily spaces - offices, gyms, cafés, and malls. Try first, own after. No pressure, no guesswork, just better living by design.',
     keywords: [
       'ZenZebra',
@@ -35,13 +36,16 @@ export async function generateMetadata(): Promise<Metadata> {
     authors: [{ name: 'ZenZebra Team' }],
     openGraph: {
       title: settings.siteName || 'ZenZebra - Curated Lifestyle Where You Already Are',
-      description: settings.siteDescription ||
+      description:
+        settings.siteDescription ||
         'World’s first lifestyle-integrated brand. Discover, try, and buy premium products right where you live, work, and relax.',
       url: 'https://zenzebra.in',
       siteName: 'ZenZebra',
       images: [
         {
-          url: settings.ogImageUrl || 'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/6985926d0013323cc0ca/view?project=698585dc0014c943f45e&mode=admin',
+          url:
+            settings.ogImageUrl ||
+            'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/6985926d0013323cc0ca/view?project=698585dc0014c943f45e&mode=admin',
           width: 1200,
           height: 630,
           alt: `${settings.siteName || 'ZenZebra'} Experience`,
@@ -68,9 +72,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Analytics />
         <SpeedInsights />
         <Providers>
-          <PublicLayout settings={settings}>
-            {children}
-          </PublicLayout>
+          <PublicLayout settings={settings}>{children}</PublicLayout>
           <Toaster />
         </Providers>
         {/* Google tag (gtag.js) */}

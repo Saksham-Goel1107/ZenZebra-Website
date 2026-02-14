@@ -49,7 +49,10 @@ function Navbar({ settings }: { settings: SystemSettings }) {
             <m.div whileHover={{ scale: 1.1 }} transition={{ duration: 1.05, ease: 'easeOut' }}>
               <Link href={'/'} aria-label={`${settings?.siteName || 'ZenZebra'} Home`}>
                 <Image
-                  src={settings?.logoUrl || "https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/6985926d0013323cc0ca/view?project=698585dc0014c943f45e&mode=admin"}
+                  src={
+                    settings?.logoUrl ||
+                    'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/6985926d0013323cc0ca/view?project=698585dc0014c943f45e&mode=admin'
+                  }
                   width={175}
                   height={175}
                   alt={`${settings?.siteName || 'ZenZebra'} Logo`}

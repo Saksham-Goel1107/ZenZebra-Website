@@ -28,7 +28,8 @@ export default function Footer({ settings }: { settings: SystemSettings }) {
             <Image
               alt={`${settings?.siteName || 'ZenZebra'} Logo`}
               src={
-                settings?.logoUrl || 'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698592c00021ba481e19/view?project=698585dc0014c943f45e&mode=admin'
+                settings?.logoUrl ||
+                'https://fra.cloud.appwrite.io/v1/storage/buckets/698585f2000d68784efd/files/698592c00021ba481e19/view?project=698585dc0014c943f45e&mode=admin'
               }
               height={175}
               width={175}
@@ -80,7 +81,11 @@ export default function Footer({ settings }: { settings: SystemSettings }) {
               <Mail className="h-4 w-4 text-[#CC2224]" />
               <span>
                 {' '}
-                <a href={`mailto:${settings?.supportEmail || 'support@zenzebra.in'}`} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={`mailto:${settings?.supportEmail || 'support@zenzebra.in'}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {settings?.supportEmail || 'support@zenzebra.in'}
                 </a>
               </span>
@@ -89,7 +94,11 @@ export default function Footer({ settings }: { settings: SystemSettings }) {
               <Phone className="h-4 w-4 text-[#CC2224]" />
               <span>
                 {' '}
-                <a href={`tel:${settings?.supportPhone || '+919910605187'}`} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={`tel:${settings?.supportPhone || '+919910605187'}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {settings?.supportPhone || '+91 9910605187'}
                 </a>
               </span>
@@ -108,7 +117,7 @@ export default function Footer({ settings }: { settings: SystemSettings }) {
 
           <div className="flex gap-4 mt-4">
             <a
-              href={settings?.socialInstagram || "https://www.instagram.com/zenzebraindia/"}
+              href={settings?.socialInstagram || 'https://www.instagram.com/zenzebraindia/'}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Visit ${settings?.siteName || 'ZenZebra'} Instagram`}
@@ -119,7 +128,10 @@ export default function Footer({ settings }: { settings: SystemSettings }) {
               />
             </a>
             <a
-              href={settings?.socialLinkedIn || "https://www.linkedin.com/company/zenzebraindia/posts/?feedView=all"}
+              href={
+                settings?.socialLinkedIn ||
+                'https://www.linkedin.com/company/zenzebraindia/posts/?feedView=all'
+              }
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Visit ${settings?.siteName || 'ZenZebra'} LinkedIn`}

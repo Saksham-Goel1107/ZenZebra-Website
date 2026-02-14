@@ -24,10 +24,7 @@ export default function CataloguePage() {
         const response = await databases.listDocuments(
           appwriteConfig.databaseId,
           appwriteConfig.locationsCollectionId,
-          [
-            Query.equal('active', true),
-            Query.orderAsc('label')
-          ]
+          [Query.equal('active', true), Query.orderAsc('label')],
         );
         const mapped: LocationItem[] = response.documents.map((doc: any) => ({
           id: doc.$id,
@@ -138,10 +135,11 @@ export default function CataloguePage() {
                           setSelected(loc.file);
                           setIsOpen(false);
                         }}
-                        className={`w-full flex items-center justify-between px-4 py-3 text-sm rounded-lg transition-all group ${selected === loc.file
+                        className={`w-full flex items-center justify-between px-4 py-3 text-sm rounded-lg transition-all group ${
+                          selected === loc.file
                             ? 'bg-white/10 text-white'
                             : 'text-white/60 hover:text-white hover:bg-white/5'
-                          }`}
+                        }`}
                       >
                         <span className="font-medium">{loc.label}</span>
                         {selected === loc.file && (

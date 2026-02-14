@@ -43,7 +43,7 @@ function DesktopStoreScroll({ isBackground }: { isBackground: boolean }) {
   });
 
   useEffect(() => {
-    const desktopVideoUrl = "/IMG_9541.mp4";
+    const desktopVideoUrl = '/IMG_9541.mp4';
     const xhr = new XMLHttpRequest();
     xhr.open('GET', desktopVideoUrl, true);
     xhr.responseType = 'blob';
@@ -53,7 +53,9 @@ function DesktopStoreScroll({ isBackground }: { isBackground: boolean }) {
       }
     };
     xhr.send();
-    return () => { if (blobUrl) URL.revokeObjectURL(blobUrl); };
+    return () => {
+      if (blobUrl) URL.revokeObjectURL(blobUrl);
+    };
   }, []);
 
   useEffect(() => {
@@ -80,7 +82,8 @@ function DesktopStoreScroll({ isBackground }: { isBackground: boolean }) {
 
       // Increased lerpFactor for snappier response
       const lerpFactor = 0.08;
-      state.current.currentTime += (state.current.targetTime - state.current.currentTime) * lerpFactor;
+      state.current.currentTime +=
+        (state.current.targetTime - state.current.currentTime) * lerpFactor;
 
       // Threshold check: Don't seek unless the change is at least roughly 1 frame
       if (Math.abs(state.current.currentTime - state.current.lastAppliedTime) > 0.02) {
@@ -109,25 +112,31 @@ function DesktopStoreScroll({ isBackground }: { isBackground: boolean }) {
       ctxGsap = gsap.context(() => {
         const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: isBackground ? "html" : containerRef.current,
-            start: "top top",
-            end: isBackground ? "bottom bottom" : "+=300%",
+            trigger: isBackground ? 'html' : containerRef.current,
+            start: 'top top',
+            end: isBackground ? 'bottom bottom' : '+=300%',
             pin: !isBackground,
             scrub: true,
             onUpdate: (self) => {
               state.current.targetTime = self.progress * (state.current.vDur - 0.1);
-            }
-          }
+            },
+          },
         });
 
         if (!isBackground) {
           const [slide1, slide2, slide3] = contentRefs.current;
           if (slide1 && slide2 && slide3) {
             gsap.set([slide1, slide2, slide3], { autoAlpha: 0, y: 30 });
-            tl.to(slide1, { autoAlpha: 1, y: 0, duration: 1 }, 0.1)
-              .to(slide1, { autoAlpha: 0, y: -30, duration: 1 }, 0.8);
-            tl.to(slide2, { autoAlpha: 1, y: 0, duration: 1 }, 1.2)
-              .to(slide2, { autoAlpha: 0, y: -30, duration: 1 }, 2.0);
+            tl.to(slide1, { autoAlpha: 1, y: 0, duration: 1 }, 0.1).to(
+              slide1,
+              { autoAlpha: 0, y: -30, duration: 1 },
+              0.8,
+            );
+            tl.to(slide2, { autoAlpha: 1, y: 0, duration: 1 }, 1.2).to(
+              slide2,
+              { autoAlpha: 0, y: -30, duration: 1 },
+              2.0,
+            );
             tl.to(slide3, { autoAlpha: 1, y: 0, duration: 1 }, 2.4);
           }
         }
@@ -159,16 +168,41 @@ function DesktopStoreScroll({ isBackground }: { isBackground: boolean }) {
       <div className="absolute inset-0 bg-black/30 z-[1] pointer-events-none" />
       {!isBackground && (
         <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
-          <div ref={el => { contentRefs.current[0] = el; }} className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-            <h2 className="text-5xl md:text-8xl font-bold text-white mb-4 uppercase italic">Revolutionizing</h2>
-            <p className="text-xl md:text-2xl text-white/80 uppercase tracking-widest">The Retail Experience</p>
+          <div
+            ref={(el) => {
+              contentRefs.current[0] = el;
+            }}
+            className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
+          >
+            <h2 className="text-5xl md:text-8xl font-bold text-white mb-4 uppercase italic">
+              Revolutionizing
+            </h2>
+            <p className="text-xl md:text-2xl text-white/80 uppercase tracking-widest">
+              The Retail Experience
+            </p>
           </div>
-          <div ref={el => { contentRefs.current[1] = el; }} className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-            <h2 className="text-5xl md:text-8xl font-bold text-white mb-4 uppercase italic">Curated Spaces</h2>
-            <p className="text-xl md:text-2xl text-white/80 uppercase tracking-widest">Modernity Meets Zebra</p>
+          <div
+            ref={(el) => {
+              contentRefs.current[1] = el;
+            }}
+            className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
+          >
+            <h2 className="text-5xl md:text-8xl font-bold text-white mb-4 uppercase italic">
+              Curated Spaces
+            </h2>
+            <p className="text-xl md:text-2xl text-white/80 uppercase tracking-widest">
+              Modernity Meets Zebra
+            </p>
           </div>
-          <div ref={el => { contentRefs.current[2] = el; }} className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-            <h2 className="text-5xl md:text-8xl font-bold text-white mb-6 uppercase italic">Join the Stripe</h2>
+          <div
+            ref={(el) => {
+              contentRefs.current[2] = el;
+            }}
+            className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
+          >
+            <h2 className="text-5xl md:text-8xl font-bold text-white mb-6 uppercase italic">
+              Join the Stripe
+            </h2>
             {/* <Link href="/catalogue" className="pointer-events-auto px-12 py-4 bg-white text-black font-bold rounded-full">Explore Collection</Link> */}
           </div>
         </div>

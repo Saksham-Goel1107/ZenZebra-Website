@@ -8,12 +8,12 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { appwriteConfig, default as client, databases, storage } from '@/lib/appwrite';
 import { ID, Query, RealtimeResponseEvent } from 'appwrite';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -28,10 +28,10 @@ import {
   MapPin,
   Plus,
   Search,
-  Trash2
+  Trash2,
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { toast } from "sonner";
+import { toast } from 'sonner';
 
 type Row = {
   id: string;
@@ -53,7 +53,10 @@ export default function CatalogueDashboard() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [deleteDialog, setDeleteDialog] = useState<{ isOpen: boolean; row: Row | null }>({ isOpen: false, row: null });
+  const [deleteDialog, setDeleteDialog] = useState<{ isOpen: boolean; row: Row | null }>({
+    isOpen: false,
+    row: null,
+  });
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const formRef = useRef<HTMLDivElement | null>(null);
@@ -63,7 +66,7 @@ export default function CatalogueDashboard() {
       const response = await databases.listDocuments(
         appwriteConfig.databaseId,
         appwriteConfig.locationsCollectionId,
-        [Query.orderDesc('$createdAt')]
+        [Query.orderDesc('$createdAt')],
       );
       const list: Row[] = response.documents.map((doc: any) => ({
         id: doc.$id,
@@ -86,16 +89,20 @@ export default function CatalogueDashboard() {
     const unsubscribe = client.subscribe(
       `databases.${appwriteConfig.databaseId}.collections.${appwriteConfig.locationsCollectionId}.documents`,
       (response: RealtimeResponseEvent<Row>) => {
-        if (response.events.some(e => e.includes('.create') || e.includes('.update') || e.includes('.delete'))) {
+        if (
+          response.events.some(
+            (e) => e.includes('.create') || e.includes('.update') || e.includes('.delete'),
+          )
+        ) {
           fetchLocations();
         }
-      }
+      },
     );
     return () => unsubscribe();
   }, []);
 
   const filteredRows = useMemo(() => {
-    return rows.filter(r => r.label.toLowerCase().includes(searchQuery.toLowerCase()));
+    return rows.filter((r) => r.label.toLowerCase().includes(searchQuery.toLowerCase()));
   }, [rows, searchQuery]);
 
   const resetForm = () => {
@@ -114,11 +121,7 @@ export default function CatalogueDashboard() {
       if (!isPdf) throw new Error('System only accepts valid PDF documents.');
       if (file.size > 25 * 1024 * 1024) throw new Error('Maximum payload size (25MB) exceeded.');
 
-      const uploadedFile = await storage.createFile(
-        appwriteConfig.bucketId,
-        ID.unique(),
-        file
-      );
+      const uploadedFile = await storage.createFile(appwriteConfig.bucketId, ID.unique(), file);
 
       const fileUrl = storage.getFileView(appwriteConfig.bucketId, uploadedFile.$id);
       return fileUrl.toString();
@@ -146,17 +149,17 @@ export default function CatalogueDashboard() {
           appwriteConfig.databaseId,
           appwriteConfig.locationsCollectionId,
           editingId,
-          data
+          data,
         );
-        toast.success("Location identity updated");
+        toast.success('Location identity updated');
       } else {
         await databases.createDocument(
           appwriteConfig.databaseId,
           appwriteConfig.locationsCollectionId,
           ID.unique(),
-          data
+          data,
         );
-        toast.success("New location deployed");
+        toast.success('New location deployed');
       }
       resetForm();
     } catch (e: any) {
@@ -182,12 +185,12 @@ export default function CatalogueDashboard() {
       await databases.deleteDocument(
         appwriteConfig.databaseId,
         appwriteConfig.locationsCollectionId,
-        deleteDialog.row.id
+        deleteDialog.row.id,
       );
       toast.success(`Removed "${deleteDialog.row.label}"`);
       if (editingId === deleteDialog.row.id) resetForm();
     } catch (e: any) {
-      toast.error("Removal failed");
+      toast.error('Removal failed');
     } finally {
       setDeleteDialog({ isOpen: false, row: null });
     }
@@ -222,13 +225,19 @@ export default function CatalogueDashboard() {
             <div className="absolute top-0 right-0 w-48 h-48 bg-[#CC2224]/5 blur-3xl pointer-events-none group-hover:bg-[#CC2224]/10 transition-colors" />
 
             <h2 className="text-2xl font-bold text-foreground italic uppercase tracking-tighter mb-8 flex items-center gap-3">
-              {editingId ? <Edit2 className="w-5 h-5 text-[#CC2224]" /> : <Plus className="w-5 h-5 text-[#CC2224]" />}
+              {editingId ? (
+                <Edit2 className="w-5 h-5 text-[#CC2224]" />
+              ) : (
+                <Plus className="w-5 h-5 text-[#CC2224]" />
+              )}
               {editingId ? 'Modify Station' : 'Deploy Station'}
             </h2>
 
             <div className="space-y-6 relative z-10">
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-[#CC2224] ml-1">Location Identity</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-[#CC2224] ml-1">
+                  Location Identity
+                </label>
                 <Input
                   value={label}
                   onChange={(e) => setLabel(e.target.value)}
@@ -238,7 +247,9 @@ export default function CatalogueDashboard() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-[#CC2224] ml-1">Catalogue Package (PDF)</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-[#CC2224] ml-1">
+                  Catalogue Package (PDF)
+                </label>
                 <div
                   className={`
                     relative rounded-2xl border-2 border-dashed transition-all cursor-pointer overflow-hidden
@@ -256,8 +267,12 @@ export default function CatalogueDashboard() {
                     {file ? (
                       <>
                         <FileUp className="w-8 h-8 text-[#CC2224] mb-3" />
-                        <p className="text-xs font-bold text-foreground truncate max-w-full italic">{file.name}</p>
-                        <p className="text-[10px] text-muted-foreground mt-1 uppercase font-bold tracking-widest">{(file.size / 1024 / 1024).toFixed(2)} MB Payload</p>
+                        <p className="text-xs font-bold text-foreground truncate max-w-full italic">
+                          {file.name}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground mt-1 uppercase font-bold tracking-widest">
+                          {(file.size / 1024 / 1024).toFixed(2)} MB Payload
+                        </p>
                       </>
                     ) : (
                       <>
@@ -278,7 +293,10 @@ export default function CatalogueDashboard() {
                   onCheckedChange={(c) => setActive(c === true)}
                   className="border-input data-[state=checked]:bg-[#CC2224] data-[state=checked]:border-[#CC2224]"
                 />
-                <Label htmlFor="active-mode" className="text-xs font-bold uppercase tracking-widest text-muted-foreground cursor-pointer">
+                <Label
+                  htmlFor="active-mode"
+                  className="text-xs font-bold uppercase tracking-widest text-muted-foreground cursor-pointer"
+                >
                   Online Broadcast Mode
                 </Label>
               </div>
@@ -289,7 +307,13 @@ export default function CatalogueDashboard() {
                   onClick={handleSave}
                   className="w-full h-14 bg-[#CC2224] hover:bg-[#b01c1e] text-white font-bold uppercase tracking-widest italic shadow-[0_0_20px_rgba(204,34,36,0.3)] transition-all active:scale-95"
                 >
-                  {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : (editingId ? 'Push Update' : 'Initialize Station')}
+                  {busy ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : editingId ? (
+                    'Push Update'
+                  ) : (
+                    'Initialize Station'
+                  )}
                 </Button>
                 {editingId && (
                   <Button
@@ -326,7 +350,10 @@ export default function CatalogueDashboard() {
             <AnimatePresence mode="popLayout">
               {loading ? (
                 Array.from({ length: 4 }).map((_, i) => (
-                  <motion.div key={`sk-${i}`} className="h-48 rounded-[2rem] bg-white/[0.03] border border-white/5 animate-pulse" />
+                  <motion.div
+                    key={`sk-${i}`}
+                    className="h-48 rounded-[2rem] bg-white/[0.03] border border-white/5 animate-pulse"
+                  />
                 ))
               ) : filteredRows.length === 0 ? (
                 <motion.div
@@ -335,7 +362,9 @@ export default function CatalogueDashboard() {
                   className="col-span-full py-20 text-center bg-muted/10 border border-dashed border-border rounded-[2.5rem]"
                 >
                   <Search className="w-10 h-10 text-muted-foreground/30 mx-auto mb-4" />
-                  <p className="text-xs font-bold text-muted-foreground/70 uppercase tracking-[0.2em] italic">No stations detected in search</p>
+                  <p className="text-xs font-bold text-muted-foreground/70 uppercase tracking-[0.2em] italic">
+                    No stations detected in search
+                  </p>
                 </motion.div>
               ) : (
                 filteredRows.map((row) => (
@@ -355,7 +384,9 @@ export default function CatalogueDashboard() {
                           <h3 className="text-md font-extrabold text-foreground truncate max-w-[150px] italic">
                             {row.label}
                           </h3>
-                          <div className={`mt-1 flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest border w-fit ${row.active ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-muted border-border text-muted-foreground'}`}>
+                          <div
+                            className={`mt-1 flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest border w-fit ${row.active ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-muted border-border text-muted-foreground'}`}
+                          >
                             {row.active ? 'Broadcasting' : 'Offline'}
                           </div>
                         </div>
@@ -388,7 +419,9 @@ export default function CatalogueDashboard() {
                       >
                         <div className="flex items-center gap-2">
                           <BookOpen className="w-4 h-4 text-muted-foreground group-hover/link:text-[#CC2224]" />
-                          <span className="text-[10px] font-bold text-muted-foreground group-hover/link:text-foreground uppercase tracking-wider">Catalogue Intelligence</span>
+                          <span className="text-[10px] font-bold text-muted-foreground group-hover/link:text-foreground uppercase tracking-wider">
+                            Catalogue Intelligence
+                          </span>
                         </div>
                         <ExternalLink className="w-3.5 h-3.5 text-muted-foreground/50 group-hover/link:text-foreground/70" />
                       </a>
@@ -397,7 +430,8 @@ export default function CatalogueDashboard() {
                     <div className="mt-4 pt-4 border-t border-border flex items-center justify-between text-[9px] font-bold text-muted-foreground/50 uppercase tracking-widest">
                       <div className="flex items-center gap-1.5">
                         <Calendar className="w-3 h-3" />
-                        Updated {row.$updatedAt ? new Date(row.$updatedAt).toLocaleDateString() : 'Initial'}
+                        Updated{' '}
+                        {row.$updatedAt ? new Date(row.$updatedAt).toLocaleDateString() : 'Initial'}
                       </div>
                       <span className="font-mono">ID: {row.id.slice(-6)}</span>
                     </div>
@@ -409,20 +443,34 @@ export default function CatalogueDashboard() {
         </div>
       </div>
 
-      <AlertDialog open={deleteDialog.isOpen} onOpenChange={(o) => setDeleteDialog(prev => ({ ...prev, isOpen: o }))}>
+      <AlertDialog
+        open={deleteDialog.isOpen}
+        onOpenChange={(o) => setDeleteDialog((prev) => ({ ...prev, isOpen: o }))}
+      >
         <AlertDialogContent className="bg-card border-border text-foreground max-w-sm rounded-[2rem]">
           <AlertDialogHeader>
             <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
               <Trash2 className="w-6 h-6 text-red-500" />
             </div>
-            <AlertDialogTitle className="text-xl font-bold italic uppercase text-center">Terminate Station?</AlertDialogTitle>
+            <AlertDialogTitle className="text-xl font-bold italic uppercase text-center">
+              Terminate Station?
+            </AlertDialogTitle>
             <AlertDialogDescription className="text-muted-foreground text-center pt-2">
-              This will permanently revoke all broadcasting from <span className="text-foreground font-bold">"{deleteDialog.row?.label}"</span>. This action is irreversible.
+              This will permanently revoke all broadcasting from{' '}
+              <span className="text-foreground font-bold">"{deleteDialog.row?.label}"</span>. This
+              action is irreversible.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="mt-8 flex gap-2">
-            <AlertDialogCancel className="bg-transparent border-border hover:bg-accent rounded-xl uppercase font-bold text-[10px] tracking-widest flex-1">Abort</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-red-600 hover:bg-red-700 text-white rounded-xl uppercase font-bold text-[10px] tracking-widest flex-1">Confirm Termination</AlertDialogAction>
+            <AlertDialogCancel className="bg-transparent border-border hover:bg-accent rounded-xl uppercase font-bold text-[10px] tracking-widest flex-1">
+              Abort
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-red-600 hover:bg-red-700 text-white rounded-xl uppercase font-bold text-[10px] tracking-widest flex-1"
+            >
+              Confirm Termination
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
