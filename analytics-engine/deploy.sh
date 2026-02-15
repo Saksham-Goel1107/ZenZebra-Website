@@ -37,7 +37,7 @@ fi
 
 # 3. Docker Compose Build and Deploy
 echo "🐳 Building and deploying Docker containers..."
-docker-compose up -d --build
+docker compose up -d --build
 
 # 4. Clean up unused images (optional but recommended)
 echo "🧹 Cleaning up old images..."

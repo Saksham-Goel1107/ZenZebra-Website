@@ -22,7 +22,13 @@ from zenzebra_analytics import ZenZebraAnalytics, process_triple_reports
 # Load environment variables
 load_dotenv()
 
-app = FastAPI()
+app = FastAPI(
+    title="ZenZebra Analytics API",
+    description="API for processing and analyzing ZenZebra sales and stock data.",
+    version="3.0",
+    docs_url="/help",  # Custom docs URL
+    redoc_url="/documentation"
+)
 
 # Add CORS middleware
 app.add_middleware(
@@ -66,7 +72,12 @@ class TripleAnalyzeRequest(BaseModel):
 
 @app.get("/")
 def read_root():
-    return {"message": "ZenZebra Analytics Engine Running", "status": "active", "version": "3.0"}
+    return {
+        "message": "ZenZebra Analytics Engine Running",
+        "status": "active",
+        "version": "3.0",
+        "documentation": "/help"
+    }
 
 @app.get("/health")
 def health_check():

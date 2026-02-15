@@ -583,10 +583,11 @@ function SettingsTab({
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 group ${active
-        ? 'bg-[#CC2224] text-white shadow-xl shadow-[#CC2224]/30 scale-[1.02]'
-        : 'hover:bg-muted text-muted-foreground hover:text-foreground border border-transparent hover:border-border'
-        }`}
+      className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 group ${
+        active
+          ? 'bg-[#CC2224] text-white shadow-xl shadow-[#CC2224]/30 scale-[1.02]'
+          : 'hover:bg-muted text-muted-foreground hover:text-foreground border border-transparent hover:border-border'
+      }`}
     >
       <span
         className={`p-2 rounded-xl transition-colors flex items-center justify-center ${active ? 'bg-white/20' : 'bg-muted group-hover:bg-muted-foreground/10'}`}

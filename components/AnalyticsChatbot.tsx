@@ -897,7 +897,11 @@ export default function AnalyticsChatbot({
                   onClick={() => setIsExpanded(!isExpanded)}
                   title={isExpanded ? 'Minimize' : 'Expand'}
                 >
-                  {isExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+                  {isExpanded ? (
+                    <Minimize2 className="w-4 h-4" />
+                  ) : (
+                    <Maximize2 className="w-4 h-4" />
+                  )}
                 </Button>
                 <Button
                   variant="ghost"
@@ -995,9 +999,9 @@ export default function AnalyticsChatbot({
                             msg.role === 'user'
                               ? 'bg-primary text-primary-foreground rounded-tr-sm'
                               : cn(
-                                'bg-background border border-border rounded-tl-sm text-foreground',
-                                msg.isError && 'border-destructive/50 bg-destructive/5',
-                              ),
+                                  'bg-background border border-border rounded-tl-sm text-foreground',
+                                  msg.isError && 'border-destructive/50 bg-destructive/5',
+                                ),
                           )}
                         >
                           {msg.role === 'assistant' ? (
