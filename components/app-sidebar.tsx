@@ -82,6 +82,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     { title: 'Inquiries', href: '/admin-login/inquiries', icon: MessageSquare },
     { title: 'Partner Requests', href: '/admin-login/partner-requests', icon: Handshake },
     { title: 'Locations', href: '/admin-login/locations', icon: MapPin },
+    { title: 'Status', href: 'https://status.zenzebra.in', icon: Monitor },
   ];
 
   // Admin only sections
@@ -130,12 +131,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     isActive={pathname === item.href}
                     className="transition-all duration-300 hover:bg-[#CC2224]/5"
                   >
-                    <Link href={item.href}>
-                      <item.icon className={pathname === item.href ? 'text-[#CC2224]' : ''} />
-                      <span className={pathname === item.href ? 'font-bold text-foreground' : ''}>
-                        {item.title}
-                      </span>
-                    </Link>
+                    {item.href.startsWith('http') ? (
+                      <a href={item.href} target="_blank" rel="noopener noreferrer">
+                        <item.icon className={pathname === item.href ? 'text-[#CC2224]' : ''} />
+                        <span className={pathname === item.href ? 'font-bold text-foreground' : ''}>
+                          {item.title}
+                        </span>
+                      </a>
+                    ) : (
+                      <Link href={item.href}>
+                        <item.icon className={pathname === item.href ? 'text-[#CC2224]' : ''} />
+                        <span className={pathname === item.href ? 'font-bold text-foreground' : ''}>
+                          {item.title}
+                        </span>
+                      </Link>
+                    )}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

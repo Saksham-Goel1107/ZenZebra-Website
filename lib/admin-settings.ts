@@ -28,6 +28,7 @@ export interface SystemSettings {
   inquiryStatusUpdateSubject: string;
   inquiryStatusUpdateTemplate: string;
   analyticsChatbotEnabled: boolean;
+  ownerOnlyMode: boolean;
 }
 
 const DEFAULT_SETTINGS: SystemSettings = {
@@ -54,6 +55,7 @@ const DEFAULT_SETTINGS: SystemSettings = {
   inquiryStatusUpdateTemplate:
     'Hello {name},\n\nYour inquiry status has been updated to: {status}.\n\nThank you for choosing ZenZebra!',
   analyticsChatbotEnabled: true,
+  ownerOnlyMode: false,
 };
 
 // --- Helpers ---

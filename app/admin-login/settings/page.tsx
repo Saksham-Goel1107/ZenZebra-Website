@@ -37,6 +37,7 @@ interface SettingsData {
   inquiryStatusUpdateSubject: string;
   inquiryStatusUpdateTemplate: string;
   analyticsChatbotEnabled: boolean;
+  ownerOnlyMode: boolean;
 }
 
 const DEFAULT_SETTINGS: SettingsData = {
@@ -59,6 +60,7 @@ const DEFAULT_SETTINGS: SettingsData = {
   inquiryStatusUpdateSubject: '',
   inquiryStatusUpdateTemplate: '',
   analyticsChatbotEnabled: true,
+  ownerOnlyMode: false,
 };
 
 export default function SettingsPage() {
@@ -332,6 +334,36 @@ export default function SettingsPage() {
                   )}
                 </div>
 
+                <div
+                  className={`p-6 rounded-[2rem] border transition-all duration-300 ${settings.ownerOnlyMode ? 'bg-orange-500/10 border-orange-500 shadow-[0_0_30px_-5px_oklch(var(--orange-500)/0.2)]' : 'bg-muted/30 border-border hover:border-[#CC2224]/30'}`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-1">
+                      <span
+                        className={`font-black text-sm uppercase tracking-tighter flex items-center gap-2 ${settings.ownerOnlyMode ? 'text-orange-500' : 'text-foreground'}`}
+                      >
+                        <Shield className="w-4 h-4" />
+                        Owner-Only Mode
+                      </span>
+                      <span className="text-[10px] text-muted-foreground font-medium max-w-[280px] leading-tight">
+                        When enabled, only the platform owner can access the admin dashboard. All other administrative accounts will be temporarily blocked.
+                      </span>
+                    </div>
+                    <Switch
+                      checked={settings.ownerOnlyMode}
+                      onChange={(checked) => updateSetting('ownerOnlyMode', checked)}
+                    />
+                  </div>
+                  {settings.ownerOnlyMode && (
+                    <div className="mt-4 p-4 bg-orange-500/10 rounded-2xl border border-orange-500/20 text-[11px] text-orange-500 flex gap-3 items-start font-bold">
+                      <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                      <div>
+                        <strong>ACTIVE:</strong> Teams access is currently restricted. Only you (the owner) can manage the system until this is disabled.
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 <div className="p-6 bg-muted/20 rounded-[1.5rem] border border-border flex items-center gap-4">
                   <div className="p-3 rounded-full bg-blue-500/10 text-blue-500">
                     <Shield className="w-5 h-5" />
@@ -583,11 +615,10 @@ function SettingsTab({
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 group ${
-        active
-          ? 'bg-[#CC2224] text-white shadow-xl shadow-[#CC2224]/30 scale-[1.02]'
-          : 'hover:bg-muted text-muted-foreground hover:text-foreground border border-transparent hover:border-border'
-      }`}
+      className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 group ${active
+        ? 'bg-[#CC2224] text-white shadow-xl shadow-[#CC2224]/30 scale-[1.02]'
+        : 'hover:bg-muted text-muted-foreground hover:text-foreground border border-transparent hover:border-border'
+        }`}
     >
       <span
         className={`p-2 rounded-xl transition-colors flex items-center justify-center ${active ? 'bg-white/20' : 'bg-muted group-hover:bg-muted-foreground/10'}`}
