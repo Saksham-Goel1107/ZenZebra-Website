@@ -46,3 +46,46 @@ This is a FastAPI service powered by Pandas to process Excel/CSV files for the Z
 - **Trigger**: Receives POST request from Next.js with `fileId`.
 - **Process**: Downloads file from Appwrite Storage -> Pandas Analysis.
 - **Result**: Uploads JSON results to Appwrite Database.
+
+## Monitoring
+
+- **Health Endpoint**: `GET /health` returns the service status and current timestamp. This is used by Docker for container health monitoring.
+
+## Docker Deployment
+
+1.  **Build the Docker image**:
+
+    ```bash
+    docker build -t zenzebra-analytics .
+    ```
+
+2.  **Run the container**:
+
+    ```bash
+    docker run -p 8000:8000 --env-file .env zenzebra-analytics
+    ```
+
+3.  **Using Docker Compose**:
+    ```bash
+    # Make sure you have a .env file in this directory first!
+    docker-compose up -d --build
+    ```
+
+## Automated Deployment
+
+A `deploy.sh` script is provided to automate the deployment process. It pulls the latest code, fetches environment variables from Doppler, and restarts the containers.
+
+**Prerequisites:**
+
+- Doppler CLI is not required, but a `DOPPLER_TOKEN` (Service Token) must be available.
+
+**Usage:**
+
+```bash
+# Set your Doppler Service Token
+export DOPPLER_TOKEN="dp.pt..."
+
+# Run the deploy script
+chmod +x deploy.sh
+./deploy.sh
+```

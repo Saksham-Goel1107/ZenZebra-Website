@@ -68,6 +68,10 @@ class TripleAnalyzeRequest(BaseModel):
 def read_root():
     return {"message": "ZenZebra Analytics Engine Running", "status": "active", "version": "3.0"}
 
+@app.get("/health")
+def health_check():
+    return {"status": "healthy", "timestamp": datetime.now().isoformat()}
+
 def get_user_name(user_id: str) -> str:
     """Get user's name from Appwrite"""
     try:
