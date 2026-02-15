@@ -1,4 +1,5 @@
 import { getSystemSettings } from '@/lib/admin-settings';
+import { getClientIp, ratelimit } from '@/lib/rate-limit';
 import { NextResponse } from 'next/server';
 import { Pingram } from 'pingram';
 
@@ -56,6 +57,8 @@ async function sendEmailNotification(to: string, subject: string, message: strin
       email: {
         subject: subject,
         html: message.replace(/\n/g, '<br>'),
+        senderName: 'ZenZebra',
+        senderEmail: 'noreply@noreply.zenzebra.in',
       },
     });
   } catch (error) {
@@ -65,6 +68,17 @@ async function sendEmailNotification(to: string, subject: string, message: strin
 
 export async function POST(request: Request) {
   try {
+    // Rate Limiting
+    const ip = getClientIp(request);
+    const { success } = await ratelimit.limit(ip);
+
+    if (!success) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 },
+      );
+    }
+
     const body = await request.json();
     const { name, email, phone, query } = body;
 

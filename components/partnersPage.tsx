@@ -1,7 +1,7 @@
 'use client';
 
+import { PartnerRequestModal } from '@/components/PartnerRequestModal';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 
 /* -------------------- Hero -------------------- */
 export function Hero() {
@@ -36,14 +36,11 @@ export function Hero() {
           viewport={{ once: true }}
           className="mt-8 flex items-center gap-3"
         >
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://docs.google.com/forms/d/e/1FAIpQLSfyFOB1d7hBoF-um8epwCM6TR3tcB6diGmdffn3WNok4pMxZw/viewform?usp=publish-editor"
-            className="rounded-full bg-[#CC2224] px-6 py-3 text-sm font-semibold hover:bg-[#b31d1f] transition"
-          >
-            Partner With Us
-          </a>
+          <PartnerRequestModal>
+            <button className="rounded-full bg-[#CC2224] px-6 py-3 text-sm font-semibold hover:bg-[#b31d1f] transition">
+              Partner With Us
+            </button>
+          </PartnerRequestModal>
         </motion.div>
       </div>
     </section>
@@ -256,14 +253,11 @@ export function FinalCTA() {
         </p>
 
         <div className="mt-8">
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://docs.google.com/forms/d/e/1FAIpQLSfyFOB1d7hBoF-um8epwCM6TR3tcB6diGmdffn3WNok4pMxZw/viewform?usp=publish-editor"
-            className="rounded-full bg-[#CC2224] px-6 py-3 text-sm font-semibold hover:bg-[#b31d1f] transition"
-          >
-            Become a Space Partner
-          </a>
+          <PartnerRequestModal>
+            <button className="rounded-full bg-[#CC2224] px-6 py-3 text-sm font-semibold hover:bg-[#b31d1f] transition">
+              Become a Space Partner
+            </button>
+          </PartnerRequestModal>
         </div>
       </div>
     </section>

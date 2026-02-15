@@ -5,6 +5,7 @@ import {
   BarChart3,
   BookOpen,
   Command,
+  Handshake,
   Key,
   LogOut,
   MapPin,
@@ -79,6 +80,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     { title: 'Data Analytics', href: '/admin-login/data-analytics', icon: BarChart3 },
     { title: 'Catalogue', href: '/admin-login/catalogue-dashboard', icon: BookOpen },
     { title: 'Inquiries', href: '/admin-login/inquiries', icon: MessageSquare },
+    { title: 'Partner Requests', href: '/admin-login/partner-requests', icon: Handshake },
     { title: 'Locations', href: '/admin-login/locations', icon: MapPin },
   ];
 

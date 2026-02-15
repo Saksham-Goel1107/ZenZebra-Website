@@ -101,9 +101,11 @@ export async function POST(request: Request) {
                   <li>Keep your credentials secure and never share them</li>
                 </ul>
                 <p style="color: #999; font-size: 12px; margin-top: 30px;">This email contains sensitive information. Please delete it after setting up your account.</p>
-                <p>Regards,<br>ZenZebra Intelligence</p>
+                <p>Regards,<br>ZenZebra</p>
               </div>
             `,
+            senderName: 'ZenZebra',
+            senderEmail: 'noreply@noreply.zenzebra.in',
           },
         });
         secureLog('Welcome email sent successfully');

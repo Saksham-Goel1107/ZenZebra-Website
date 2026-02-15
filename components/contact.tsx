@@ -60,7 +60,7 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
   };
 
   return (
-    <main className="relative min-h-screen bg-background text-foreground transition-colors duration-300 overflow-hidden">
+    <main className="relative min-h-screen bg-black text-white transition-colors duration-300 overflow-hidden">
       {/* Background glow - adjusted for light/dark */}
       <div className="pointer-events-none absolute -top-32 -left-24 h-[40rem] w-[40rem] rounded-full bg-[#CC2224]/10 dark:bg-[#CC2224]/20 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-40 -right-24 h-[36rem] w-[36rem] rounded-full bg-primary/5 dark:bg-white/10 blur-3xl" />
@@ -76,7 +76,7 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
           <h1 className="text-4xl sm:text-6xl font-black tracking-tighter uppercase italic">
             Get in <span className="text-[#CC2224]">Touch</span>
           </h1>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="text-neutral-400 text-lg max-w-2xl mx-auto leading-relaxed">
             Whether you&apos;re a brand, a partner, or just curious - we&apos;d love to hear from
             you.
           </p>
@@ -91,7 +91,7 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="rounded-3xl border border-border bg-card/50 backdrop-blur-xl p-8 hover:border-[#CC2224]/30 transition-all group"
+                className="rounded-3xl border border-neutral-800 bg-neutral-900/50 backdrop-blur-xl p-8 hover:border-[#CC2224]/30 transition-all group"
               >
                 <div className="w-12 h-12 bg-[#CC2224]/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <Mail className="h-6 w-6 text-[#CC2224]" />
@@ -99,7 +99,7 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
                 <h3 className="text-lg font-bold mb-1">Email</h3>
                 <a
                   href={`mailto:${email}`}
-                  className="text-muted-foreground hover:text-[#CC2224] transition-colors text-sm break-all font-medium"
+                  className="text-neutral-400 hover:text-[#CC2224] transition-colors text-sm break-all font-medium"
                 >
                   {email}
                 </a>
@@ -111,7 +111,7 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
-                className="rounded-3xl border border-border bg-card/50 backdrop-blur-xl p-8 hover:border-[#CC2224]/30 transition-all group"
+                className="rounded-3xl border border-neutral-800 bg-neutral-900/50 backdrop-blur-xl p-8 hover:border-[#CC2224]/30 transition-all group"
               >
                 <div className="w-12 h-12 bg-[#CC2224]/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <Phone className="h-6 w-6 text-[#CC2224]" />
@@ -119,7 +119,7 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
                 <h3 className="text-lg font-bold mb-1">Phone</h3>
                 <a
                   href={`tel:${phone}`}
-                  className="text-muted-foreground hover:text-[#CC2224] transition-colors text-sm font-medium"
+                  className="text-neutral-400 hover:text-[#CC2224] transition-colors text-sm font-medium"
                 >
                   {phone}
                 </a>
@@ -132,7 +132,7 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="rounded-3xl border border-border bg-card/50 backdrop-blur-xl p-8 hover:border-[#CC2224]/30 transition-all group "
+              className="rounded-3xl border border-neutral-800 bg-neutral-900/50 backdrop-blur-xl p-8 hover:border-[#CC2224]/30 transition-all group "
             >
               <div className="flex items-center gap-6">
                 <div className="w-12 h-12 bg-[#CC2224]/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
@@ -140,27 +140,27 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
                 </div>
                 <div>
                   <h3 className="text-lg font-bold mb-1">Location</h3>
-                  <p className="text-muted-foreground text-sm font-medium">Delhi, India</p>
+                  <p className="text-neutral-400 text-sm font-medium">Delhi, India</p>
                 </div>
               </div>
             </motion.div>
 
             {/* Social Links */}
             <div className="flex items-center gap-4 pt-4">
-              <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground mr-4">
+              <p className="text-sm font-bold uppercase tracking-widest text-neutral-400 mr-4">
                 Follow Us
               </p>
               <a
                 href={settings?.socialInstagram || 'https://www.instagram.com/zenzebraindia/'}
                 target="_blank"
-                className="w-12 h-12 rounded-2xl border border-border flex items-center justify-center hover:bg-[#CC2224] hover:border-[#CC2224] hover:text-white transition-all transform hover:-translate-y-1"
+                className="w-12 h-12 rounded-2xl border border-neutral-800 flex items-center justify-center hover:bg-[#CC2224] hover:border-[#CC2224] hover:text-white transition-all transform hover:-translate-y-1"
               >
                 <Instagram className="h-5 w-5" />
               </a>
               <a
                 href={settings?.socialLinkedIn || 'https://www.linkedin.com/company/zenzebraindia/'}
                 target="_blank"
-                className="w-12 h-12 rounded-2xl border border-border flex items-center justify-center hover:bg-[#CC2224] hover:border-[#CC2224] hover:text-white transition-all transform hover:-translate-y-1"
+                className="w-12 h-12 rounded-2xl border border-neutral-800 flex items-center justify-center hover:bg-[#CC2224] hover:border-[#CC2224] hover:text-white transition-all transform hover:-translate-y-1"
               >
                 <Linkedin className="h-5 w-5" />
               </a>
@@ -172,14 +172,14 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="rounded-[2.5rem] border border-border bg-card p-8 sm:p-12 shadow-2xl shadow-black/5 dark:shadow-red-500/5 relative overflow-hidden group"
+            className="rounded-[2.5rem] border border-neutral-800 bg-neutral-900 p-8 sm:p-12 shadow-2xl shadow-black/5 dark:shadow-red-500/5 relative overflow-hidden group"
           >
             {/* Subtle glow inside form */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#CC2224]/5 blur-[60px] rounded-full pointer-events-none" />
 
             <form onSubmit={handleSubmit} className="relative z-10 space-y-6">
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">
+                <label className="text-xs font-bold uppercase tracking-widest text-neutral-400 ml-1">
                   Full Name
                 </label>
                 <input
@@ -188,13 +188,13 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
                   placeholder="John Doe"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full bg-background border border-border rounded-2xl px-6 py-4 outline-none focus:border-[#CC2224] transition-colors font-medium"
+                  className="w-full bg-black border border-neutral-800 rounded-2xl px-6 py-4 outline-none focus:border-[#CC2224] transition-colors font-medium text-white placeholder:text-neutral-600"
                 />
               </div>
 
               <div className="grid sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">
+                  <label className="text-xs font-bold uppercase tracking-widest text-neutral-400 ml-1">
                     Email Address
                   </label>
                   <input
@@ -203,11 +203,11 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
                     placeholder="john@example.com"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full bg-background border border-border rounded-2xl px-6 py-4 outline-none focus:border-[#CC2224] transition-colors font-medium"
+                    className="w-full bg-black border border-neutral-800 rounded-2xl px-6 py-4 outline-none focus:border-[#CC2224] transition-colors font-medium text-white placeholder:text-neutral-600"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">
+                  <label className="text-xs font-bold uppercase tracking-widest text-neutral-400 ml-1">
                     Phone Number
                   </label>
                   <input
@@ -216,13 +216,13 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
                     placeholder="+91 98765 43210"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full bg-background border border-border rounded-2xl px-6 py-4 outline-none focus:border-[#CC2224] transition-colors font-medium"
+                    className="w-full bg-black border border-neutral-800 rounded-2xl px-6 py-4 outline-none focus:border-[#CC2224] transition-colors font-medium text-white placeholder:text-neutral-600"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">
+                <label className="text-xs font-bold uppercase tracking-widest text-neutral-400 ml-1">
                   Your Query
                 </label>
                 <textarea
@@ -231,7 +231,7 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
                   placeholder="How can we help you?"
                   value={formData.query}
                   onChange={(e) => setFormData({ ...formData, query: e.target.value })}
-                  className="w-full bg-background border border-border rounded-2xl px-6 py-4 outline-none focus:border-[#CC2224] transition-colors font-medium resize-none"
+                  className="w-full bg-black border border-neutral-800 rounded-2xl px-6 py-4 outline-none focus:border-[#CC2224] transition-colors font-medium resize-none text-white placeholder:text-neutral-600"
                 />
               </div>
 
@@ -254,11 +254,6 @@ export default function ContactPage({ settings }: { settings: SystemSettings }) 
               </button>
             </form>
           </motion.div>
-        </div>
-
-        {/* Footer line */}
-        <div className="mt-24 border-t border-border pt-8 text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground text-center w-full">
-          © {new Date().getFullYear()} {siteName}. Engineered for excellence.
         </div>
       </section>
     </main>

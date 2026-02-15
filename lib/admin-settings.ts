@@ -27,6 +27,7 @@ export interface SystemSettings {
   inquiryConfirmationTemplate: string;
   inquiryStatusUpdateSubject: string;
   inquiryStatusUpdateTemplate: string;
+  analyticsChatbotEnabled: boolean;
 }
 
 const DEFAULT_SETTINGS: SystemSettings = {
@@ -52,6 +53,7 @@ const DEFAULT_SETTINGS: SystemSettings = {
   inquiryStatusUpdateSubject: 'ZenZebra - Inquiry Update: {status}',
   inquiryStatusUpdateTemplate:
     'Hello {name},\n\nYour inquiry status has been updated to: {status}.\n\nThank you for choosing ZenZebra!',
+  analyticsChatbotEnabled: true,
 };
 
 // --- Helpers ---

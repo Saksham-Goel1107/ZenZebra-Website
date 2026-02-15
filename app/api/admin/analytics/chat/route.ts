@@ -1,3 +1,4 @@
+import { getSystemSettings } from '@/lib/admin-settings';
 import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
 import { ChatPromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts';
 import { Tool } from '@langchain/core/tools';
@@ -100,6 +101,15 @@ Ensure the JSON in the chart block is valid. Do not use TOON for charts, only fo
 export async function POST(request: NextRequest) {
   try {
     const { message, context, conversationHistory } = await request.json();
+
+    // Check if chatbot is enabled globally
+    const settings = await getSystemSettings();
+    if (settings.analyticsChatbotEnabled === false) {
+      return NextResponse.json(
+        { error: 'Analytics Chatbot is currently disabled by the administrator.' },
+        { status: 403 },
+      );
+    }
 
     if (!process.env.GEMINI_API_KEY) {
       throw new Error('Gemini API key not configured');
