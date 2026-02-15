@@ -1,8 +1,8 @@
 'use client';
 
 import { m } from 'framer-motion';
-import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import { PartnerRequestModal } from './PartnerRequestModal';
 
 const Ticker = dynamic(() => import('@/components/Ticker'));
 
@@ -39,14 +39,11 @@ export function Hero() {
           viewport={{ once: true }}
           className="mt-8 flex items-center gap-3"
         >
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://docs.google.com/forms/d/e/1FAIpQLSf6IqDJ3WhYjUc-805XiHlsZ_D4lomL9_qCPKl7EIHlfDubBA/viewform"
-            className="rounded-full bg-[#CC2224] px-6 py-3 text-sm font-semibold hover:bg-[#b31d1f] transition"
-          >
-            Become a Brand Partner
-          </a>
+          <PartnerRequestModal>
+            <button className="rounded-full bg-[#CC2224] px-6 py-3 text-sm font-semibold hover:bg-[#b31d1f] transition text-white">
+              Become a Brand Partner
+            </button>
+          </PartnerRequestModal>
         </m.div>
       </div>
     </section>
@@ -247,14 +244,11 @@ export function FinalCTA() {
         </p>
 
         <div className="mt-8">
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://docs.google.com/forms/d/e/1FAIpQLSf6IqDJ3WhYjUc-805XiHlsZ_D4lomL9_qCPKl7EIHlfDubBA/viewform"
-            className="rounded-full bg-[#CC2224] px-6 py-3 text-sm font-semibold hover:bg-[#b31d1f] transition"
-          >
-            Apply to Partner
-          </a>
+          <PartnerRequestModal>
+            <button className="rounded-full bg-[#CC2224] px-6 py-3 text-sm font-semibold hover:bg-[#b31d1f] transition text-white">
+              Apply to Partner
+            </button>
+          </PartnerRequestModal>
         </div>
       </div>
     </section>

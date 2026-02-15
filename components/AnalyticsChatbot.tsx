@@ -1,9 +1,8 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { account } from '@/lib/appwrite';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -13,6 +12,7 @@ import {
   Copy,
   Edit2,
   Loader2,
+  Lock,
   Maximize2,
   Mic,
   MicOff,
@@ -472,6 +472,32 @@ export default function AnalyticsChatbot({
   const abortControllerRef = useRef<AbortController | null>(null);
   const [contextSummary, setContextSummary] = useState<string>('');
   const [editingId, setEditingId] = useState<string | null>(null); // For editing messages
+  const [isFeatureEnabled, setIsFeatureEnabled] = useState<boolean>(true); // Assume enabled by default
+  const [checkingFeature, setCheckingFeature] = useState<boolean>(true);
+
+  // Check if chatbot is enabled
+  useEffect(() => {
+    const checkFeatureStatus = async () => {
+      try {
+        const { jwt } = await account.createJWT();
+        const res = await fetch('/api/settings', {
+          headers: {
+            'X-Appwrite-JWT': jwt,
+          },
+        });
+        if (res.ok) {
+          const settings = await res.json();
+          // Use explicit check for false, default to true if undefined
+          setIsFeatureEnabled(settings.analyticsChatbotEnabled !== false);
+        }
+      } catch (error) {
+        console.error('Failed to check chatbot status:', error);
+      } finally {
+        setCheckingFeature(false);
+      }
+    };
+    checkFeatureStatus();
+  }, []);
 
   // Generate detailed context summary
   useEffect(() => {
@@ -802,330 +828,321 @@ export default function AnalyticsChatbot({
     '📊 Summarize this report',
   ];
 
+  if (checkingFeature) {
+    return null;
+  }
+
+  if (!isFeatureEnabled) {
+    return null;
+  }
+
   return (
     <>
-      <AnimatePresence>
-        {!isOpen && (
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            className="fixed bottom-6 right-6 z-50"
-          >
-            <Button
-              onClick={() => setIsOpen(true)}
-              className="h-14 w-14 rounded-full shadow-xl bg-primary hover:bg-primary/90 text-primary-foreground p-0 flex items-center justify-center transition-all hover:scale-105"
-            >
-              <Sparkles className="w-6 h-6 animate-pulse" />
-            </Button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Floating Chat Button */}
+      {!isOpen && (
+        <motion.button
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-6 right-6 z-50 group flex items-center justify-center w-14 h-14 bg-[#CC2224] text-white rounded-full shadow-[0_4px_14px_0_rgba(204,34,36,0.39)] hover:shadow-[0_6px_20px_rgba(204,34,36,0.23)] hover:bg-[#b01c1e] transition-all duration-300"
+        >
+          <Bot className="w-7 h-7" />
+          <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+        </motion.button>
+      )}
 
+      {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ y: 20, opacity: 0, scale: 0.95 }}
-            animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: 20, opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              width: isExpanded ? '800px' : '400px',
+              height: isExpanded ? '80vh' : '600px',
+            }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
             className={cn(
-              'fixed z-50 flex flex-col shadow-2xl overflow-hidden transition-all duration-300 ease-in-out',
-              isExpanded
-                ? 'inset-0 sm:inset-6 w-full h-full sm:rounded-xl'
-                : 'inset-0 sm:inset-auto sm:bottom-4 sm:right-4 w-full sm:w-[450px] h-full sm:h-[85vh] sm:max-h-[650px] sm:rounded-xl',
+              'fixed bottom-6 right-6 z-50 flex flex-col bg-background/95 backdrop-blur-xl border border-border shadow-2xl rounded-[2rem] overflow-hidden',
+              isExpanded ? 'max-w-[calc(100vw-48px)]' : 'w-[400px] max-h-[80vh]',
             )}
           >
-            <Card className="flex flex-col h-full border-0 shadow-none bg-background/95 backdrop-blur-supports-[backdrop-filter]:bg-background/60 rounded-none sm:rounded-xl">
-              {/* Header */}
-              <CardHeader className="p-4 bg-primary text-primary-foreground flex flex-row justify-between items-center space-y-0 shrink-0 cursor-move">
-                <div className="flex items-center gap-3">
-                  <div className="bg-white/10 p-2 rounded-lg backdrop-blur-md">
-                    <Bot className="w-5 h-5" />
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b bg-muted/30">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#CC2224] to-[#ff4d4f] flex items-center justify-center shadow-lg shadow-[#CC2224]/20">
+                    <Bot className="w-6 h-6 text-white" />
+                  </div>
+                  <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-background rounded-full animate-pulse" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-foreground leading-tight">ZenZebra Intelligence</h3>
+                  <p className="text-[10px] text-muted-foreground font-medium flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-amber-500" />
+                    AI-Powered Analytics
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 rounded-full hover:bg-muted"
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  title={isExpanded ? 'Minimize' : 'Expand'}
+                >
+                  {isExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground"
+                  onClick={clearChat}
+                  title="Clear Chat"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <ChevronDown className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Messages Area */}
+            <ScrollArea className="flex-1 p-4 bg-muted/5 relative">
+              {messages.length === 0 ? (
+                <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl flex items-center justify-center mb-2">
+                    <Sparkles className="w-8 h-8 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm tracking-tight">ZenZebra Intelligence</h3>
-                    <div className="flex items-center gap-1.5 opacity-90">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.5)]" />
-                      <span className="text-[10px] font-medium">Online</span>
-                    </div>
+                    <h4 className="font-bold text-lg mb-2">How can I help you today?</h4>
+                    <p className="text-sm text-muted-foreground max-w-[260px]">
+                      I can analyze your sales trends, identify dead stock, or summarize your
+                      inventory status.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 gap-2 w-full max-w-[280px]">
+                    {suggestedQuestions.map((q, i) => (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          setInput(q);
+                          // Optional: Auto-send?
+                          // setInput(q);
+                          // setTimeout(() => sendMessage(), 100);
+                        }}
+                        className="text-xs text-left px-4 py-3 rounded-xl bg-background border hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 shadow-sm"
+                      >
+                        {q}
+                      </button>
+                    ))}
                   </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  {isSpeaking && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={stopSpeaking}
-                      className="h-8 w-8 text-primary-foreground hover:bg-white/20 rounded-full transition-colors animate-pulse bg-red-500/20"
-                      title="Stop speaking"
+              ) : (
+                <div className="space-y-6 pb-4">
+                  {messages.map((msg, index) => (
+                    <motion.div
+                      key={msg.id}
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className={cn(
+                        'flex gap-3 max-w-[90%]',
+                        msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto',
+                      )}
                     >
-                      <VolumeX className="w-4 h-4" />
-                    </Button>
-                  )}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    className="h-8 w-8 text-primary-foreground hover:bg-white/20 rounded-full transition-colors hidden sm:flex"
-                    title={isExpanded ? 'Minimize' : 'Maximize'}
-                  >
-                    {isExpanded ? (
-                      <Minimize2 className="w-4 h-4" />
-                    ) : (
-                      <Maximize2 className="w-4 h-4" />
-                    )}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={clearChat}
-                    className="h-8 w-8 text-primary-foreground hover:bg-white/20 rounded-full transition-colors"
-                    title="Clear conversation"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setIsOpen(false)}
-                    className="h-8 w-8 text-primary-foreground hover:bg-white/20 rounded-full transition-colors"
-                  >
-                    <ChevronDown className="w-5 h-5" />
-                  </Button>
-                </div>
-              </CardHeader>
-
-              {/* Chat Area */}
-              <CardContent className="flex-1 p-0 overflow-hidden relative bg-muted/30">
-                <ScrollArea className="h-full px-4 py-4">
-                  {messages.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-full mt-10 space-y-6 text-center px-6">
-                      <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center animate-in zoom-in-50 duration-500">
-                        <Sparkles className="w-8 h-8 text-primary" />
-                      </div>
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-lg">How can I help you?</h3>
-                        <p className="text-sm text-muted-foreground">
-                          I've analyzed your latest stock & sales data. Ask me anything!
-                        </p>
+                      {/* Avatar */}
+                      <div
+                        className={cn(
+                          'w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-sm mt-1',
+                          msg.role === 'user'
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-background border border-border',
+                        )}
+                      >
+                        {msg.role === 'user' ? (
+                          <User className="w-4 h-4" />
+                        ) : (
+                          <Bot className="w-4 h-4 text-primary" />
+                        )}
                       </div>
 
-                      <div className="grid grid-cols-1 gap-2 w-full max-w-xs">
-                        {suggestedQuestions.map((q, i) => (
-                          <Button
-                            key={i}
-                            variant="outline"
-                            className="justify-start h-auto py-3 text-xs w-full font-normal hover:bg-primary/5 hover:text-primary transition-colors border-dashed"
-                            onClick={() => setInput(q)}
-                          >
-                            {q}
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-4 pb-4">
-                      {messages.map((msg, idx) => (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          key={idx}
+                      {/* Bubble */}
+                      <div className="flex flex-col gap-1 min-w-0">
+                        {/* Thinking Process Display */}
+                        {msg.role === 'assistant' && msg.thinkingSteps && (
+                          <ThinkingProcess
+                            steps={msg.thinkingSteps}
+                            isStreaming={msg.isStreaming && index === messages.length - 1}
+                          />
+                        )}
+
+                        <div
                           className={cn(
-                            'flex gap-3 max-w-[90%]',
-                            msg.role === 'user' ? 'ml-auto flex-row-reverse' : '',
+                            'p-4 rounded-2xl shadow-sm text-sm overflow-hidden break-words relative group',
+                            msg.role === 'user'
+                              ? 'bg-primary text-primary-foreground rounded-tr-sm'
+                              : cn(
+                                'bg-background border border-border rounded-tl-sm text-foreground',
+                                msg.isError && 'border-destructive/50 bg-destructive/5',
+                              ),
                           )}
                         >
-                          <div
-                            className={cn(
-                              'w-8 h-8 rounded-full flex items-center justify-center shrink-0 border shadow-sm',
-                              msg.role === 'user'
-                                ? 'bg-primary text-primary-foreground'
-                                : 'bg-card text-primary',
-                            )}
-                          >
-                            {msg.role === 'user' ? (
-                              <User className="w-4 h-4" />
-                            ) : (
-                              <Bot className="w-4 h-4" />
-                            )}
-                          </div>
-
-                          <div
-                            className={cn(
-                              'group relative p-3.5 rounded-2xl text-sm shadow-sm max-w-full overflow-hidden',
-                              msg.role === 'user'
-                                ? 'bg-primary text-primary-foreground rounded-tr-sm'
-                                : 'bg-card border rounded-tl-sm pl-4 pr-4',
-                              msg.isError
-                                ? 'border-destructive/50 bg-destructive/10 text-destructive'
-                                : '',
-                            )}
-                          >
-                            {msg.role === 'assistant' ? (
-                              <div className="prose prose-sm dark:prose-invert max-w-none w-full overflow-hidden">
-                                {msg.thinkingSteps && msg.thinkingSteps.length > 0 && (
-                                  <ThinkingProcess
-                                    steps={msg.thinkingSteps}
-                                    isStreaming={msg.isStreaming}
-                                  />
-                                )}
+                          {msg.role === 'assistant' ? (
+                            <div className="prose prose-sm dark:prose-invert max-w-none">
+                              {msg.content ? (
                                 <MarkdownContent content={msg.content} />
-                              </div>
-                            ) : (
-                              <div className="break-words">{msg.content}</div>
-                            )}
+                              ) : (
+                                msg.isStreaming && (
+                                  <span className="flex items-center gap-1 opacity-50">
+                                    <span className="w-1.5 h-1.5 bg-current rounded-full animate-bounce [animation-delay:-0.3s]" />
+                                    <span className="w-1.5 h-1.5 bg-current rounded-full animate-bounce [animation-delay:-0.15s]" />
+                                    <span className="w-1.5 h-1.5 bg-current rounded-full animate-bounce" />
+                                  </span>
+                                )
+                              )}
+                            </div>
+                          ) : (
+                            <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+                          )}
 
-                            {/* Error State: Retry Button */}
-                            {msg.isError && (
-                              <div className="mt-2 flex items-center gap-2">
-                                <span className="text-xs font-medium">Failed to send</span>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="h-7 text-xs border-destructive/30 hover:bg-destructive/10"
-                                  onClick={() => handleRetry(msg)}
-                                >
-                                  <RefreshCcw className="w-3 h-3 mr-1" /> Retry
-                                </Button>
-                              </div>
-                            )}
-
-                            {/* Action Buttons (Hover) */}
+                          {/* Message Actions */}
+                          {!msg.isStreaming && !msg.isError && (
                             <div
                               className={cn(
-                                'absolute -bottom-8 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10 bg-background/80 backdrop-blur-sm rounded-full p-1 border shadow-sm',
+                                'absolute -bottom-6 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity p-1',
                                 msg.role === 'user' ? 'right-0' : 'left-0',
                               )}
                             >
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6 rounded-full hover:bg-muted"
+                              <button
                                 onClick={() => handleCopy(msg.content)}
-                                title="Copy text"
+                                className="p-1 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                                title="Copy"
                               >
-                                <Copy className="w-3 h-3 text-muted-foreground" />
-                              </Button>
+                                <Copy className="w-3 h-3" />
+                              </button>
                               {msg.role === 'assistant' && (
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6 rounded-full hover:bg-muted"
-                                  onClick={() => handleSpeak(msg.content)}
-                                  title="Read aloud"
+                                <button
+                                  onClick={() =>
+                                    isSpeaking ? stopSpeaking() : handleSpeak(msg.content)
+                                  }
+                                  className={cn(
+                                    'p-1 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors',
+                                    isSpeaking && 'text-primary animate-pulse',
+                                  )}
+                                  title="Read Aloud"
                                 >
-                                  <Volume2 className="w-3 h-3 text-muted-foreground" />
-                                </Button>
+                                  {isSpeaking ? (
+                                    <VolumeX className="w-3 h-3" />
+                                  ) : (
+                                    <Volume2 className="w-3 h-3" />
+                                  )}
+                                </button>
                               )}
                               {msg.role === 'user' && (
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6 rounded-full hover:bg-muted"
+                                <button
                                   onClick={() => handleEdit(msg)}
-                                  title="Edit message"
+                                  className="p-1 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                                  title="Edit"
                                 >
-                                  <Edit2 className="w-3 h-3 text-muted-foreground" />
-                                </Button>
+                                  <Edit2 className="w-3 h-3" />
+                                </button>
                               )}
+                              <button
+                                onClick={() => handleRetry(msg)}
+                                className="p-1 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                                title="Regenerate"
+                              >
+                                <RefreshCcw className="w-3 h-3" />
+                              </button>
                             </div>
+                          )}
+                        </div>
 
-                            {/* Regenerate Button for last AI message */}
-                            {!loading &&
-                              msg.role === 'assistant' &&
-                              idx === messages.length - 1 &&
-                              !msg.isStreaming && (
-                                <div className="flex justify-end mt-2 opacity-50 hover:opacity-100 transition-opacity">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={regenerateResponse}
-                                    className="h-6 px-2 text-[10px] gap-1 hover:bg-muted"
-                                  >
-                                    <RefreshCcw className="w-3 h-3" /> Regenerate
-                                  </Button>
-                                </div>
-                              )}
-                          </div>
-                        </motion.div>
-                      ))}
-                      {loading &&
-                        messages.length > 0 &&
-                        messages[messages.length - 1]?.role !== 'assistant' && (
-                          <div className="flex gap-3">
-                            <div className="w-8 h-8 rounded-full bg-card border text-primary flex items-center justify-center shrink-0">
-                              <Bot className="w-4 h-4" />
-                            </div>
-                            <div className="bg-card border p-4 rounded-2xl rounded-tl-sm shadow-sm flex items-center gap-2">
-                              <Loader2 className="w-4 h-4 animate-spin text-primary" />
-                              <span className="text-xs text-muted-foreground">Thinking...</span>
-                            </div>
-                          </div>
-                        )}
-                      <div ref={messagesEndRef} />
-                    </div>
+                        {/* Timestamp */}
+                        <span className="text-[10px] text-muted-foreground/50 px-1">
+                          {new Date(msg.timestamp).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </span>
+                      </div>
+                    </motion.div>
+                  ))}
+                  {/* Invisible element to scroll to */}
+                  <div ref={messagesEndRef} />
+                </div>
+              )}
+            </ScrollArea>
+
+            {/* Input Area */}
+            <div className="p-4 bg-background border-t">
+              <div className="flex items-end gap-2 bg-muted/50 p-2 rounded-[1.5rem] border border-transparent focus-within:border-primary/30 focus-within:bg-background transition-all shadow-inner">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={cn(
+                    'h-10 w-10 rounded-full shrink-0 transition-colors',
+                    isListening
+                      ? 'bg-red-500/10 text-red-500 animate-pulse'
+                      : 'text-muted-foreground hover:text-primary hover:bg-primary/10',
                   )}
-                </ScrollArea>
-              </CardContent>
-
-              {/* Footer / Input */}
-              <CardFooter className="p-3 bg-background border-t">
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    sendMessage();
-                  }}
-                  className="flex w-full items-center gap-2"
+                  onClick={toggleListening}
+                  disabled={loading}
                 >
-                  <div className="relative flex-1">
-                    <Input
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                      placeholder="Ask ZenZebra..."
-                      disabled={loading}
-                      className="rounded-full bg-muted/50 border-transparent focus-visible:bg-background focus-visible:border-input transition-all pr-10"
-                    />
-                    <Button
-                      type="button"
-                      size="icon"
-                      variant="ghost"
-                      onClick={toggleListening}
-                      className={cn(
-                        'absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full transition-colors',
-                        isListening
-                          ? 'text-red-500 bg-red-100 dark:bg-red-900/20 animate-pulse'
-                          : 'text-muted-foreground hover:bg-background',
-                      )}
-                    >
-                      {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-                    </Button>
-                  </div>
-                  <Button
-                    onClick={(e) => {
+                  {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                </Button>
+
+                <textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
-                      if (loading) {
-                        stopGeneration();
-                      } else {
-                        sendMessage();
-                      }
-                    }}
-                    size="icon"
-                    className={cn(
-                      'rounded-full h-10 w-10 shrink-0 shadow-sm transition-all duration-300 ml-2',
-                      loading
-                        ? 'bg-red-500 hover:bg-red-600 text-white'
-                        : 'bg-blue-600 hover:bg-blue-700 text-white',
-                    )}
-                  >
-                    {loading ? (
-                      <div className="h-3 w-3 rounded-sm bg-white" />
-                    ) : (
-                      <Send className="h-4 w-4" />
-                    )}
-                  </Button>
-                </form>
-              </CardFooter>
-            </Card>
+                      sendMessage();
+                    }
+                  }}
+                  disabled={loading}
+                  placeholder="Ask about your data..."
+                  className="flex-1 max-h-[120px] min-h-[40px] py-2.5 bg-transparent border-none focus:ring-0 text-sm placeholder:text-muted-foreground resize-none custom-scrollbar"
+                  rows={1}
+                />
+
+                <Button
+                  onClick={sendMessage}
+                  disabled={!input.trim() || loading}
+                  className={cn(
+                    'h-10 w-10 rounded-full shrink-0 shadow-lg transition-all',
+                    !input.trim() || loading
+                      ? 'bg-muted text-muted-foreground'
+                      : 'bg-[#CC2224] hover:bg-[#b01c1e] text-white hover:scale-105 active:scale-95',
+                  )}
+                >
+                  {loading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Send className="w-4 h-4 ml-0.5" />
+                  )}
+                </Button>
+              </div>
+              <div className="text-center mt-2">
+                <p className="text-[9px] text-muted-foreground/60 font-medium">
+                  AI responses may refer to real-time data but should be verified.
+                </p>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

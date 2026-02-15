@@ -36,6 +36,7 @@ interface SettingsData {
   inquiryConfirmationTemplate: string;
   inquiryStatusUpdateSubject: string;
   inquiryStatusUpdateTemplate: string;
+  analyticsChatbotEnabled: boolean;
 }
 
 const DEFAULT_SETTINGS: SettingsData = {
@@ -57,6 +58,7 @@ const DEFAULT_SETTINGS: SettingsData = {
   inquiryConfirmationTemplate: '',
   inquiryStatusUpdateSubject: '',
   inquiryStatusUpdateTemplate: '',
+  analyticsChatbotEnabled: true,
 };
 
 export default function SettingsPage() {
@@ -403,6 +405,30 @@ export default function SettingsPage() {
                     your Vercel/Next.js hosting dashboard.
                   </p>
                 </div>
+
+                <div className="flex items-center justify-between p-6 rounded-3xl bg-muted/30 border border-border group hover:border-[#CC2224]/30 transition-colors">
+                  <div className="flex flex-col">
+                    <span className="text-foreground font-bold text-sm flex items-center gap-2 uppercase tracking-tighter">
+                      Analytics AI Assistant
+                      {settings.analyticsChatbotEnabled ? (
+                        <span className="px-2 py-0.5 rounded-md bg-green-500 text-[8px] text-white uppercase tracking-wider">
+                          Active
+                        </span>
+                      ) : (
+                        <span className="px-2 py-0.5 rounded-md bg-zinc-500 text-[8px] text-white uppercase tracking-wider">
+                          Disabled
+                        </span>
+                      )}
+                    </span>
+                    <span className="text-[10px] text-muted-foreground font-medium mt-1 leading-tight">
+                      Allow owners to query business data using the AI Chatbot.
+                    </span>
+                  </div>
+                  <Switch
+                    checked={settings.analyticsChatbotEnabled}
+                    onChange={(checked) => updateSetting('analyticsChatbotEnabled', checked)}
+                  />
+                </div>
               </div>
             </Section>
           )}
@@ -557,11 +583,10 @@ function SettingsTab({
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 group ${
-        active
-          ? 'bg-[#CC2224] text-white shadow-xl shadow-[#CC2224]/30 scale-[1.02]'
-          : 'hover:bg-muted text-muted-foreground hover:text-foreground border border-transparent hover:border-border'
-      }`}
+      className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 group ${active
+        ? 'bg-[#CC2224] text-white shadow-xl shadow-[#CC2224]/30 scale-[1.02]'
+        : 'hover:bg-muted text-muted-foreground hover:text-foreground border border-transparent hover:border-border'
+        }`}
     >
       <span
         className={`p-2 rounded-xl transition-colors flex items-center justify-center ${active ? 'bg-white/20' : 'bg-muted group-hover:bg-muted-foreground/10'}`}

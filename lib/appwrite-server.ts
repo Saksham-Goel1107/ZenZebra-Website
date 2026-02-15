@@ -88,4 +88,5 @@ export const appwriteConfig = {
   settingsCollectionId: process.env.NEXT_PUBLIC_APPWRITE_SETTINGS_COLLECTION_ID!,
   inquiriesCollectionId: process.env.NEXT_PUBLIC_APPWRITE_INQUIRIES_COLLECTION_ID!,
   analyticsCollectionId: process.env.NEXT_PUBLIC_APPWRITE_ANALYTICS_COLLECTION_ID!,
+  partnerRequestsCollectionId: process.env.NEXT_PUBLIC_APPWRITE_PARTNER_REQUESTS_COLLECTION_ID!,
 };

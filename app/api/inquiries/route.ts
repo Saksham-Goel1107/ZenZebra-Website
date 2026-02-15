@@ -71,6 +71,8 @@ async function sendEmailNotification(to: string, subject: string, message: strin
       email: {
         subject: subject,
         html: message.replace(/\n/g, '<br>'),
+        senderName: 'ZenZebra',
+        senderEmail: 'noreply@noreply.zenzebra.in',
       },
     });
   } catch (error) {
