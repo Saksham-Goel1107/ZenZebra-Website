@@ -2,7 +2,6 @@
 import { ParticleCanvas } from '@/hooks/particle';
 import { SystemSettings } from '@/lib/admin-settings';
 import { m } from 'framer-motion';
-import Link from 'next/link';
 
 function Hero({ settings }: { settings: SystemSettings }) {
   // Use siteDescription if available, or fallback to default hero text
@@ -10,74 +9,72 @@ function Hero({ settings }: { settings: SystemSettings }) {
     settings?.siteDescription || 'Curated lifestyle, seamlessly integrated into your daily life.';
 
   return (
-    <section className="min-h-screen relative flex items-center justify-center overflow-hidden pt-20">
+    <section id="hero-landing" className="min-h-screen relative flex items-center justify-center overflow-hidden py-32 grain">
       {/* Background Ambience */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-500/10 via-background to-background z-0" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-600/5 via-black to-black z-0" />
+      <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-black to-transparent z-[1]" />
       <ParticleCanvas />
 
       <div className="max-w-7xl mx-auto px-6 z-10 w-full">
         <div className="flex flex-col items-center justify-center text-center">
           {/* Main Content */}
           <m.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="max-w-4xl mx-auto space-y-8"
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            viewport={{ once: true }}
+            className="max-w-5xl mx-auto space-y-12"
           >
-            {/* Tagline / Badge (Optional, adds a nice touch) */}
+            {/* Over-title */}
             <m.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="inline-block"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="flex flex-col items-center justify-center gap-4"
             >
-              <span className="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs font-medium uppercase tracking-[0.2em] text-white/50 backdrop-blur-sm font-bold">
-                Next Gen Catalogue
-              </span>
+              <span className="text-red-500 uppercase tracking-[0.8em] text-[10px] font-bold">ZenZebra India</span>
+              <div className="h-12 w-[1px] bg-red-600/30" />
             </m.div>
 
             {/* Hero Heading */}
-            <m.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[1.1]
-                         bg-gradient-to-b from-white via-white/90 to-white/40
-                         bg-clip-text text-transparent drop-shadow-2xl"
+            <h1
+              className="text-4xl md:text-6xl lg:text-7xl font-light tracking-[0.1em] leading-tight
+                         text-white drop-shadow-2xl uppercase"
             >
-              {description}
-            </m.h1>
+              {description.split(' ').map((word, i) => (
+                <m.span
+                  key={i}
+                  initial={{ opacity: 0, filter: 'blur(10px)', y: 20 }}
+                  whileInView={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
+                  transition={{ duration: 1, delay: 0.4 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  viewport={{ once: true }}
+                  className="inline-block mr-[0.3em]"
+                >
+                  {word === 'lifestyle,' || word === 'lifestyle' || word === 'Curated' ? <span className="font-black italic text-red-600">{word}</span> : word}
+                </m.span>
+              ))}
+            </h1>
 
             {/* Subtext */}
             <m.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="text-xl md:text-2xl text-white/60 font-light max-w-2xl mx-auto"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 2, delay: 1.5 }}
+              viewport={{ once: true }}
+              className="text-sm md:text-base text-white/30 font-light max-w-2xl mx-auto uppercase tracking-[0.5em] leading-loose"
             >
-              Try it. Own it. On the go.
+              Experience • Lifestyle • Trends
             </m.p>
 
-            {/* CTA Button */}
+            {/* Visual Element */}
             <m.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.7 }}
-              className="pt-4"
-            >
-              <Link href={'/catalogue'}>
-                <m.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="group relative px-10 py-5 rounded-full bg-white text-black font-bold text-lg
-                             tracking-wide overflow-hidden shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]
-                             hover:shadow-[0_0_60px_-15px_rgba(255,255,255,0.5)] transition-all duration-300"
-                >
-                  <span className="relative z-10 flex items-center gap-2">Explore Catalogue</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-gray-200 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </m.button>
-              </Link>
-            </m.div>
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              transition={{ duration: 1.5, delay: 2 }}
+              viewport={{ once: true }}
+              className="h-[1px] w-24 bg-gradient-to-r from-transparent via-red-600 to-transparent mx-auto mt-16"
+            />
           </m.div>
         </div>
       </div>

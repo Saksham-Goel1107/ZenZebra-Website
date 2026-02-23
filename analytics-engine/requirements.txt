@@ -8,5 +8,7 @@ python-dotenv
 httpx
 numpy
 scipy
+scikit-learn
+statsmodels
 python-multipart
 gender-guesser

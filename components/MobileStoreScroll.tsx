@@ -140,7 +140,7 @@ export default function MobileStoreScroll({ isBackground }: { isBackground: bool
           );
         });
       }, containerRef);
-      video.play().catch(() => {});
+      video.play().catch(() => { });
     };
 
     const onLoaded = () => {
@@ -186,41 +186,20 @@ export default function MobileStoreScroll({ isBackground }: { isBackground: bool
 
       {!isBackground && !isIOS && (
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-6 pointer-events-none">
-          <div
-            ref={(el) => {
-              contentRefs.current[0] = el;
-            }}
-            className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
-          >
-            <h2 className="text-4xl font-bold text-white mb-2 uppercase italic">ZenZebra</h2>
-            <p className="text-sm text-white/70 tracking-widest uppercase">The New Era of Retail</p>
-          </div>
-          <div
-            ref={(el) => {
-              contentRefs.current[1] = el;
-            }}
-            className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
-          >
-            <h2 className="text-4xl font-bold text-white mb-2 uppercase italic">Curated Spaces</h2>
-            <p className="text-sm text-white/70 tracking-widest uppercase">Experience Modernity</p>
-          </div>
-          <div
-            ref={(el) => {
-              contentRefs.current[2] = el;
-            }}
-            className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
-          >
-            <h2 className="text-4xl font-bold text-white mb-6 uppercase italic">Join Us</h2>
-            <button className="pointer-events-auto px-10 py-3 bg-white text-black text-sm font-bold rounded-full uppercase">
-              Shop Now
-            </button>
+          {/* Scroll Indicator */}
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-30">
+            <div className="w-[1px] h-8 bg-gradient-to-b from-white to-transparent" />
+            <span className="text-[7px] uppercase tracking-[0.5em] text-white">SCROLL</span>
           </div>
         </div>
       )}
 
       {!isReady && (
         <div className="absolute inset-0 flex items-center justify-center bg-black z-50">
-          <div className="w-10 h-10 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-12 h-12 border-2 border-white/10 border-t-red-600 rounded-full animate-spin" />
+            <span className="text-[10px] uppercase tracking-[0.4em] text-white/40">ZenZebra...</span>
+          </div>
         </div>
       )}
     </div>

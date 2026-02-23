@@ -1,3 +1,4 @@
+import { aj } from '@/lib/arcjet';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
@@ -8,11 +9,25 @@ export async function middleware(request: NextRequest) {
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/static') ||
-    pathname.startsWith('/api') ||
     pathname === '/favicon.ico' ||
     pathname.match(/\.(png|jpg|jpeg|svg|gif|webp)$/)
   ) {
     return NextResponse.next();
+  }
+
+  // 1.1 Arcjet Protection
+  // We don't protect the /api routes here if we want more granular control there,
+  // but Shield and Bot detection are good for all public pages.
+  const decision = await aj.protect(request);
+
+  if (decision.isDenied()) {
+    if (decision.reason.isBot()) {
+      return NextResponse.json({ error: 'No bots allowed' }, { status: 403 });
+    } else if (decision.reason.isRateLimit()) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    } else {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
   }
 
   // 2. Allow direct access to Maintenance & Disabled pages to prevent loops

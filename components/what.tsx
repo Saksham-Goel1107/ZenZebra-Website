@@ -13,7 +13,7 @@ function What() {
           viewport={{ once: true }}
           className="text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-12"
         >
-          Welcome to the <span className="text-[#CC2224] inline-block">Dazzle</span>
+          Welcome to the <span className="text-[#CC2224] inline-block">Breakspot</span>
         </motion.h2>
 
         <motion.div
@@ -21,25 +21,18 @@ function What() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
           viewport={{ once: true }}
-          className="text-xl md:text-2xl leading-relaxed text-white/80 font-light space-y-8"
+          className="text-xl md:text-2xl leading-relaxed text-white/80 font-light space-y-12"
         >
-          <p>
-            <span className="text-white font-bold">ZenZebra</span> is the curated pause in your
-            "always-on" day. We&apos;ve replaced the boring vending machine with a{' '}
-            <span className="text-[#CC2224] font-bold">BreakSpot</span> designed for the curious.
-          </p>
-
-          <p>
-            Whether it&apos;s an office, gym, or your favorite café, we bring the internet&apos;s
-            most exciting brands directly into your hands.
-          </p>
-
-          <p className="text-white font-semibold text-2xl md:text-3xl py-4">
-            Touch it, try it, and upgrade your day instantly.
-          </p>
-
-          <p className="text-sm md:text-base text-white/50 uppercase tracking-[0.2em] font-bold">
-            No guesswork. No scrolling. Just a better lifestyle, right where you are.
+          <div className="space-y-6">
+            <p>
+              We have brought the internet&apos;s most wanted labels to your office doorstep.
+            </p>
+            <p>
+              It feels less like a shop and more like your personal curated wishlist, brought to your lifestyle.
+            </p>
+          </div>
+          <p className="text-white font-semibold text-2xl md:text-3xl pt-12 italic">
+            Because your orbit deserves better
           </p>
         </motion.div>
 

@@ -126,18 +126,21 @@ function DesktopStoreScroll({ isBackground }: { isBackground: boolean }) {
         if (!isBackground) {
           const [slide1, slide2, slide3] = contentRefs.current;
           if (slide1 && slide2 && slide3) {
-            gsap.set([slide1, slide2, slide3], { autoAlpha: 0, y: 30 });
-            tl.to(slide1, { autoAlpha: 1, y: 0, duration: 1 }, 0.1).to(
-              slide1,
-              { autoAlpha: 0, y: -30, duration: 1 },
-              0.8,
-            );
-            tl.to(slide2, { autoAlpha: 1, y: 0, duration: 1 }, 1.2).to(
-              slide2,
-              { autoAlpha: 0, y: -30, duration: 1 },
-              2.0,
-            );
-            tl.to(slide3, { autoAlpha: 1, y: 0, duration: 1 }, 2.4);
+            gsap.set([slide1, slide2, slide3], { opacity: 0, scale: 0.9, y: 40 });
+
+            // Apple-style Sequence
+            // Slide 1 In
+            tl.to(slide1, { opacity: 1, scale: 1, y: 0, duration: 0.8 }, 0.2);
+            // Slide 1 Out
+            tl.to(slide1, { opacity: 0, scale: 1.1, y: -40, duration: 0.8 }, 1.0);
+
+            // Slide 2 In
+            tl.to(slide2, { opacity: 1, scale: 1, y: 0, duration: 0.8 }, 1.3);
+            // Slide 2 Out
+            tl.to(slide2, { opacity: 0, scale: 1.1, y: -40, duration: 0.8 }, 2.1);
+
+            // Slide 3 In
+            tl.to(slide3, { opacity: 1, scale: 1, y: 0, duration: 0.8 }, 2.4);
           }
         }
 
@@ -165,51 +168,28 @@ function DesktopStoreScroll({ isBackground }: { isBackground: boolean }) {
     <div ref={containerRef} className="relative w-full h-screen bg-black overflow-hidden">
       <video ref={videoRef} muted playsInline className="hidden" style={{ display: 'none' }} />
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full object-cover" />
-      <div className="absolute inset-0 bg-black/30 z-[1] pointer-events-none" />
+
+      {/* Dynamic Overlay Gradient - More subtle & premium */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 z-[1] pointer-events-none" />
+
       {!isBackground && (
         <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
-          <div
-            ref={(el) => {
-              contentRefs.current[0] = el;
-            }}
-            className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
-          >
-            <h2 className="text-5xl md:text-8xl font-bold text-white mb-4 uppercase italic">
-              Revolutionizing
-            </h2>
-            <p className="text-xl md:text-2xl text-white/80 uppercase tracking-widest">
-              The Retail Experience
-            </p>
-          </div>
-          <div
-            ref={(el) => {
-              contentRefs.current[1] = el;
-            }}
-            className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
-          >
-            <h2 className="text-5xl md:text-8xl font-bold text-white mb-4 uppercase italic">
-              Curated Spaces
-            </h2>
-            <p className="text-xl md:text-2xl text-white/80 uppercase tracking-widest">
-              Modernity Meets Zebra
-            </p>
-          </div>
-          <div
-            ref={(el) => {
-              contentRefs.current[2] = el;
-            }}
-            className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
-          >
-            <h2 className="text-5xl md:text-8xl font-bold text-white mb-6 uppercase italic">
-              Join the Stripe
-            </h2>
-            {/* <Link href="/catalogue" className="pointer-events-auto px-12 py-4 bg-white text-black font-bold rounded-full">Explore Collection</Link> */}
+          {/* Scroll Indicator */}
+          <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-30">
+            <div className="w-[1px] h-16 bg-gradient-to-b from-white via-white/50 to-transparent" />
+            <span className="text-[8px] uppercase tracking-[0.8em] text-white rotate-90 origin-left ml-1 translate-y-4">SCROLL</span>
           </div>
         </div>
       )}
       {!isReady && (
         <div className="absolute inset-0 flex items-center justify-center bg-black z-50">
-          <div className="w-10 h-10 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+          <div className="flex flex-col items-center gap-8">
+            <div className="relative">
+              <div className="w-16 h-16 border-[1px] border-white/5 rounded-full" />
+              <div className="absolute top-0 left-0 w-16 h-16 border-t-[1px] border-red-600 rounded-full animate-spin" />
+            </div>
+            <span className="text-[10px] uppercase tracking-[0.8em] text-white/20 animate-pulse">ZenZebra India</span>
+          </div>
         </div>
       )}
     </div>

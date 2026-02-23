@@ -1,4 +1,5 @@
 import { getSystemSettings } from '@/lib/admin-settings';
+import { apiRateLimiter } from '@/lib/arcjet';
 import { NextResponse } from 'next/server';
 import { Pingram } from 'pingram';
 
@@ -80,8 +81,13 @@ async function sendEmailNotification(to: string, subject: string, message: strin
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const decision = await apiRateLimiter.protect(request);
+    if (decision.isDenied()) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+
     const data = await fetchAppwrite(
       'GET',
       `/databases/${appwriteConfig.databaseId}/collections/${appwriteConfig.inquiriesCollectionId}/documents`,
@@ -97,6 +103,11 @@ const ALLOWED_STATUSES = ['Queued', 'In_process', 'Completed', 'Discarded'];
 
 export async function PATCH(request: Request) {
   try {
+    const decision = await apiRateLimiter.protect(request);
+    if (decision.isDenied()) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     const { status } = await request.json();

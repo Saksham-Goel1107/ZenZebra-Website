@@ -11,12 +11,13 @@ import MenuItem from './MenuItem';
 function Navbar({ settings }: { settings: SystemSettings }) {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isHidden, setIsHidden] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
+  const [isHidden, setIsHidden] = useState(false); // Initialize to false, as logic is now in useEffect
 
   const navItems = [
-    { label: 'Home', href: '/' },
     { label: 'Brands', href: '/brands' },
     { label: 'Partners', href: '/partners' },
+    { label: 'Products', href: '/products' },
     { label: 'Zen at home', href: '/zen-at-home' },
     { label: 'Contact', href: '/contact' },
   ];
@@ -25,23 +26,41 @@ function Navbar({ settings }: { settings: SystemSettings }) {
     let lastY = window.scrollY;
     const onScroll = () => {
       const currentY = window.scrollY;
-      setIsHidden(currentY > lastY && currentY > 80);
+      setIsAtTop(currentY < 10);
+
+      if (pathname === '/') {
+        // Show at the very top, hide during tour, show again after tour (3.8vh)
+        const tourEnd = window.innerHeight * 3.8;
+        if (currentY <= 10) {
+          setIsHidden(false);
+        } else if (currentY > 10 && currentY < tourEnd) {
+          setIsHidden(true);
+        } else {
+          setIsHidden(false);
+        }
+      } else {
+        setIsHidden(currentY > lastY && currentY > 80);
+      }
+
       lastY = currentY;
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [pathname]);
 
   if (pathname?.startsWith('/admin-login')) return null;
 
   return (
     <m.nav
-      initial={{ y: -100 }}
-      animate={{ y: isHidden ? -80 : 0 }}
-      transition={{ duration: 0.4, ease: 'easeInOut' }}
-      className="fixed w-full top-0 left-0 right-0 z-50 bg-[#1c1c1c]/60 backdrop-blur-3xl
-      transition-all duration-300 ease-out text-white/70 border-white/10"
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: isHidden ? -100 : 0, opacity: isHidden ? 0 : 1 }}
+      transition={{ duration: 0.5, ease: 'circOut' }}
+      className={`fixed w-full top-0 left-0 right-0 z-50 transition-all duration-500 ease-out
+      ${isAtTop ? 'bg-transparent backdrop-blur-none border-transparent' : 'bg-[#1c1c1c]/60 backdrop-blur-3xl border-b border-white/10'}
+      text-white/70`}
     >
       <div className="max-w-full px-6 py-3 ">
         <div className="flex justify-between items-center">

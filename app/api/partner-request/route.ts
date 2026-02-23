@@ -1,6 +1,6 @@
 import { getSystemSettings } from '@/lib/admin-settings';
 import { appwriteConfig, getServerDatabases } from '@/lib/appwrite-server';
-import { getClientIp, ratelimit } from '@/lib/rate-limit';
+import { formRateLimiter } from '@/lib/arcjet';
 import { NextResponse } from 'next/server';
 import { ID } from 'node-appwrite';
 import { Pingram } from 'pingram';
@@ -33,19 +33,29 @@ async function sendEmailNotification(to: string, subject: string, message: strin
 
 export async function POST(request: Request) {
   try {
-    // Rate Limiting
-    const ip = getClientIp(request);
-    const { success } = await ratelimit.limit(ip);
-
-    if (!success) {
-      return NextResponse.json(
-        { error: 'Too many requests. Please try again later.' },
-        { status: 429 },
-      );
-    }
-
     const body = await request.json();
     const { name, email, phone, companyName, companyWebsite, remarks } = body;
+
+    // 1. Arcjet Protection (Rate Limiting + Email Validation)
+    const decision = await formRateLimiter.protect(request, {
+      email, // Pass the email to Arcjet for validation
+    });
+
+    if (decision.isDenied()) {
+      if (decision.reason.isRateLimit()) {
+        return NextResponse.json(
+          { error: 'Too many requests. Please try again later.' },
+          { status: 429 },
+        );
+      }
+      if (decision.reason.isEmail()) {
+        return NextResponse.json(
+          { error: 'Please provide a valid, non-disposable email address.' },
+          { status: 400 },
+        );
+      }
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
 
     // Validation
     if (!name?.trim() || !email?.trim() || !phone || !companyName?.trim()) {

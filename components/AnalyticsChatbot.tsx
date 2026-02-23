@@ -1,7 +1,5 @@
-'use client';
+﻿'use client';
 
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { account } from '@/lib/appwrite';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -11,8 +9,6 @@ import {
   ChevronRight,
   Copy,
   Edit2,
-  Loader2,
-  Lock,
   Maximize2,
   Mic,
   MicOff,
@@ -20,10 +16,12 @@ import {
   RefreshCcw,
   Send,
   Sparkles,
+  Square,
   Trash2,
   User,
   Volume2,
   VolumeX,
+  X
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -34,8 +32,6 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
-  ComposedChart,
-  Legend,
   Line,
   LineChart,
   Pie,
@@ -48,7 +44,7 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis,
+  YAxis
 } from 'recharts';
 import remarkGfm from 'remark-gfm';
 import { toast } from 'sonner';
@@ -65,197 +61,107 @@ interface Message {
 const ChartRenderer = ({ data }: { data: any }) => {
   if (!data || !data.type || !data.data) return null;
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
+  const COLORS = ['#CC2224', '#22C55E', '#3B82F6', '#F59E0B', '#8B5CF6', '#EC4899'];
 
-  if (data.type === 'bar') {
-    return (
-      <div className="w-full h-64 my-4 p-2 bg-white/5 rounded-lg border border-white/10">
-        <p className="text-center text-xs font-semibold mb-2">{data.title}</p>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data.data}>
-            <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-            <XAxis dataKey={data.xKey || 'name'} fontSize={10} tickLine={false} axisLine={false} />
-            <YAxis fontSize={10} tickLine={false} axisLine={false} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: '#1f2937',
-                borderColor: '#374151',
-                color: '#f3f4f6',
-              }}
-              itemStyle={{ color: '#f3f4f6' }}
-            />
-            <Legend />
-            <Bar dataKey={data.yKey || 'value'} fill="#8884d8" radius={[4, 4, 0, 0]}>
-              {data.data.map((entry: any, index: number) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-    );
-  }
-  if (data.type === 'line') {
-    return (
-      <div className="w-full h-64 my-4 p-2 bg-white/5 rounded-lg border border-white/10">
-        <p className="text-center text-xs font-semibold mb-2">{data.title}</p>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data.data}>
-            <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-            <XAxis dataKey={data.xKey || 'name'} fontSize={10} tickLine={false} axisLine={false} />
-            <YAxis fontSize={10} tickLine={false} axisLine={false} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: '#1f2937',
-                borderColor: '#374151',
-                color: '#f3f4f6',
-              }}
-              itemStyle={{ color: '#f3f4f6' }}
-            />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey={data.yKey || 'value'}
-              stroke="#8884d8"
-              strokeWidth={2}
-              dot={false}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    );
-  }
-  if (data.type === 'pie') {
-    return (
-      <div className="w-full h-64 my-4 p-2 bg-white/5 rounded-lg border border-white/10">
-        <p className="text-center text-xs font-semibold mb-2">{data.title}</p>
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={data.data}
-              cx="50%"
-              cy="50%"
-              innerRadius={60}
-              outerRadius={80}
-              paddingAngle={5}
-              dataKey={data.yKey || 'value'}
-            >
-              {data.data.map((entry: any, index: number) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip
-              contentStyle={{
-                backgroundColor: '#1f2937',
-                borderColor: '#374151',
-                color: '#f3f4f6',
-              }}
-              itemStyle={{ color: '#f3f4f6' }}
-            />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
-    );
-  }
-  if (data.type === 'area') {
-    return (
-      <div className="w-full h-64 my-4 p-2 bg-white/5 rounded-lg border border-white/10">
-        <p className="text-center text-xs font-semibold mb-2">{data.title}</p>
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data.data}>
-            <defs>
-              <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-            <XAxis dataKey={data.xKey || 'name'} fontSize={10} tickLine={false} axisLine={false} />
-            <YAxis fontSize={10} tickLine={false} axisLine={false} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: '#1f2937',
-                borderColor: '#374151',
-                color: '#f3f4f6',
-              }}
-              itemStyle={{ color: '#f3f4f6' }}
-            />
-            <Area
-              type="monotone"
-              dataKey={data.yKey || 'value'}
-              stroke="#8884d8"
-              fillOpacity={1}
-              fill="url(#colorValue)"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
-    );
-  }
-  if (data.type === 'radar') {
-    return (
-      <div className="w-full h-64 my-4 p-2 bg-white/5 rounded-lg border border-white/10">
-        <p className="text-center text-xs font-semibold mb-2">{data.title}</p>
-        <ResponsiveContainer width="100%" height="100%">
-          <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data.data}>
-            <PolarGrid opacity={0.2} />
-            <PolarAngleAxis dataKey={data.xKey || 'subject'} fontSize={10} />
-            <PolarRadiusAxis angle={30} domain={[0, 'auto']} fontSize={10} />
-            <Radar
-              name={data.title}
-              dataKey={data.yKey || 'value'}
-              stroke="#8884d8"
-              fill="#8884d8"
-              fillOpacity={0.6}
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: '#1f2937',
-                borderColor: '#374151',
-                color: '#f3f4f6',
-              }}
-              itemStyle={{ color: '#f3f4f6' }}
-            />
-          </RadarChart>
-        </ResponsiveContainer>
-      </div>
-    );
-  }
-  if (data.type === 'composed') {
-    return (
-      <div className="w-full h-64 my-4 p-2 bg-white/5 rounded-lg border border-white/10">
-        <p className="text-center text-xs font-semibold mb-2">{data.title}</p>
-        <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={data.data}>
-            <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-            <XAxis dataKey={data.xKey || 'name'} fontSize={10} tickLine={false} axisLine={false} />
-            <YAxis fontSize={10} tickLine={false} axisLine={false} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: '#1f2937',
-                borderColor: '#374151',
-                color: '#f3f4f6',
-              }}
-              itemStyle={{ color: '#f3f4f6' }}
-            />
-            <Legend />
-            <Area
-              type="monotone"
-              dataKey={data.areaKey || 'amt'}
-              fill="#8884d8"
-              stroke="#8884d8"
-              fillOpacity={0.2}
-            />
-            <Bar dataKey={data.barKey || 'value'} barSize={20} fill="#413ea0" />
-            <Line type="monotone" dataKey={data.lineKey || 'trend'} stroke="#ff7300" />
-          </ComposedChart>
-        </ResponsiveContainer>
-      </div>
-    );
-  }
-  return null;
+  const commonContainerClass = "w-full h-72 my-4 p-4 bg-muted/30 rounded-2xl border border-border/50 shadow-inner overflow-visible";
+  const commonTitleClass = "text-center text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-4";
+
+  const commonTooltipProps = {
+    contentStyle: {
+      backgroundColor: '#1c1c1c',
+      borderColor: 'rgba(255, 255, 255, 0.1)',
+      color: '#ffffff',
+      borderRadius: '12px',
+      fontSize: '11px',
+      border: '1px solid rgba(255, 255, 255, 0.1)',
+      boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.5)',
+      padding: '8px 12px',
+    },
+    itemStyle: { color: '#ffffff', padding: '2px 0' },
+    labelStyle: { color: 'rgba(255, 255, 255, 0.7)', fontWeight: 'bold', marginBottom: '4px' },
+    cursor: { fill: 'currentColor', opacity: 0.1 },
+  };
+
+  const chartElement = () => {
+    if (data.type === 'bar') {
+      return (
+        <BarChart data={data.data}>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.1} />
+          <XAxis dataKey={data.xKey || 'name'} fontSize={10} tickLine={false} axisLine={false} tick={{ fill: 'currentColor', opacity: 0.5 }} />
+          <YAxis fontSize={10} tickLine={false} axisLine={false} tick={{ fill: 'currentColor', opacity: 0.5 }} />
+          <Tooltip {...commonTooltipProps} />
+          <Bar dataKey={data.yKey || 'value'} fill="hsl(var(--primary))" radius={[4, 4, 0, 0]}>
+            {data.data.map((entry: any, index: number) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} opacity={0.8} />
+            ))}
+          </Bar>
+        </BarChart>
+      );
+    }
+    if (data.type === 'line') {
+      return (
+        <LineChart data={data.data}>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.1} />
+          <XAxis dataKey={data.xKey || 'name'} fontSize={10} tickLine={false} axisLine={false} tick={{ fill: 'currentColor', opacity: 0.5 }} />
+          <YAxis fontSize={10} tickLine={false} axisLine={false} tick={{ fill: 'currentColor', opacity: 0.5 }} />
+          <Tooltip {...commonTooltipProps} />
+          <Line type="monotone" dataKey={data.yKey || 'value'} stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 4, fill: 'hsl(var(--primary))', strokeWidth: 2, stroke: 'hsl(var(--background))' }} activeDot={{ r: 6, strokeWidth: 0 }} />
+        </LineChart>
+      );
+    }
+    if (data.type === 'pie') {
+      return (
+        <PieChart>
+          <Pie data={data.data} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} dataKey={data.yKey || 'value'} stroke="none">
+            {data.data.map((entry: any, index: number) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} opacity={0.8} />
+            ))}
+          </Pie>
+          <Tooltip {...commonTooltipProps} />
+        </PieChart>
+      );
+    }
+    if (data.type === 'area') {
+      return (
+        <AreaChart data={data.data}>
+          <defs>
+            <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.1} />
+          <XAxis dataKey={data.xKey || 'name'} fontSize={10} tickLine={false} axisLine={false} tick={{ fill: 'currentColor', opacity: 0.5 }} />
+          <YAxis fontSize={10} tickLine={false} axisLine={false} tick={{ fill: 'currentColor', opacity: 0.5 }} />
+          <Tooltip {...commonTooltipProps} />
+          <Area type="monotone" dataKey={data.yKey || 'value'} stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorValue)" strokeWidth={2} />
+        </AreaChart>
+      );
+    }
+    if (data.type === 'radar') {
+      return (
+        <RadarChart cx="50%" cy="50%" outerRadius="70%" data={data.data}>
+          <PolarGrid opacity={0.1} />
+          <PolarAngleAxis dataKey={data.xKey || 'subject'} fontSize={10} tick={{ fill: 'currentColor', opacity: 0.5 }} />
+          <PolarRadiusAxis angle={30} domain={[0, 'auto']} fontSize={10} tick={{ fill: 'currentColor', opacity: 0.5 }} />
+          <Radar name={data.title} dataKey={data.yKey || 'value'} stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.4} />
+          <Tooltip {...commonTooltipProps} />
+        </RadarChart>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <div className={commonContainerClass}>
+      <p className={commonTitleClass}>{data.title}</p>
+      <ResponsiveContainer width="100%" height="100%">
+        {chartElement() as React.ReactElement}
+      </ResponsiveContainer>
+    </div>
+  );
 };
+
 
 const MarkdownContent = ({ content }: { content: string }) => {
   const components = useMemo(
@@ -358,7 +264,6 @@ const MarkdownContent = ({ content }: { content: string }) => {
 const ThinkingProcess = ({ steps, isStreaming }: { steps: string[]; isStreaming?: boolean }) => {
   const [isOpen, setIsOpen] = useState(true);
 
-  // Auto-open is handled by the initial state and streaming status
   useEffect(() => {
     if (isStreaming) setIsOpen(true);
   }, [isStreaming]);
@@ -366,18 +271,19 @@ const ThinkingProcess = ({ steps, isStreaming }: { steps: string[]; isStreaming?
   if (!steps || steps.length === 0) return null;
 
   return (
-    <div className="mb-4 text-xs font-mono overflow-hidden">
+    <div className="mb-3 text-[11px] font-medium transition-all">
       <div
-        className="flex items-center gap-2 cursor-pointer text-muted-foreground hover:text-primary transition-colors select-none group"
+        className="flex items-center gap-2 cursor-pointer select-none group"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="flex items-center gap-1.5 p-1 px-2 rounded-md bg-muted/50 border border-muted-foreground/10 group-hover:border-primary/30 transition-all">
-          {isOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
-          <Sparkles className={cn('w-3 h-3', isStreaming && 'animate-pulse text-primary')} />
-          <span className="font-semibold uppercase tracking-wider text-[10px]">
-            Internal Reasoning
+        <div className="flex items-center gap-1.5 p-1 px-2.5 rounded-full bg-primary/5 hover:bg-primary/10 border border-primary/10 group-hover:border-primary/20 transition-all">
+          <Sparkles className={cn('w-3 h-3 text-primary', isStreaming && 'animate-pulse')} />
+          <span className="uppercase tracking-widest text-[9px] font-bold text-primary/80">
+            AI Reasoning
           </span>
-          <span className="opacity-50 ml-1">({steps.length})</span>
+          <div className="w-1 h-3 border-l border-primary/20 mx-0.5" />
+          <span className="opacity-70 text-[9px]">{steps.length} {steps.length === 1 ? 'step' : 'steps'}</span>
+          {isOpen ? <ChevronDown className="w-2.5 h-2.5 opacity-50 transition-transform group-hover:translate-y-0.5" /> : <ChevronRight className="w-2.5 h-2.5 opacity-50 transition-transform group-hover:translate-x-0.5" />}
         </div>
       </div>
 
@@ -387,40 +293,41 @@ const ThinkingProcess = ({ steps, isStreaming }: { steps: string[]; isStreaming?
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            transition={{ duration: 0.25, ease: 'circOut' }}
             className="overflow-hidden"
           >
-            <div className="mt-2 ml-3.5 pl-4 border-l-2 border-primary/10 space-y-2 py-1">
+            <div className="mt-2.5 ml-3 pl-3.5 border-l-2 border-primary/5 space-y-2 py-0.5">
               {steps.map((step, idx) => {
                 const isLatest = idx === steps.length - 1 && isStreaming;
-                const isTool = step.startsWith('Calling') || step.startsWith('Tool Result');
+                const isTool = step.includes('Searching') || step.includes('Executing') || step.includes('Retrieved');
 
                 return (
                   <motion.div
                     key={idx}
-                    initial={{ opacity: 0, x: -5 }}
+                    initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 }}
                     className={cn(
-                      'flex gap-2 items-start transition-colors',
-                      isLatest ? 'text-primary' : 'text-muted-foreground/80',
+                      'flex gap-2 items-start',
+                      isLatest ? 'text-primary' : 'text-muted-foreground/60',
                     )}
                   >
-                    <div className="mt-1.5">
+                    <div className="mt-1.5 shrink-0">
                       {isLatest ? (
-                        <div className="w-1.5 h-1.5 rounded-full bg-primary animate-ping" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                       ) : (
                         <div
                           className={cn(
                             'w-1 h-1 rounded-full',
-                            isTool ? 'bg-amber-500/50' : 'bg-muted-foreground/30',
+                            isTool ? 'bg-amber-500/40' : 'bg-muted-foreground/20',
                           )}
                         />
                       )}
                     </div>
                     <span
                       className={cn(
-                        'leading-relaxed break-words',
-                        isTool && 'font-medium text-[11px] text-amber-500/90',
+                        'leading-relaxed break-words py-0.5',
+                        isTool && 'font-semibold text-[10px] text-amber-500/80',
                       )}
                     >
                       {step}
@@ -846,10 +753,10 @@ export default function AnalyticsChatbot({
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-50 group flex items-center justify-center w-14 h-14 bg-[#CC2224] text-white rounded-full shadow-[0_4px_14px_0_rgba(204,34,36,0.39)] hover:shadow-[0_6px_20px_rgba(204,34,36,0.23)] hover:bg-[#b01c1e] transition-all duration-300"
+          className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-[#CC2224] text-white rounded-full shadow-[0_4px_14px_0_rgba(204,34,36,0.39)] hover:shadow-[0_6px_20px_rgba(204,34,36,0.39)] hover:bg-[#b01c1e] transition-all duration-300"
         >
           <Bot className="w-7 h-7" />
-          <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+          <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />
         </motion.button>
       )}
 
@@ -857,135 +764,124 @@ export default function AnalyticsChatbot({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              width: isExpanded ? '800px' : '400px',
-              height: isExpanded ? '80vh' : '600px',
-            }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-            className={cn(
-              'fixed bottom-6 right-6 z-50 flex flex-col bg-background/95 backdrop-blur-xl border border-border shadow-2xl rounded-[2rem] overflow-hidden',
-              isExpanded ? 'max-w-[calc(100vw-48px)]' : 'w-[400px] max-h-[80vh]',
-            )}
+            initial={{ opacity: 0, y: 24, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 24, scale: 0.97 }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+            style={
+              isExpanded
+                ? { width: 'min(900px, calc(100vw - 32px))', height: 'min(88vh, 820px)' }
+                : { width: 'min(420px, calc(100vw - 32px))', height: 'min(680px, calc(100vh - 96px))' }
+            }
+            className="fixed bottom-6 right-6 z-[200] flex flex-col rounded-3xl border border-border bg-background shadow-2xl overflow-hidden transition-[width,height] duration-500"
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b bg-muted/30">
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#CC2224] to-[#ff4d4f] flex items-center justify-center shadow-lg shadow-[#CC2224]/20">
-                    <Bot className="w-6 h-6 text-white" />
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/30 shrink-0">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="relative shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#CC2224] to-[#ff4d4f] flex items-center justify-center shadow-lg shadow-[#CC2224]/20">
+                    <Bot className="w-5 h-5 text-white" />
                   </div>
-                  <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-background rounded-full animate-pulse" />
+                  <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-background rounded-full animate-pulse" />
                 </div>
-                <div>
-                  <h3 className="font-bold text-foreground leading-tight">ZenZebra Intelligence</h3>
-                  <p className="text-[10px] text-muted-foreground font-medium flex items-center gap-1">
-                    <Sparkles className="w-3 h-3 text-amber-500" />
+                <div className="min-w-0">
+                  <h3 className="font-semibold text-sm leading-tight truncate">ZenZebra Intelligence</h3>
+                  <p className="text-[10px] text-muted-foreground flex items-center gap-1">
+                    <Sparkles className="w-2.5 h-2.5 text-amber-500 shrink-0" />
                     AI-Powered Analytics
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 rounded-full hover:bg-muted"
+              <div className="flex items-center gap-0.5 shrink-0 ml-2">
+                <button
                   onClick={() => setIsExpanded(!isExpanded)}
                   title={isExpanded ? 'Minimize' : 'Expand'}
+                  className="h-8 w-8 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 >
-                  {isExpanded ? (
-                    <Minimize2 className="w-4 h-4" />
-                  ) : (
-                    <Maximize2 className="w-4 h-4" />
-                  )}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground"
+                  {isExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+                </button>
+                <button
                   onClick={clearChat}
                   title="Clear Chat"
+                  className="h-8 w-8 flex items-center justify-center rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground"
+                </button>
+                <button
                   onClick={() => setIsOpen(false)}
+                  title="Close"
+                  className="h-8 w-8 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 >
-                  <ChevronDown className="w-5 h-5" />
-                </Button>
+                  <X className="w-4 h-4" />
+                </button>
               </div>
             </div>
 
-            {/* Messages Area */}
-            <ScrollArea className="flex-1 p-4 bg-muted/5 relative">
+            {/* Messages */}
+            <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 bg-muted/5">
               {messages.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl flex items-center justify-center mb-2">
-                    <Sparkles className="w-8 h-8 text-primary" />
+                <div className="h-full flex flex-col items-center justify-center text-center px-4 space-y-4">
+                  <div className="w-14 h-14 bg-gradient-to-br from-primary/15 to-primary/5 rounded-2xl flex items-center justify-center">
+                    <Sparkles className="w-7 h-7 text-primary" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-lg mb-2">How can I help you today?</h4>
-                    <p className="text-sm text-muted-foreground max-w-[260px]">
-                      I can analyze your sales trends, identify dead stock, or summarize your
-                      inventory status.
+                    <h4 className="font-bold text-base mb-1">How can I help you today?</h4>
+                    <p className="text-xs text-muted-foreground max-w-[240px] leading-relaxed">
+                      Ask about sales trends, dead stock, or inventory status.
                     </p>
                   </div>
-                  <div className="grid grid-cols-1 gap-2 w-full max-w-[280px]">
+                  <div className="flex flex-col gap-2 w-full max-w-[300px]">
                     {suggestedQuestions.map((q, i) => (
                       <button
                         key={i}
                         onClick={() => {
                           setInput(q);
-                          // Optional: Auto-send?
-                          // setInput(q);
-                          // setTimeout(() => sendMessage(), 100);
+                          setTimeout(() => {
+                            (document.getElementById('chat-send-button') as HTMLButtonElement)?.click();
+                          }, 50);
                         }}
-                        className="text-xs text-left px-4 py-3 rounded-xl bg-background border hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 shadow-sm"
+                        className="text-xs text-left px-4 py-2.5 rounded-xl bg-background border hover:border-primary/40 hover:bg-primary/5 transition-all shadow-sm flex items-center justify-between gap-2 group"
                       >
-                        {q}
+                        <span>{q}</span>
+                        <ChevronRight className="w-3 h-3 shrink-0 opacity-0 group-hover:opacity-60 transition-opacity" />
                       </button>
                     ))}
                   </div>
                 </div>
               ) : (
-                <div className="space-y-6 pb-4">
+                <div className="space-y-5">
                   {messages.map((msg, index) => (
                     <motion.div
                       key={msg.id}
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      transition={{ duration: 0.3 }}
-                      className={cn(
-                        'flex gap-3 max-w-[90%]',
-                        msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto',
-                      )}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className={cn('flex gap-2.5', msg.role === 'user' ? 'flex-row-reverse' : 'flex-row')}
                     >
                       {/* Avatar */}
                       <div
                         className={cn(
-                          'w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-sm mt-1',
+                          'w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5',
                           msg.role === 'user'
                             ? 'bg-primary text-primary-foreground'
                             : 'bg-background border border-border',
                         )}
                       >
                         {msg.role === 'user' ? (
-                          <User className="w-4 h-4" />
+                          <User className="w-3.5 h-3.5" />
                         ) : (
-                          <Bot className="w-4 h-4 text-primary" />
+                          <Bot className="w-3.5 h-3.5 text-primary" />
                         )}
                       </div>
 
-                      {/* Bubble */}
-                      <div className="flex flex-col gap-1 min-w-0">
-                        {/* Thinking Process Display */}
+                      {/* Content column */}
+                      <div
+                        className={cn(
+                          'flex flex-col gap-1 min-w-0 flex-1',
+                          msg.role === 'user' ? 'items-end' : 'items-start',
+                        )}
+                      >
+                        {/* Thinking */}
                         {msg.role === 'assistant' && msg.thinkingSteps && (
                           <ThinkingProcess
                             steps={msg.thinkingSteps}
@@ -993,15 +889,16 @@ export default function AnalyticsChatbot({
                           />
                         )}
 
+                        {/* Bubble */}
                         <div
                           className={cn(
-                            'p-4 rounded-2xl shadow-sm text-sm overflow-hidden break-words relative group',
+                            'px-4 py-3 rounded-2xl text-sm leading-relaxed break-words',
                             msg.role === 'user'
-                              ? 'bg-primary text-primary-foreground rounded-tr-sm'
+                              ? 'bg-primary text-primary-foreground rounded-tr-sm max-w-[82%]'
                               : cn(
-                                  'bg-background border border-border rounded-tl-sm text-foreground',
-                                  msg.isError && 'border-destructive/50 bg-destructive/5',
-                                ),
+                                'bg-background border border-border rounded-tl-sm w-full',
+                                msg.isError && 'border-destructive/40 bg-destructive/5 text-destructive',
+                              ),
                           )}
                         >
                           {msg.role === 'assistant' ? (
@@ -1010,7 +907,7 @@ export default function AnalyticsChatbot({
                                 <MarkdownContent content={msg.content} />
                               ) : (
                                 msg.isStreaming && (
-                                  <span className="flex items-center gap-1 opacity-50">
+                                  <span className="flex items-center gap-1 opacity-50 py-0.5">
                                     <span className="w-1.5 h-1.5 bg-current rounded-full animate-bounce [animation-delay:-0.3s]" />
                                     <span className="w-1.5 h-1.5 bg-current rounded-full animate-bounce [animation-delay:-0.15s]" />
                                     <span className="w-1.5 h-1.5 bg-current rounded-full animate-bounce" />
@@ -1019,95 +916,80 @@ export default function AnalyticsChatbot({
                               )}
                             </div>
                           ) : (
-                            <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+                            <p className="whitespace-pre-wrap">{msg.content}</p>
                           )}
+                        </div>
 
-                          {/* Message Actions */}
+                        {/* Actions + timestamp */}
+                        <div className={cn('flex items-center gap-0.5', msg.role === 'user' ? 'flex-row-reverse' : 'flex-row')}>
+                          <span className="text-[10px] text-muted-foreground/40 px-1">
+                            {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </span>
                           {!msg.isStreaming && !msg.isError && (
-                            <div
-                              className={cn(
-                                'absolute -bottom-6 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity p-1',
-                                msg.role === 'user' ? 'right-0' : 'left-0',
-                              )}
-                            >
+                            <>
                               <button
                                 onClick={() => handleCopy(msg.content)}
-                                className="p-1 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                                className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted transition-colors"
                                 title="Copy"
                               >
                                 <Copy className="w-3 h-3" />
                               </button>
                               {msg.role === 'assistant' && (
                                 <button
-                                  onClick={() =>
-                                    isSpeaking ? stopSpeaking() : handleSpeak(msg.content)
-                                  }
+                                  onClick={() => (isSpeaking ? stopSpeaking() : handleSpeak(msg.content))}
                                   className={cn(
-                                    'p-1 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors',
-                                    isSpeaking && 'text-primary animate-pulse',
+                                    'p-1.5 rounded-lg text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted transition-colors',
+                                    isSpeaking && 'text-primary',
                                   )}
                                   title="Read Aloud"
                                 >
-                                  {isSpeaking ? (
-                                    <VolumeX className="w-3 h-3" />
-                                  ) : (
-                                    <Volume2 className="w-3 h-3" />
-                                  )}
+                                  {isSpeaking ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
                                 </button>
                               )}
                               {msg.role === 'user' && (
                                 <button
                                   onClick={() => handleEdit(msg)}
-                                  className="p-1 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                                  className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted transition-colors"
                                   title="Edit"
                                 >
                                   <Edit2 className="w-3 h-3" />
                                 </button>
                               )}
-                              <button
-                                onClick={() => handleRetry(msg)}
-                                className="p-1 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                                title="Regenerate"
-                              >
-                                <RefreshCcw className="w-3 h-3" />
-                              </button>
-                            </div>
+                              {msg.role === 'assistant' && (
+                                <button
+                                  onClick={() => handleRetry(msg)}
+                                  className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted transition-colors"
+                                  title="Regenerate"
+                                >
+                                  <RefreshCcw className="w-3 h-3" />
+                                </button>
+                              )}
+                            </>
                           )}
                         </div>
-
-                        {/* Timestamp */}
-                        <span className="text-[10px] text-muted-foreground/50 px-1">
-                          {new Date(msg.timestamp).toLocaleTimeString([], {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </span>
                       </div>
                     </motion.div>
                   ))}
-                  {/* Invisible element to scroll to */}
                   <div ref={messagesEndRef} />
                 </div>
               )}
-            </ScrollArea>
+            </div>
 
-            {/* Input Area */}
-            <div className="p-4 bg-background border-t">
-              <div className="flex items-end gap-2 bg-muted/50 p-2 rounded-[1.5rem] border border-transparent focus-within:border-primary/30 focus-within:bg-background transition-all shadow-inner">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className={cn(
-                    'h-10 w-10 rounded-full shrink-0 transition-colors',
-                    isListening
-                      ? 'bg-red-500/10 text-red-500 animate-pulse'
-                      : 'text-muted-foreground hover:text-primary hover:bg-primary/10',
-                  )}
+            {/* Input */}
+            <div className="px-4 py-3 border-t border-border bg-background shrink-0">
+              <div className="flex items-end gap-2 bg-muted/40 px-3 py-2 rounded-2xl border border-transparent focus-within:border-primary/25 focus-within:bg-background transition-all">
+                <button
                   onClick={toggleListening}
                   disabled={loading}
+                  className={cn(
+                    'h-8 w-8 flex items-center justify-center rounded-full shrink-0 transition-colors',
+                    isListening
+                      ? 'bg-red-500/15 text-red-500 animate-pulse'
+                      : 'text-muted-foreground hover:text-primary hover:bg-primary/10',
+                  )}
                 >
                   {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-                </Button>
+                </button>
 
                 <textarea
                   value={input}
@@ -1119,33 +1001,38 @@ export default function AnalyticsChatbot({
                     }
                   }}
                   disabled={loading}
-                  placeholder="Ask about your data..."
-                  className="flex-1 max-h-[120px] min-h-[40px] py-2.5 bg-transparent border-none focus:ring-0 text-sm placeholder:text-muted-foreground resize-none custom-scrollbar"
+                  placeholder="Ask about your data"
+                  className="flex-1 max-h-[100px] min-h-[36px] py-1.5 bg-transparent border-none outline-none text-sm placeholder:text-muted-foreground resize-none leading-relaxed"
                   rows={1}
                 />
 
-                <Button
-                  onClick={sendMessage}
-                  disabled={!input.trim() || loading}
-                  className={cn(
-                    'h-10 w-10 rounded-full shrink-0 shadow-lg transition-all',
-                    !input.trim() || loading
-                      ? 'bg-muted text-muted-foreground'
-                      : 'bg-[#CC2224] hover:bg-[#b01c1e] text-white hover:scale-105 active:scale-95',
-                  )}
-                >
-                  {loading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Send className="w-4 h-4 ml-0.5" />
-                  )}
-                </Button>
+                {loading ? (
+                  <button
+                    onClick={stopGeneration}
+                    title="Stop"
+                    className="h-9 w-9 flex items-center justify-center rounded-full shrink-0 bg-red-500 hover:bg-red-600 text-white shadow-md transition-all"
+                  >
+                    <Square className="w-3.5 h-3.5 fill-white" />
+                  </button>
+                ) : (
+                  <button
+                    id="chat-send-button"
+                    onClick={sendMessage}
+                    disabled={!input.trim()}
+                    className={cn(
+                      'h-9 w-9 flex items-center justify-center rounded-full shrink-0 shadow-md transition-all',
+                      !input.trim()
+                        ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                        : 'bg-[#CC2224] hover:bg-[#b01c1e] text-white hover:scale-105 active:scale-95',
+                    )}
+                  >
+                    <Send className="w-3.5 h-3.5 ml-0.5" />
+                  </button>
+                )}
               </div>
-              <div className="text-center mt-2">
-                <p className="text-[9px] text-muted-foreground/60 font-medium">
-                  AI responses may refer to real-time data but should be verified.
-                </p>
-              </div>
+              <p className="text-center mt-1.5 text-[9px] text-muted-foreground/50">
+                AI responses may refer to real-time data but should be verified.
+              </p>
             </div>
           </motion.div>
         )}

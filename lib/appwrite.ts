@@ -18,6 +18,8 @@ export const appwriteConfig = {
   projectId: process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID!,
   analyticsCollectionId: process.env.NEXT_PUBLIC_APPWRITE_ANALYTICS_COLLECTION_ID!,
   partnerRequestsCollectionId: process.env.NEXT_PUBLIC_APPWRITE_PARTNER_REQUESTS_COLLECTION_ID!,
+  productsCollectionId: process.env.NEXT_PUBLIC_APPWRITE_PRODUCTS_COLLECTION_ID!,
+  storesCollectionId: process.env.NEXT_PUBLIC_APPWRITE_STORES_COLLECTION_ID!,
 };
 
 export const isOwner = async (userId: string | undefined) => {

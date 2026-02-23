@@ -53,7 +53,7 @@ export default function How() {
             viewport={{ once: true }}
             className="text-xl text-white/70 max-w-md leading-relaxed"
           >
-            We find the cult brands so you don't have to. Discovery happens here—physically,
+            We find the cult brands so you don't have to. Discovery happens here physically
             instantly, and right where you are.
           </motion.p>
         </div>

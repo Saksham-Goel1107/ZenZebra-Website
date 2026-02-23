@@ -3,10 +3,10 @@
 import {
   Activity,
   BarChart3,
-  BookOpen,
   Command,
   Handshake,
   Key,
+  LayoutDashboard,
   LogOut,
   MapPin,
   MessageSquare,
@@ -15,9 +15,10 @@ import {
   Rocket,
   Settings2,
   Shield,
+  ShoppingCart,
   SquareTerminal,
   Sun,
-  User,
+  User
 } from 'lucide-react';
 import * as React from 'react';
 
@@ -78,10 +79,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     { title: 'Dashboard', href: '/admin-login/dashboard', icon: SquareTerminal },
     { title: 'Traffic Analytics', href: '/admin-login/analytics', icon: Activity },
     { title: 'Data Analytics', href: '/admin-login/data-analytics', icon: BarChart3 },
-    { title: 'Catalogue', href: '/admin-login/catalogue-dashboard', icon: BookOpen },
+    { title: 'Store Locations', href: '/admin-login/stores', icon: MapPin },
+    { title: 'Product Inventory', href: '/admin-login/products', icon: ShoppingCart },
     { title: 'Inquiries', href: '/admin-login/inquiries', icon: MessageSquare },
     { title: 'Partner Requests', href: '/admin-login/partner-requests', icon: Handshake },
-    { title: 'Locations', href: '/admin-login/locations', icon: MapPin },
+    { title: 'Home Widgets', href: '/admin-login/locations', icon: LayoutDashboard },
     { title: 'Status', href: 'https://status.zenzebra.in', icon: Monitor },
   ];
 
