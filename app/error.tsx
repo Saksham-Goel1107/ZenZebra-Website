@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import * as Sentry from '@sentry/nextjs';
+import { useEffect } from 'react';
+// import * as Sentry from '@sentry/nextjs';
 import Link from 'next/link';
 
 export default function Error({
@@ -13,8 +13,9 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    Sentry.captureException(error);
+    // Sentry.captureException(error);
   }, [error]);
+
 
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center justify-center bg-black text-white px-6">

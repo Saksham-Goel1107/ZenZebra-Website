@@ -1,4 +1,4 @@
-import { aj } from '@/lib/arcjet';
+// import { aj } from '@/lib/arcjet';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
@@ -13,16 +13,16 @@ export async function middleware(request: NextRequest) {
   // 2. Arcjet Protection
   // We've moved heavy rules (email validation, etc) to arcjet-server.ts
   // to keep this middleware bundle under the 1MB Edge limit.
-  const decision = await aj.protect(request);
+  // const decision = await aj.protect(request);
 
-  if (decision.isDenied()) {
-    if (decision.reason.isBot()) {
-      return NextResponse.json({ error: 'No bots allowed' }, { status: 403 });
-    } else if (decision.reason.isRateLimit()) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
-    }
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  // if (decision.isDenied()) {
+  //   if (decision.reason.isBot()) {
+  //     return NextResponse.json({ error: 'No bots allowed' }, { status: 403 });
+  //   } else if (decision.reason.isRateLimit()) {
+  //     return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  //   }
+  //   return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  // }
 
   // 3. System Settings Check (Maintenance & Admin Lock)
   try {
