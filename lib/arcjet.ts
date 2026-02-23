@@ -1,6 +1,6 @@
-import arcjet, { detectBot, fixedWindow, shield, slidingWindow, validateEmail } from '@arcjet/next';
+import arcjet, { detectBot, shield } from '@arcjet/next';
 
-// Register any custom rules or configurations here
+// Main Arcjet instance for middleware protection
 export const aj = arcjet({
   key: process.env.ARCJET_KEY!, // Get your site key from https://app.arcjet.com
   characteristics: ['ip.src'], // Track requests by IP address
@@ -17,37 +17,6 @@ export const aj = arcjet({
         'CATEGORY:SEARCH_ENGINE',
         'CATEGORY:MONITOR', // Allow uptime monitors
       ],
-    }),
-  ],
-});
-
-// Dedicated rate limiter for sensitive API routes (e.g. login, contact)
-export const apiRateLimiter = arcjet({
-  key: process.env.ARCJET_KEY!,
-  characteristics: ['ip.src'],
-  rules: [
-    slidingWindow({
-      mode: 'LIVE',
-      interval: '1m',
-      max: 10,
-    }),
-  ],
-});
-
-// Sensitive form rate limiter (e.g. inquiries, partner requests)
-// Includes email validation to prevent spam with fake emails
-export const formRateLimiter = arcjet({
-  key: process.env.ARCJET_KEY!,
-  characteristics: ['ip.src'],
-  rules: [
-    fixedWindow({
-      mode: 'LIVE',
-      window: '1h',
-      max: 5,
-    }),
-    validateEmail({
-      mode: 'LIVE',
-      deny: ['DISPOSABLE', 'INVALID', 'NO_MX_RECORDS'],
     }),
   ],
 });

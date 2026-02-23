@@ -5,19 +5,14 @@ import { NextResponse } from 'next/server';
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 1. Bypass static assets, API, and Next.js internals
-  if (
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/static') ||
-    pathname === '/favicon.ico' ||
-    pathname.match(/\.(png|jpg|jpeg|svg|gif|webp)$/)
-  ) {
+  // 1. Bypass check for critical paths
+  if (pathname === '/maintenance' || pathname === '/admin-disabled') {
     return NextResponse.next();
   }
 
-  // 1.1 Arcjet Protection
-  // We don't protect the /api routes here if we want more granular control there,
-  // but Shield and Bot detection are good for all public pages.
+  // 2. Arcjet Protection
+  // We've moved heavy rules (email validation, etc) to arcjet-server.ts
+  // to keep this middleware bundle under the 1MB Edge limit.
   const decision = await aj.protect(request);
 
   if (decision.isDenied()) {
@@ -25,63 +20,51 @@ export async function middleware(request: NextRequest) {
       return NextResponse.json({ error: 'No bots allowed' }, { status: 403 });
     } else if (decision.reason.isRateLimit()) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
-    } else {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  // 2. Allow direct access to Maintenance & Disabled pages to prevent loops
-  if (pathname === '/maintenance' || pathname === '/admin-disabled') {
-    return NextResponse.next();
-  }
-
+  // 3. System Settings Check (Maintenance & Admin Lock)
   try {
-    const endpoint = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT;
-    const projectId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID;
-    const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID;
-    const collectionId = process.env.NEXT_PUBLIC_APPWRITE_SETTINGS_COLLECTION_ID;
-    const apiKey = process.env.APPWRITE_API_KEY;
+    const {
+      NEXT_PUBLIC_APPWRITE_ENDPOINT: endpoint,
+      NEXT_PUBLIC_APPWRITE_PROJECT_ID: projectId,
+      NEXT_PUBLIC_APPWRITE_DATABASE_ID: databaseId,
+      NEXT_PUBLIC_APPWRITE_SETTINGS_COLLECTION_ID: collectionId,
+      APPWRITE_API_KEY: apiKey,
+    } = process.env;
 
     if (!endpoint || !projectId || !databaseId || !collectionId || !apiKey) {
       return NextResponse.next();
     }
 
-    // 3. Fetch ALL System Settings via REST (Key-Value Format)
-    // We fetch a list of documents. Each doc has `key` and `value`.
+    // Fetch settings via REST to avoid bringing the full SDK into the Edge bundle
     const response = await fetch(
       `${endpoint}/databases/${databaseId}/collections/${collectionId}/documents`,
       {
         headers: {
-          'Content-Type': 'application/json',
           'X-Appwrite-Project': projectId,
           'X-Appwrite-Key': apiKey,
         },
+        // We use a short revalidate for settings
         next: { revalidate: 30 },
-      },
+      } as any, // Cast to any because 'next' is a Next.js extension
     );
 
-    if (!response.ok) {
-      return NextResponse.next();
-    }
+    if (!response.ok) return NextResponse.next();
 
     const data = await response.json();
     const documents = data.documents || [];
 
-    // 4. Find Critical flags
     let adminLocked = false;
     let maintenanceMode = false;
 
-    // Iterate through docs to find keys
     for (const doc of documents) {
-      if (doc.key === 'adminLocked' && doc.value === 'true') {
-        adminLocked = true;
-      }
-      if (doc.key === 'maintenanceMode' && doc.value === 'true') {
-        maintenanceMode = true;
-      }
+      if (doc.key === 'adminLocked') adminLocked = doc.value === 'true';
+      if (doc.key === 'maintenanceMode') maintenanceMode = doc.value === 'true';
     }
 
-    // 5. Restrict access to Utility Pages if not active
+    // Redirect logic
     if (pathname === '/maintenance' && !maintenanceMode) {
       return NextResponse.redirect(new URL('/', request.url));
     }
@@ -89,24 +72,29 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/', request.url));
     }
 
-    // 6. Check "Kill Switch" for Admin Dashboard
     if (adminLocked && pathname.startsWith('/admin-login')) {
       return NextResponse.redirect(new URL('/admin-disabled', request.url));
     }
 
-    // 7. Check Maintenance Mode for Public Site
-    // Block everything EXCEPT /admin-login (unless locked above)
     if (maintenanceMode && !pathname.startsWith('/admin-login') && pathname !== '/maintenance') {
       return NextResponse.redirect(new URL('/maintenance', request.url));
     }
   } catch (error) {
     console.error('Middleware Error:', error);
-    return NextResponse.next();
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: '/:path*',
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public assets (png, jpg, etc)
+     */
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+  ],
 };

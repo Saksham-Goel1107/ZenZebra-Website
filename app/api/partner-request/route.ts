@@ -1,6 +1,6 @@
 import { getSystemSettings } from '@/lib/admin-settings';
 import { appwriteConfig, getServerDatabases } from '@/lib/appwrite-server';
-import { formRateLimiter } from '@/lib/arcjet';
+import { formRateLimiter } from '@/lib/arcjet-server';
 import { NextResponse } from 'next/server';
 import { ID } from 'node-appwrite';
 import { Pingram } from 'pingram';

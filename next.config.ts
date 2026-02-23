@@ -15,24 +15,29 @@ const nextConfig: NextConfig = {
     ],
   },
   serverExternalPackages: ['node-appwrite'],
+  webpack: (config, { isServer }) => {
+    // Optimization: Disabling source maps during build can prevent OOM errors in memory-limited builders
+    if (!isServer && process.env.NODE_ENV === 'production') {
+      config.devtool = false;
+    }
+    return config;
+  },
 };
 
 export default withSentryConfig(nextConfig, {
   org: 'zenzebra',
-
   project: 'javascript-nextjs',
-
   silent: !process.env.CI,
-
   widenClientFileUpload: true,
-
   tunnelRoute: '/monitoring',
 
-  webpack: {
-    automaticVercelMonitors: true,
-
-    treeshake: {
-      removeDebugLogging: true,
-    },
+  bundleSizeOptimizations: {
+    excludeDebugStatements: true,
+    excludeTracing: true,
+    excludeReplayShadowDom: true,
+    excludeReplayIframe: true,
+    excludeReplayWorker: true,
   },
+
+  disableLogger: true,
 });

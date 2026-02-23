@@ -1,5 +1,5 @@
 import { getSystemSettings } from '@/lib/admin-settings';
-import { formRateLimiter } from '@/lib/arcjet';
+import { formRateLimiter } from '@/lib/arcjet-server';
 import { NextResponse } from 'next/server';
 import { Pingram } from 'pingram';
 
