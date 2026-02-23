@@ -1,0 +1,976 @@
+{
+    "projectId": "698585dc0014c943f45e",
+    "projectName": "ZenZebra",
+    "endpoint": "https://fra.cloud.appwrite.io/v1",
+    "settings": {
+        "services": {
+            "account": true,
+            "avatars": true,
+            "databases": true,
+            "locale": false,
+            "health": true,
+            "storage": true,
+            "teams": false,
+            "users": true,
+            "sites": true,
+            "functions": false,
+            "graphql": true,
+            "messaging": false
+        },
+        "auth": {
+            "methods": {
+                "jwt": true,
+                "phone": false,
+                "invites": false,
+                "anonymous": false,
+                "email-otp": true,
+                "magic-url": true,
+                "email-password": true
+            },
+            "security": {
+                "duration": 3600,
+                "limit": 1,
+                "sessionsLimit": 1,
+                "passwordHistory": 5,
+                "passwordDictionary": true,
+                "personalDataCheck": true,
+                "sessionAlerts": true,
+                "mockNumbers": []
+            }
+        }
+    },
+    "sites": [
+        {
+            "$id": "ZenZebra",
+            "name": "zenzebra-site",
+            "framework": "nextjs",
+            "adapter": "ssr",
+            "buildRuntime": "node-22",
+            "installCommand": "npm install",
+            "buildCommand": "npm run build",
+            "outputDirectory": "./.next",
+            "fallbackFile": "",
+            "specification": "s-0.5vcpu-512mb",
+            "enabled": true,
+            "timeout": 30,
+            "logging": true,
+            "ignore": null,
+            "path": "sites/zenzebra-site",
+            "vars": [
+                {
+                    "key": "NEXT_PUBLIC_APPWRITE_ENDPOINT",
+                    "value": "https://cloud.appwrite.io/v1"
+                },
+                {
+                    "key": "NEXT_PUBLIC_APPWRITE_PROJECT_ID",
+                    "value": "698585dc0014c943f45e"
+                },
+                {
+                    "key": "NEXT_PUBLIC_APPWRITE_PROJECT_NAME",
+                    "value": "ZenZebra"
+                }
+            ]
+        }
+    ],
+    "tablesDB": [
+        {
+            "$id": "698ac19f00139a6e37de",
+            "name": "ZenZebra",
+            "enabled": true
+        }
+    ],
+    "tables": [
+        {
+            "$id": "locations",
+            "$permissions": [
+                "read(\"any\")",
+                "create(\"users\")",
+                "read(\"users\")",
+                "update(\"users\")",
+                "delete(\"users\")"
+            ],
+            "databaseId": "698ac19f00139a6e37de",
+            "name": "locations",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "label",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "url",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "active",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": true
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "index_1",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "active"
+                    ],
+                    "orders": [
+                        "asc"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "home_locations",
+            "$permissions": [
+                "read(\"any\")",
+                "create(\"users\")",
+                "read(\"users\")",
+                "update(\"users\")",
+                "delete(\"users\")"
+            ],
+            "databaseId": "698ac19f00139a6e37de",
+            "name": "home_locations",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "title",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "description",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "mediaUrl",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "mediaType",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "active",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": true
+                },
+                {
+                    "key": "order",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "index",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "order",
+                        "active"
+                    ],
+                    "orders": [
+                        "asc",
+                        "asc"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "settings",
+            "$permissions": [
+                "create(\"user:698abfa9003557e99b64\")",
+                "read(\"user:698abfa9003557e99b64\")",
+                "update(\"user:698abfa9003557e99b64\")",
+                "delete(\"user:698abfa9003557e99b64\")"
+            ],
+            "databaseId": "698ac19f00139a6e37de",
+            "name": "settings",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "key",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "value",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "index_1",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "key"
+                    ],
+                    "orders": [
+                        "asc"
+                    ]
+                },
+                {
+                    "key": "index_2",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "key",
+                        "value"
+                    ],
+                    "orders": [
+                        "asc",
+                        "asc"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "inquiries",
+            "$permissions": [],
+            "databaseId": "698ac19f00139a6e37de",
+            "name": "inquiries",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "name",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "email",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "phone",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": 1111111111,
+                    "max": 9999999999
+                },
+                {
+                    "key": "query",
+                    "type": "longtext",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "default": "Queued",
+                    "format": "enum",
+                    "elements": [
+                        "Queued",
+                        "In_process",
+                        "Completed",
+                        "Discarded"
+                    ]
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "index_1",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "status"
+                    ],
+                    "orders": [
+                        "asc"
+                    ]
+                },
+                {
+                    "key": "index_2",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "$createdAt"
+                    ],
+                    "orders": [
+                        "asc"
+                    ]
+                },
+                {
+                    "key": "index_3",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "$createdAt",
+                        "status"
+                    ],
+                    "orders": [
+                        "asc",
+                        "asc"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "analytics_results",
+            "$permissions": [
+                "create(\"users\")",
+                "read(\"users\")",
+                "update(\"users\")",
+                "delete(\"users\")"
+            ],
+            "databaseId": "698ac19f00139a6e37de",
+            "name": "Analytics Results",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "fileId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "fileName",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "analyzedAt",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "rowCount",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "summaryStats",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "categoricalAnalysis",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "metadata",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "processedFileId",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "uploadedBy",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "stockFileId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "stockFileName",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "salesFileId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "salesFileName",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "uploadedById",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "executionTime",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "salesPeriod",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "stockPeriod",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "totalRevenue",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "totalOrders",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "totalItems",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "averageOrderValue",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "overallMargin",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "stockValue",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "error",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "errorTrace",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "deadStockFileId",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "deadStockFileName",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "idx_analyzed_at",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "analyzedAt"
+                    ],
+                    "orders": [
+                        "desc"
+                    ]
+                },
+                {
+                    "key": "idx_status",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "status"
+                    ],
+                    "orders": [
+                        "asc"
+                    ]
+                },
+                {
+                    "key": "idx_uploaded_by",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "uploadedBy"
+                    ],
+                    "orders": [
+                        "asc"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "partner_requests",
+            "$permissions": [],
+            "databaseId": "698ac19f00139a6e37de",
+            "name": "Partner Requests",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "name",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "email",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "phone",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9999999999
+                },
+                {
+                    "key": "companyName",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "companyWebsite",
+                    "type": "text",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "remarks",
+                    "type": "text",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "default": "Queued",
+                    "format": "enum",
+                    "elements": [
+                        "Queued",
+                        "in_progress",
+                        "discarded",
+                        "contacted",
+                        "onboarded",
+                        "spam"
+                    ]
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "stores",
+            "$permissions": [
+                "create(\"users\")",
+                "read(\"users\")",
+                "update(\"users\")",
+                "delete(\"users\")",
+                "read(\"any\")"
+            ],
+            "databaseId": "698ac19f00139a6e37de",
+            "name": "Stores",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "label",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "url",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "address",
+                    "type": "text",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "active",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": true
+                },
+                {
+                    "key": "description",
+                    "type": "text",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "index_1",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "active"
+                    ],
+                    "orders": [
+                        "asc"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "products",
+            "$permissions": [
+                "create(\"users\")",
+                "read(\"users\")",
+                "update(\"users\")",
+                "delete(\"users\")",
+                "read(\"any\")"
+            ],
+            "databaseId": "698ac19f00139a6e37de",
+            "name": "Products",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "inStock",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": true
+                },
+                {
+                    "key": "name",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "description",
+                    "type": "text",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "price",
+                    "type": "double",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "category",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "locationId",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "imageUrls",
+                    "type": "text",
+                    "required": false,
+                    "array": true,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "url",
+                    "type": "text",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "brand",
+                    "type": "text",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "highlights",
+                    "type": "text",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "specifications",
+                    "type": "text",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                },
+                {
+                    "key": "detailedDescription",
+                    "type": "text",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "encrypt": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "index_1",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "inStock",
+                        "price"
+                    ],
+                    "orders": [
+                        "asc",
+                        "asc"
+                    ]
+                },
+                {
+                    "key": "index_2",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "category",
+                        "inStock"
+                    ],
+                    "orders": [
+                        "asc",
+                        "asc"
+                    ]
+                }
+            ]
+        }
+    ],
+    "buckets": [
+        {
+            "$id": "698585f2000d68784efd",
+            "$permissions": [
+                "read(\"any\")",
+                "create(\"user:698abfa9003557e99b64\")",
+                "read(\"user:698abfa9003557e99b64\")",
+                "update(\"user:698abfa9003557e99b64\")",
+                "delete(\"user:698abfa9003557e99b64\")"
+            ],
+            "fileSecurity": true,
+            "name": "ZenZebra",
+            "enabled": true,
+            "maximumFileSize": 50000000,
+            "allowedFileExtensions": [],
+            "compression": "zstd",
+            "encryption": true,
+            "antivirus": true
+        }
+    ],
+    "teams": [],
+    "topics": []
+}
