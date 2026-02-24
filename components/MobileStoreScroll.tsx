@@ -69,6 +69,28 @@ export default function MobileStoreScroll({ isBackground }: { isBackground: bool
     let ctxGsap: gsap.Context;
     let frameId: number;
 
+    let cachedScale = 1, cachedCx = 0, cachedCy = 0, cachedRw = 0, cachedRh = 0;
+
+    const updateIOSSize = () => {
+      if (!canvas || !video) return;
+      canvas.width = window.innerWidth * (window.devicePixelRatio || 1);
+      canvas.height = window.innerHeight * (window.devicePixelRatio || 1);
+
+      const w = canvas.width;
+      const h = canvas.height;
+      const vw = video.videoWidth || 1080;
+      const vh = video.videoHeight || 1920;
+
+      const containScale = Math.min(w / vw, h / vh);
+      const coverScale = Math.max(w / vw, h / vh);
+      cachedScale = containScale + (coverScale - containScale) * 0.2;
+
+      cachedRw = vw * cachedScale;
+      cachedRh = vh * cachedScale;
+      cachedCx = (w - cachedRw) / 2;
+      cachedCy = (h - cachedRh) / 2;
+    };
+
     const render = () => {
       if (!ctx || !video || !isIOS || !canvas || video.readyState < 2) return;
 
@@ -76,33 +98,17 @@ export default function MobileStoreScroll({ isBackground }: { isBackground: bool
       state.current.currentTime +=
         (state.current.targetTime - state.current.currentTime) * lerpFactor;
 
-      if (Math.abs(state.current.currentTime - state.current.lastAppliedTime) > 0.03) {
+      // Higher threshold to reduce lag on mobile
+      if (Math.abs(state.current.currentTime - state.current.lastAppliedTime) > 0.05) {
         video.currentTime = state.current.currentTime;
         state.current.lastAppliedTime = state.current.currentTime;
       }
 
-      const w = canvas.width;
-      const h = canvas.height;
-      const vw = video.videoWidth;
-      const vh = video.videoHeight;
-
-      // SMART SCALE: A balanced compromise between "contain" and "cover"
-      // It zooms in enough to reduce empty space but doesn't crop the subject
-      const containScale = Math.min(w / vw, h / vh);
-      const coverScale = Math.max(w / vw, h / vh);
-      const scale = containScale + (coverScale - containScale) * 0.4; // 40% zoom towards cover
-
-      const rw = vw * scale;
-      const rh = vh * scale;
-      const cx = (w - rw) / 2;
-      const cy = (h - rh) / 2;
-
-      ctx.drawImage(video, cx, cy, rw, rh);
+      ctx.drawImage(video, cachedCx, cachedCy, cachedRw, cachedRh);
     };
 
     const initIOS = () => {
-      canvas!.width = window.innerWidth * (window.devicePixelRatio || 1);
-      canvas!.height = window.innerHeight * (window.devicePixelRatio || 1);
+      updateIOSSize();
       setIsReady(true);
 
       ctxGsap = gsap.context(() => {
@@ -110,7 +116,7 @@ export default function MobileStoreScroll({ isBackground }: { isBackground: bool
         ScrollTrigger.create({
           trigger: isBackground ? 'html' : containerRef.current,
           start: 'top top',
-          end: isBackground ? 'bottom bottom' : '+=1500',
+          end: isBackground ? 'bottom bottom' : '+=100%',
           pin: !isBackground,
           scrub: true,
           onUpdate: (self) => {
@@ -127,19 +133,8 @@ export default function MobileStoreScroll({ isBackground }: { isBackground: bool
     };
 
     const initAndroid = () => {
-      ctxGsap = gsap.context(() => {
-        const tl = gsap.timeline({ repeat: -1 });
-        const slides = contentRefs.current;
-        gsap.set(slides, { autoAlpha: 0, y: 20 });
-        slides.forEach((slide, i) => {
-          if (!slide) return;
-          tl.to(slide, { autoAlpha: 1, y: 0, duration: 0.8 }).to(
-            slide,
-            { autoAlpha: 0, y: -20, duration: 0.8 },
-            '+=1.5',
-          );
-        });
-      }, containerRef);
+      // Content removed as per user request
+
       video.play().catch(() => { });
     };
 
@@ -149,8 +144,10 @@ export default function MobileStoreScroll({ isBackground }: { isBackground: bool
     };
 
     video.addEventListener('loadedmetadata', onLoaded);
+    window.addEventListener('resize', updateIOSSize);
     return () => {
       video.removeEventListener('loadedmetadata', onLoaded);
+      window.removeEventListener('resize', updateIOSSize);
       if (ctxGsap) ctxGsap.revert();
       if (frameId) cancelAnimationFrame(frameId);
     };
@@ -173,9 +170,7 @@ export default function MobileStoreScroll({ isBackground }: { isBackground: bool
           autoPlay={!isIOS}
           className="w-full h-full"
           style={{
-            objectFit: 'cover',
-            // We scale the video component itself down slightly if it's too cropped
-            transform: 'scale(0.85)',
+            objectFit: 'contain', // Changed to contain to avoid cropping
             display: isIOS ? 'none' : 'block',
           }}
         />
@@ -184,21 +179,13 @@ export default function MobileStoreScroll({ isBackground }: { isBackground: bool
       {!isIOS && <div className="absolute inset-0 bg-black/40 z-[1]" />}
       {isIOS && <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />}
 
-      {!isBackground && !isIOS && (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-6 pointer-events-none">
-          {/* Scroll Indicator */}
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-30">
-            <div className="w-[1px] h-8 bg-gradient-to-b from-white to-transparent" />
-            <span className="text-[7px] uppercase tracking-[0.5em] text-white">SCROLL</span>
-          </div>
-        </div>
-      )}
+      {/* Overlays removed as per user request */}
 
       {!isReady && (
         <div className="absolute inset-0 flex items-center justify-center bg-black z-50">
           <div className="flex flex-col items-center gap-4">
             <div className="w-12 h-12 border-2 border-white/10 border-t-red-600 rounded-full animate-spin" />
-            <span className="text-[10px] uppercase tracking-[0.4em] text-white/40">ZenZebra...</span>
+            {/* Loader text removed as per user request */}
           </div>
         </div>
       )}

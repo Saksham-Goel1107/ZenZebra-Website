@@ -9,7 +9,7 @@ function Hero({ settings }: { settings: SystemSettings }) {
     settings?.siteDescription || 'Curated lifestyle, seamlessly integrated into your daily life.';
 
   return (
-    <section id="hero-landing" className="min-h-screen relative flex items-center justify-center overflow-hidden py-32 grain">
+    <section id="hero-landing" className="min-h-screen relative flex items-center justify-center overflow-hidden py-20 md:py-32 grain">
       {/* Background Ambience */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-600/5 via-black to-black z-0" />
       <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-black to-transparent z-[1]" />

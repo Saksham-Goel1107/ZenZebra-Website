@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 function What() {
   return (
-    <section className="relative z-10 bg-transparent py-32 px-6 overflow-hidden">
+    <section className="relative z-10 bg-transparent py-20 md:py-32 px-6 overflow-hidden">
       <div className="max-w-5xl mx-auto text-center relative z-10 drop-shadow-2xl">
         <motion.h2
           initial={{ opacity: 0, y: 30 }}

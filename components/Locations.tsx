@@ -56,7 +56,7 @@ export default function Locations() {
 
   if (loading) {
     return (
-      <section className="relative py-24 px-6 min-h-[400px] flex items-center justify-center">
+      <section className="relative py-20 md:py-24 px-6 min-h-[400px] flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-[#CC2224]/20 border-t-[#CC2224] rounded-full animate-spin" />
       </section>
     );
@@ -66,7 +66,7 @@ export default function Locations() {
   if (locations.length === 0) return null;
 
   return (
-    <section className="relative py-24 px-6">
+    <section className="relative py-20 md:py-24 px-6">
       <div className="mx-auto max-w-6xl">
         {/* Heading */}
         <m.h2

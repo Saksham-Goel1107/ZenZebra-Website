@@ -20,7 +20,7 @@ export default function How() {
   };
 
   return (
-    <section className="relative py-24 md:py-32 px-6 overflow-hidden bg-transparent">
+    <section className="relative py-20 md:py-32 px-6 overflow-hidden bg-transparent">
       {/* Background Glow - Reduced Opacity */}
       <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1/3 h-full bg-[#CC2224]/5 blur-[100px] pointer-events-none -z-10" />
 
