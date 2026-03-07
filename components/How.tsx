@@ -71,7 +71,7 @@ export default function How() {
             <div className="absolute inset-0 bg-gradient-to-r from-[#CC2224] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl blur-xl -z-10" />
             <div className="rounded-2xl bg-black/20 backdrop-blur-md border border-white/10 p-8 flex items-start gap-6 hover:border-[#CC2224]/50 transition-colors duration-300">
               <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[#CC2224]/10 flex items-center justify-center text-[#CC2224] group-hover:bg-[#CC2224] group-hover:text-white transition-all duration-300">
-                <Sparkles className="w-6 h-6" />
+                <Sparkles className="w-6 h-6 group-hover:animate-pulse" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#CC2224] transition-colors">
@@ -87,9 +87,10 @@ export default function How() {
 
           {/* Card 2 */}
           <motion.div variants={itemVariants} className="group relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-[#CC2224] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl blur-xl -z-10" />
             <div className="rounded-2xl bg-black/20 backdrop-blur-md border border-white/10 p-8 flex items-start gap-6 hover:border-[#CC2224]/50 transition-colors duration-300">
               <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[#CC2224]/10 flex items-center justify-center text-[#CC2224] group-hover:bg-[#CC2224] group-hover:text-white transition-all duration-300">
-                <RefreshCcw className="w-6 h-6" />
+                <RefreshCcw className="w-6 h-6 group-hover:animate-[spin_3s_linear_infinite]" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#CC2224] transition-colors">
@@ -105,9 +106,10 @@ export default function How() {
 
           {/* Card 3 */}
           <motion.div variants={itemVariants} className="group relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-[#CC2224] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl blur-xl -z-10" />
             <div className="rounded-2xl bg-black/20 backdrop-blur-md border border-white/10 p-8 flex items-start gap-6 hover:border-[#CC2224]/50 transition-colors duration-300">
               <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[#CC2224]/10 flex items-center justify-center text-[#CC2224] group-hover:bg-[#CC2224] group-hover:text-white transition-all duration-300">
-                <Gem className="w-6 h-6" />
+                <Gem className="w-6 h-6 group-hover:scale-110 transition-transform" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#CC2224] transition-colors">

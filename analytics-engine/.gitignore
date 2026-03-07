@@ -1,3 +1,12 @@
 .env
 .env*.local
 __pycache__
+*.pyc
+
+# Google service account credentials — NEVER commit this file
+service.json
+*-service-account*.json
+
+# Python virtual environment
+venv/
+.venv/

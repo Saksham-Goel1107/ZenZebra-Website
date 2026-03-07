@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   analytics-engine:
@@ -6,15 +6,19 @@ services:
     container_name: zenzebra-analytics
     restart: unless-stopped
     ports:
-      - '8000:8000'
+      - "8000:8000"
     volumes:
       - .:/app
+      # Mount your Google service account key.  Place service.json in the
+      # analytics-engine/ directory (it is git-ignored).  Change the source
+      # path if you store the file elsewhere.
+      - ./service.json:/app/service.json:ro
     env_file:
       - .env
     environment:
       - PYTHONUNBUFFERED=1
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:8000/health']
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
       timeout: 10s
       retries: 3

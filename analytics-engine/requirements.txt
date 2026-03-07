@@ -1,14 +1,30 @@
+# --- Web framework ---
 fastapi
-uvicorn
+uvicorn[standard]
+
+# --- Data processing ---
 pandas
 openpyxl
-requests
-appwrite
-python-dotenv
-httpx
 numpy
 scipy
 scikit-learn
 statsmodels
+
+# --- Google Sheets integration ---
+gspread>=6.0.0
+google-auth>=2.0.0
+google-auth-httplib2
+google-api-python-client
+
+# --- Cron / scheduling ---
+APScheduler>=3.10.0
+
+# --- Appwrite SDK ---
+appwrite
+
+# --- Utilities ---
+python-dotenv
+httpx
+requests
 python-multipart
 gender-guesser
